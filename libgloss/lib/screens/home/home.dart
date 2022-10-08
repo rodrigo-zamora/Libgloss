@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/side_menu.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
@@ -30,6 +31,7 @@ class _MainPageState extends State<Home> {
             appBarColor: _appBarColor,
             textFieldController: _textFieldController),
       ),
+      drawer: SideMenu(),
       body: Container(),
       bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
     );

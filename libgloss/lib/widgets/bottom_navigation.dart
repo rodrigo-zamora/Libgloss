@@ -10,7 +10,7 @@ import 'package:libgloss/screens/user_options.dart';
 import '../config/routes.dart';
 
 class BottomNavigation extends StatelessWidget {
-  var selectedItem;
+  final selectedItem;
 
   BottomNavigation({
     Key? key,

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:libgloss/widgets/side_menu.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({
@@ -14,9 +16,12 @@ class SearchAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode)
+      print("[SearchAppBar] Building SearchAppBar with color $_appBarColor");
     return AppBar(
       backgroundColor: _appBarColor,
       toolbarHeight: 80,
+      automaticallyImplyLeading: false,
       flexibleSpace: SafeArea(
         child: Column(
           children: [
@@ -26,7 +31,9 @@ class SearchAppBar extends StatelessWidget {
                   children: [
                     IconButton(
                       icon: Icon(Icons.menu),
-                      onPressed: () {},
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
                     ),
                   ],
                 ),
