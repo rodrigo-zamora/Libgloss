@@ -1,37 +1,50 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/screens/features/book_tracker.dart';
+import 'package:libgloss/screens/home/home.dart';
+import 'package:libgloss/screens/used_book_seller.dart';
+import 'package:libgloss/screens/user_options.dart';
+
+import '../config/routes.dart';
 
 class BottomNavigation extends StatelessWidget {
-  static final int HOME = 0;
-  static final int SEARCH = 1;
-  static final int BOOK_TRACKER = 2;
-  static final int USER_OPTIONS = 3;
-
-  var selectedItem = 0;
+  var selectedItem;
 
   BottomNavigation({
-    selectedItem,
     Key? key,
-  }) : super(key: key);
+    required String selectedItem,
+  })  : selectedItem = selectedItem,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode)
+      print(
+          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $selectedItem");
+
+    var _routes = {
+      LibglossRoutes.HOME: 0,
+      LibglossRoutes.USED_BOOK_SELLER: 1,
+      LibglossRoutes.BOOK_TRACKER: 2,
+      LibglossRoutes.OPTIONS: 3,
+    };
+
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: FaIcon(FontAwesomeIcons.bookOpen),
+          icon: FaIcon(FontAwesomeIcons.book),
           label: 'Nuevos',
-          //backgroundColor: Color.fromRGBO(16, 112, 130, 1)
+          //backgroundColor: Color.fromRGBO(16, 112, 130, 1),
         ),
         BottomNavigationBarItem(
-          icon: FaIcon(FontAwesomeIcons.userGroup), //Icon(Icons.group_sharp),
+          icon: FaIcon(FontAwesomeIcons.userGroup),
           label: 'Usados',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.bookmarks_sharp),// FaIcon(FontAwesomeIcons.solidBookmark),
+          icon: FaIcon(FontAwesomeIcons.solidBookmark),
           label: 'Seguimiento',
         ),
         BottomNavigationBarItem(
@@ -39,25 +52,56 @@ class BottomNavigation extends StatelessWidget {
           label: 'Opciones',
         ),
       ],
-      currentIndex: selectedItem,
-      selectedItemColor: Color.fromRGBO(16, 112, 130, 1),
+      currentIndex: _routes[selectedItem]!,
+      selectedItemColor: Colors.black,
       onTap: (index) {
         switch (index) {
           case 0:
-            Navigator.of(context)
-              .pushReplacementNamed(LibglossRoutes.HOME);
+            if (kDebugMode) print('[BottomNavigation] Redirecting to Home');
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => Home(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
             break;
           case 1:
-            Navigator.of(context)
-              .pushReplacementNamed(LibglossRoutes.USED_BOOK_SELLER);
+            if (kDebugMode) print('[BottomNavigation] Redirecting to Search');
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) =>
+                    UsedBookSeller(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
             break;
           case 2:
-            Navigator.of(context)
-              .pushReplacementNamed(LibglossRoutes.BOOK_TRACKER);
+            if (kDebugMode)
+              print('[BottomNavigation] Redirecting to BookTracker');
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => BookTracker(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
             break;
           case 3:
-            Navigator.of(context)
-              .pushReplacementNamed(LibglossRoutes.OPTIONS);
+            if (kDebugMode)
+              print('[BottomNavigation] Redirecting to UserOptions');
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => UserOptions(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
             break;
         }
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:libgloss/config/routes.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
@@ -7,6 +8,8 @@ import '../../widgets/search_appbar.dart';
 class UserOptions extends StatelessWidget {
   final Color _appBarColor = Color.fromRGBO(199, 246, 255, 1);
   final TextEditingController _textFieldController = TextEditingController();
+
+  UserOptions({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class UserOptions extends StatelessWidget {
       ),
       body: Container(),
       bottomNavigationBar:
-          BottomNavigation(selectedItem: BottomNavigation.USER_OPTIONS),
+          BottomNavigation(selectedItem: LibglossRoutes.OPTIONS),
     );
   }
 }

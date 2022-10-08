@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:libgloss/config/routes.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
@@ -30,8 +31,7 @@ class _MainPageState extends State<Home> {
             textFieldController: _textFieldController),
       ),
       body: Container(),
-      bottomNavigationBar:
-          BottomNavigation(selectedItem: BottomNavigation.HOME),
+      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
     );
   }
 }
