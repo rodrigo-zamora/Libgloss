@@ -98,7 +98,8 @@ class _MainPageState extends State<Home> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
-                          //Navigator.pushNamed(context, "/newBookDetails");
+                          Navigator.pushNamed(context, LibglossRoutes.NEW_BOOK_DETAILS,
+                              arguments: _listElements[index]);
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),

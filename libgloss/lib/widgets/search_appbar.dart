@@ -40,9 +40,11 @@ class SearchAppBar extends StatelessWidget {
                     },
                   ),
                 if (!_showMenuButton)
-                  SizedBox(
-                    height: 48,
-                    width: 48,
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
