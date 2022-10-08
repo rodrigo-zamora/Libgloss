@@ -20,8 +20,11 @@ class UsedBookSeller extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            appBarColor: _appBarColor,
-            textFieldController: _textFieldController),
+          appBarColor: _appBarColor,
+          textFieldController: _textFieldController,
+          showMenuButton: false,
+          showCameraButton: false,
+        ),
       ),
       body: Container(),
       bottomNavigationBar:

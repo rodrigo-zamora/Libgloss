@@ -48,7 +48,8 @@ class _MainPageState extends State<Home> {
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image": "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "image":
+          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
     },
   ];
 
@@ -62,7 +63,9 @@ class _MainPageState extends State<Home> {
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
             appBarColor: _appBarColor,
-            textFieldController: _textFieldController),
+            textFieldController: _textFieldController,
+            showMenuButton: true,
+            showCameraButton: true),
       ),
       drawer: SideMenu(),
       body: _found(context),
@@ -84,7 +87,7 @@ class _MainPageState extends State<Home> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 18,
                 childAspectRatio: MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.height / 1.5),
+                    (MediaQuery.of(context).size.height / 1.5),
               ),
               itemCount: _listElements.length,
               itemBuilder: (BuildContext context, int index) {
@@ -100,32 +103,34 @@ class _MainPageState extends State<Home> {
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: Image.network(
-                            "${_listElements[index]["image"]}", 
+                            "${_listElements[index]["image"]}",
                             fit: BoxFit.fill,
                           ),
                         ),
                       ),
-                      SizedBox(height: 8,),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Text(
                         "${_listElements[index]["title"]}",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         maxLines: 2,
-                        style: 
-                          TextStyle(
-                            fontSize: 14,
-                          ),
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
                       ),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Text(
                         "${_listElements[index]["author"]}",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: 
-                          TextStyle(
-                            color: Color.fromRGBO(16, 112, 130, 1),
-                            fontSize: 12,
-                          ),
+                        style: TextStyle(
+                          color: Color.fromRGBO(16, 112, 130, 1),
+                          fontSize: 12,
+                        ),
                       )
                     ],
                   ),

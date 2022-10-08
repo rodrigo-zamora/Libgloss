@@ -1,18 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:libgloss/widgets/side_menu.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({
     Key? key,
     required Color appBarColor,
     required TextEditingController textFieldController,
+    required bool showMenuButton,
+    required bool showCameraButton,
   })  : _appBarColor = appBarColor,
         _textFieldController = textFieldController,
+        _showMenuButton = showMenuButton,
+        _showCameraButton = showCameraButton,
         super(key: key);
 
   final Color _appBarColor;
   final TextEditingController _textFieldController;
+  final bool _showMenuButton;
+  final bool _showCameraButton;
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +32,18 @@ class SearchAppBar extends StatelessWidget {
           children: [
             Row(
               children: [
-                Column(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.menu),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  ],
-                ),
+                if (_showMenuButton)
+                  IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
+                if (!_showMenuButton)
+                  SizedBox(
+                    height: 48,
+                    width: 48,
+                  ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -49,6 +56,8 @@ class SearchAppBar extends StatelessWidget {
                         controller: _textFieldController,
                         decoration: InputDecoration(
                           hintText: "Buscar en Libgloss",
+                          suffixIcon:
+                              _showCameraButton ? Icon(Icons.camera_alt) : null,
                           hintStyle: TextStyle(
                             fontSize: 15,
                           ),
