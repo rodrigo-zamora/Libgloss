@@ -22,39 +22,42 @@ class BottomNavigation extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: FaIcon(FontAwesomeIcons.book),
-          label: 'Inicio',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people),
-          label: 'Buscar',
-        ),
-        BottomNavigationBarItem(
           icon: FaIcon(FontAwesomeIcons.bookOpen),
-          label: 'Vendedores',
+          label: 'Nuevos',
+          //backgroundColor: Color.fromRGBO(16, 112, 130, 1)
         ),
         BottomNavigationBarItem(
-          icon: FaIcon(FontAwesomeIcons.user),
+          icon: FaIcon(FontAwesomeIcons.userGroup), //Icon(Icons.group_sharp),
+          label: 'Usados',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.bookmarks_sharp),// FaIcon(FontAwesomeIcons.solidBookmark),
+          label: 'Seguimiento',
+        ),
+        BottomNavigationBarItem(
+          icon: FaIcon(FontAwesomeIcons.gear),
           label: 'Opciones',
         ),
       ],
       currentIndex: selectedItem,
-      selectedItemColor: Colors.black,
+      selectedItemColor: Color.fromRGBO(16, 112, 130, 1),
       onTap: (index) {
         switch (index) {
           case 0:
-            Navigator.of(context).pushReplacementNamed(LibglossRoutes.HOME);
+            Navigator.of(context)
+              .pushReplacementNamed(LibglossRoutes.HOME);
             break;
           case 1:
             Navigator.of(context)
-                .pushReplacementNamed(LibglossRoutes.USED_BOOK_SELLER);
+              .pushReplacementNamed(LibglossRoutes.USED_BOOK_SELLER);
             break;
           case 2:
             Navigator.of(context)
-                .pushReplacementNamed(LibglossRoutes.BOOK_TRACKER);
+              .pushReplacementNamed(LibglossRoutes.BOOK_TRACKER);
             break;
           case 3:
-            Navigator.of(context).pushReplacementNamed(LibglossRoutes.OPTIONS);
+            Navigator.of(context)
+              .pushReplacementNamed(LibglossRoutes.OPTIONS);
             break;
         }
       },
