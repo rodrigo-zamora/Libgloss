@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:libgloss/config/routes.dart';
 
-import 'views/configuraciones.dart';
-import 'views/detalles_nuevos.dart';
-import 'views/detalles_usados.dart';
-import 'views/main_page.dart';
-import 'views/seguimientos.dart';
-import 'views/vendedor_usados.dart';
+import 'screens/user_options.dart';
+import 'screens/book_search/new_book_details.dart';
+import 'screens/book_search/used_book_details.dart';
+import 'screens/home/home.dart';
+import 'screens/features/book_tracker.dart';
+import 'screens/used_book_seller.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,28 +16,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true, //<-- SEE HERE
-          fillColor: Colors.white, //<-- SEE HERE
-        ),
-      ),
-      home: MainPage(
-      ),
-      routes: {
-        "/main_pafe": (context) => MainPage(
-        ),
-        "/detalles_nuevos": (context) => DetallesNuevos(
-        ),
-        "/detalles_usados": (context) => DetallesUsados(
-        ),
-        "/vendedor_usados": (context) => VendedorUsados(
-        ),
-        "/seguimientos": (context) => Seguimientos(
-        ),
-        "/configuraciones": (context) => Configuraciones(
-        )
-      },
+      home: Home(),
+      routes: _registerRoutes(),
     );
+  }
+
+  Map<String, WidgetBuilder> _registerRoutes() {
+    return {
+      LibglossRoutes.HOME: (context) => Home(),
+      LibglossRoutes.OPTIONS: (context) => UserOptions(),
+      LibglossRoutes.NEW_BOOK_DETAILS: (context) => NewBookDetails(),
+      LibglossRoutes.USED_BOOK_DETAILS: (context) => UsedBookDetails(),
+      LibglossRoutes.USED_BOOK_SELLER: (context) => UsedBookSeller(),
+      LibglossRoutes.BOOK_TRACKER: (context) => BookTracker(),
+    };
   }
 }

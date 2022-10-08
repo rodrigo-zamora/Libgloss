@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Seguimientos extends StatelessWidget {
-  const Seguimientos({
+class BookTracker extends StatelessWidget {
+  const BookTracker({
     Key? key,
   }) : super(key: key);
 

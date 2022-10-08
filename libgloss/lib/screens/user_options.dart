@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DetallesUsados extends StatelessWidget {
-  const DetallesUsados({
+class UserOptions extends StatelessWidget {
+  const UserOptions({
     Key? key,
   }) : super(key: key);
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DetallesNuevos extends StatelessWidget {
-  const DetallesNuevos({
+class NewBookDetails extends StatelessWidget {
+  const NewBookDetails({
     Key? key,
   }) : super(key: key);
 

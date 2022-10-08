@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Configuraciones extends StatelessWidget {
-  const Configuraciones({
+class UsedBookSeller extends StatelessWidget {
+  const UsedBookSeller({
     Key? key,
   }) : super(key: key);
 
