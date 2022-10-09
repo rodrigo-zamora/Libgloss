@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
@@ -16,7 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _MainPageState extends State<Home> {
-  Color _appBarColor = Color.fromRGBO(199, 246, 255, 1);
+  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
+  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
   TextEditingController _textFieldController = TextEditingController();
 
   final List<Map<String, String>> _listElements = [
@@ -55,19 +55,19 @@ class _MainPageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: _appBarColor,
-    ));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            appBarColor: _appBarColor,
+            primaryColor: _primaryColor,
+            secondaryColor: _secondaryColor,
             textFieldController: _textFieldController,
             showMenuButton: true,
             showCameraButton: true),
       ),
-      drawer: SideMenu(),
+      drawer: SideMenu(
+        sideMenuColor: _primaryColor,
+      ),
       body: _found(context),
       bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
     );
@@ -98,7 +98,8 @@ class _MainPageState extends State<Home> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
-                          Navigator.pushNamed(context, LibglossRoutes.NEW_BOOK_DETAILS,
+                          Navigator.pushNamed(
+                              context, LibglossRoutes.NEW_BOOK_DETAILS,
                               arguments: _listElements[index]);
                         },
                         child: Container(

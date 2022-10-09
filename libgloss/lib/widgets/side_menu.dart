@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class SideMenu extends StatelessWidget {
+  const SideMenu({
+    Key? key,
+    required Color sideMenuColor,
+  })  : _sideMenuColor = sideMenuColor,
+        super(key: key);
+
+  final Color _sideMenuColor;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,6 +18,7 @@ class SideMenu extends StatelessWidget {
           children: [
             Column(
               children: [
+                _buildDrawerHeader(),
                 _buildCategoryList(
                   "Género",
                   [
@@ -100,6 +109,37 @@ class SideMenu extends StatelessWidget {
       onTap: () {
         // TODO: Implement navigation to the selected item
       },
+    );
+  }
+
+  Widget _buildDrawerHeader() {
+    return Container(
+      width: 200,
+      color: _sideMenuColor,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Image.asset(
+                'assets/onlybunny.png',
+                width: 50,
+                height: 50,
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Libgloss",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
@@ -16,24 +15,24 @@ class NewBookDetails extends StatefulWidget {
 }
 
 class _NewBookDetailsState extends State<NewBookDetails> {
-  Color _appBarColor = Color.fromRGBO(199, 246, 255, 1);
+  Color _mainColor = Color.fromRGBO(199, 246, 255, 1);
 
   TextEditingController _textFieldController = TextEditingController();
 
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: _appBarColor,
-    ));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            appBarColor: _appBarColor,
+            primaryColor: _mainColor,
+            secondaryColor: _mainColor,
             textFieldController: _textFieldController,
             showMenuButton: false,
             showCameraButton: false),
       ),
-      drawer: SideMenu(),
+      drawer: SideMenu(
+        sideMenuColor: _mainColor,
+      ),
       body: Container(),
       bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
     );

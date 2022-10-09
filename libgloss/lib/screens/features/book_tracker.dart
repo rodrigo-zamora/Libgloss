@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:libgloss/config/routes.dart';
 
 import '../../widgets/bottom_navigation.dart';
@@ -13,14 +12,12 @@ class BookTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: _appBarColor,
-    ));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-          appBarColor: _appBarColor,
+          primaryColor: _appBarColor,
+          secondaryColor: _appBarColor,
           textFieldController: _textFieldController,
           showMenuButton: true,
           showCameraButton: false,

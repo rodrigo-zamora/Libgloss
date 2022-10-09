@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:libgloss/config/routes.dart';
 
 import 'screens/user_options.dart';
@@ -8,14 +9,20 @@ import 'screens/home/home.dart';
 import 'screens/features/book_tracker.dart';
 import 'screens/used_book_seller.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.red,
+  ));
+  runApp(Libgloss());
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Libgloss extends StatelessWidget {
+  const Libgloss({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Home(),
       routes: _registerRoutes(),
     );

@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({
     Key? key,
-    required Color appBarColor,
+    required Color primaryColor,
+    required Color secondaryColor,
     required TextEditingController textFieldController,
     required bool showMenuButton,
     required bool showCameraButton,
-  })  : _appBarColor = appBarColor,
+  })  : _primaryColor = primaryColor,
+        _secondaryColor = secondaryColor,
         _textFieldController = textFieldController,
         _showMenuButton = showMenuButton,
         _showCameraButton = showCameraButton,
         super(key: key);
 
-  final Color _appBarColor;
+  final Color _primaryColor;
+  final Color _secondaryColor;
   final TextEditingController _textFieldController;
   final bool _showMenuButton;
   final bool _showCameraButton;
@@ -22,9 +25,9 @@ class SearchAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kDebugMode)
-      print("[SearchAppBar] Building SearchAppBar with color $_appBarColor");
+      print("[SearchAppBar] Building SearchAppBar with color $_primaryColor");
     return AppBar(
-      backgroundColor: _appBarColor,
+      backgroundColor: _primaryColor,
       toolbarHeight: 80,
       automaticallyImplyLeading: false,
       flexibleSpace: SafeArea(
@@ -58,8 +61,12 @@ class SearchAppBar extends StatelessWidget {
                         controller: _textFieldController,
                         decoration: InputDecoration(
                           hintText: "Buscar en Libgloss",
-                          suffixIcon:
-                              _showCameraButton ? Icon(Icons.camera_alt) : null,
+                          suffixIcon: _showCameraButton
+                              ? GestureDetector(
+                                  child: Icon(Icons.camera_alt),
+                                  onTap: () => print("Camera button pressed"),
+                                )
+                              : null,
                           hintStyle: TextStyle(
                             fontSize: 15,
                           ),
@@ -87,7 +94,7 @@ class SearchAppBar extends StatelessWidget {
                       height: 32,
                       width: MediaQuery.of(context).size.width,
                       alignment: Alignment.topLeft,
-                      color: Color.fromRGBO(124, 196, 209, 1),
+                      color: _secondaryColor,
                       child: Container(
                         margin: EdgeInsets.only(left: 12),
                         child: Image.asset(
