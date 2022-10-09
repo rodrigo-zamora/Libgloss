@@ -5,8 +5,8 @@ import '../../../widgets/bottom_navigation.dart';
 import '../../../widgets/search_appbar.dart';
 
 class UserOptions extends StatelessWidget {
-  final Color _primaryColor = Color.fromRGBO(255, 248, 189, 1);
-  final Color _secondaryColor = Color.fromRGBO(245, 223, 22, 1);
+  final Color _primaryColor = Color.fromRGBO(248, 187, 176, 1);
+  final Color _secondaryColor = Color.fromRGBO(245, 128, 107, 1);
   
   final TextEditingController _textFieldController = TextEditingController();
 
