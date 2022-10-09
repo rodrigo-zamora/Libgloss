@@ -65,7 +65,7 @@ class _HomeUsedState extends State<HomeUsed> {
             secondaryColor: _secondaryColor,
             textFieldController: _textFieldController,
             showMenuButton: true,
-            showCameraButton: true),
+            showCameraButton: false),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
@@ -101,7 +101,7 @@ class _HomeUsedState extends State<HomeUsed> {
                         onTap: () {
                           print(_listElements[index]["title"]);
                           Navigator.pushNamed(
-                              context, LibglossRoutes.NEW_BOOK_DETAILS,
+                              context, LibglossRoutes.USED_BOOK_DETAILS,
                               arguments: _listElements[index]);
                         },
                         child: Container(

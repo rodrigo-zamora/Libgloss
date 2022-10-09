@@ -14,8 +14,8 @@ class UsedBookDetails extends StatefulWidget {
 }
 
 class _UsedBookDetailsState extends State<UsedBookDetails> {
-  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
+  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
+  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
 
   TextEditingController _textFieldController = TextEditingController();
 
