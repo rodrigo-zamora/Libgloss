@@ -21,7 +21,7 @@ class _HomeUsedState extends State<HomeUsed> {
   final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
   final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
-  
+
   TextEditingController _textFieldController = TextEditingController();
 
   final List<Map<String, String>> _listElements = [
@@ -34,31 +34,36 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "Bajo la Misma Estrella",
       "author": "John Green",
-      "image": "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
+      "image":
+          "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
       "vendedor": "Lupita Gómez",
     },
     {
       "title": "El niño de la pijama de rayas",
       "author": "John Boyne",
-      "image": "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
+      "image":
+          "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
       "vendedor": "Julian Vico",
     },
     {
       "title": "El Principito",
       "author": "Antoine de Saint-Exupéry",
-      "image": "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
+      "image":
+          "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
       "vendedor": "Maria Lucia Perera",
     },
     {
       "title": "1984",
       "author": "George Orwell",
-      "image": "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
+      "image":
+          "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
       "vendedor": "Roman Dominguez",
     },
     {
       "title": "El señor de las moscas",
       "author": "William Golding",
-      "image": "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
+      "image":
+          "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
       "vendedor": "Maria Asuncion Perez",
     },
   ];
@@ -155,7 +160,7 @@ class _HomeUsedState extends State<HomeUsed> {
                         height: 5,
                       ),
                       Text(
-                        "vendido por",
+                        "Vendido por",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(

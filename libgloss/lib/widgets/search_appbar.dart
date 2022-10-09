@@ -68,7 +68,10 @@ class SearchAppBar extends StatelessWidget {
                           hintText: "Buscar en Libgloss",
                           suffixIcon: _showCameraButton
                               ? GestureDetector(
-                                  child: Icon(Icons.camera_alt),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Color.fromARGB(255, 53, 53, 53),
+                                  ),
                                   onTap: () => print("Camera button pressed"),
                                 )
                               : null,

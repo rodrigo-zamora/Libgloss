@@ -9,7 +9,7 @@ class BookTracker extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(244, 210, 255, 1);
   final Color _secondaryColor = Color.fromRGBO(215, 132, 243, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-  
+
   final TextEditingController _textFieldController = TextEditingController();
 
   BookTracker({super.key});
@@ -55,7 +55,8 @@ class BookTracker extends StatelessWidget {
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image": "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "image":
+          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
     },
   ];
 
@@ -104,7 +105,8 @@ class BookTracker extends StatelessWidget {
               children: [
                 Container(
                   color: _primaryColor,
-                  width: 150,
+                  width: 250,
+                  height: 150,
                   child: Text('Seguimiento 1'),
                 ),
                 Container(
