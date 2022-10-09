@@ -1,13 +1,59 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class SideMenu extends StatelessWidget {
-  const SideMenu({
+class SideMenu extends StatefulWidget {
+  SideMenu({
     Key? key,
     required Color sideMenuColor,
   })  : _sideMenuColor = sideMenuColor,
         super(key: key);
 
   final Color _sideMenuColor;
+
+  @override
+  State<SideMenu> createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  var mockedData = {
+    "Género": {
+      "isExpanded": true,
+      "items": [
+        "Acción",
+        "Aventura",
+        "Ciencia Ficción",
+        "Fantasía",
+        "Misterio",
+        "Romance",
+        "Terror",
+        "Thriller",
+        "Otros"
+      ],
+    },
+    "Autor": {
+      "isExpanded": true,
+      "items": [
+        "Agatha Christie",
+        "J.K. Rowling",
+        "J.R.R. Tolkien",
+        "Gabriel García Márquez",
+        "Suzanne Collins",
+        "Gillian Flynn",
+        "Otros"
+      ],
+    },
+    "Rango de precios": {
+      "isExpanded": true,
+      "items": [
+        "Menos de \$100",
+        "Entre \$100 y \$200",
+        "Entre \$200 y \$300",
+        "Entre \$300 y \$400",
+        "Entre \$400 y \$500",
+        "Más de \$500",
+      ],
+    },
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -19,49 +65,27 @@ class SideMenu extends StatelessWidget {
             Column(
               children: [
                 _buildDrawerHeader(),
-                _buildCategoryList(
-                  "Género",
-                  [
-                    "Acción",
-                    "Aventura",
-                    "Ciencia Ficción",
-                    "Fantasía",
-                    "Historia",
-                    "Misterio",
-                    "Romance",
-                    "Terror",
-                  ],
-                ),
-                _buildCategoryList(
-                  "Autor",
-                  [
-                    "Agatha Christie",
-                    "Aldous Huxley",
-                    "Edgar Allan Poe",
-                    "George Orwell",
-                    "J. R. R. Tolkien",
-                    "J. K. Rowling",
-                    "J. D. Salinger",
-                    "Jane Austen",
-                  ],
-                ),
-                _buildCategoryList(
-                  "Rango de precios",
-                  [
-                    "Menos de \$100",
-                    "Entre \$100 y \$200",
-                    "Entre \$200 y \$300",
-                    "Entre \$300 y \$400",
-                    "Entre \$400 y \$500",
-                    "Más de \$500",
-                  ],
-                )
+                _buildDrawerBody(),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildDrawerBody() {
+    for (var i = 0; i < mockedData.length; i++) {
+      return Column(
+        children: [
+          ...mockedData.entries
+              .map((e) => _buildCategoryList(
+                  e.key, e.value.values.last as List<String>))
+              .toList(),
+        ],
+      );
+    }
+    return Container();
   }
 
   Widget _buildCategoryList(String categoryName, List<String> categoryItems) {
@@ -80,15 +104,21 @@ class SideMenu extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          trailing: IconButton(
-            icon: Icon(Icons.expand_more),
-            onPressed: () {},
-          ),
+          trailing: Icon(Icons.expand_more),
           onTap: () {
-            // TODO: Implement expand/collapse functionality
+            bool currentStatus =
+                mockedData[categoryName]!["isExpanded"] as bool;
+            if (kDebugMode)
+              print("[SideMenu] Changing category state from " +
+                  currentStatus.toString() +
+                  " to " +
+                  (!currentStatus).toString());
+            mockedData[categoryName]!["isExpanded"] = !currentStatus;
+            setState(() {});
           },
         ),
-        for (var item in categoryItems) _buildCategoryItem(item),
+        if (mockedData[categoryName]!["isExpanded"] as bool)
+          ...categoryItems.map((e) => _buildCategoryItem(e)).toList(),
       ],
     );
   }
@@ -115,7 +145,7 @@ class SideMenu extends StatelessWidget {
   Widget _buildDrawerHeader() {
     return Container(
       width: 200,
-      color: _sideMenuColor,
+      color: widget._sideMenuColor,
       child: Column(
         children: [
           Row(
