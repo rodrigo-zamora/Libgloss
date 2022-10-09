@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:libgloss/config/routes.dart';
 
 import 'screens/user_options.dart';
@@ -10,9 +9,6 @@ import 'screens/features/book_tracker.dart';
 import 'screens/used_book_seller.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.red,
-  ));
   runApp(Libgloss());
 }
 

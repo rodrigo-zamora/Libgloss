@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({
@@ -30,6 +31,10 @@ class SearchAppBar extends StatelessWidget {
       backgroundColor: _primaryColor,
       toolbarHeight: 80,
       automaticallyImplyLeading: false,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: _primaryColor,
+        statusBarIconBrightness: Brightness.dark,
+      ),
       flexibleSpace: SafeArea(
         child: Column(
           children: [

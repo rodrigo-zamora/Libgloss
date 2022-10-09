@@ -5,6 +5,8 @@ import 'package:libgloss/widgets/side_menu.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
 class Home extends StatefulWidget {
   Home({
     Key? key,
@@ -104,9 +106,15 @@ class _MainPageState extends State<Home> {
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
-                          child: Image.network(
-                            "${_listElements[index]["image"]}",
-                            fit: BoxFit.fill,
+                          child: CachedNetworkImage(
+                            imageUrl: "${_listElements[index]["image"]}",
+                            placeholder: (context, url) => Center(
+                              child: CircularProgressIndicator(
+                                color: _secondaryColor,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                         ),
                       ),
