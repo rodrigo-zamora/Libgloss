@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 
-import '../../widgets/bottom_navigation.dart';
-import '../../widgets/search_appbar.dart';
+import '../../../widgets/bottom_navigation.dart';
+import '../../../widgets/search_appbar.dart';
 
 class UsedBookSeller extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
   final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
-
+  
   final TextEditingController _textFieldController = TextEditingController();
 
   UsedBookSeller({super.key});

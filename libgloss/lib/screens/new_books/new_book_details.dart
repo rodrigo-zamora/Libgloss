@@ -15,8 +15,9 @@ class NewBookDetails extends StatefulWidget {
 }
 
 class _NewBookDetailsState extends State<NewBookDetails> {
-  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
+  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
+  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
+  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
 
   TextEditingController _textFieldController = TextEditingController();
 

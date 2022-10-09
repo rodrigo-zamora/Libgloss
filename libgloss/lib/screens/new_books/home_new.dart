@@ -7,18 +7,20 @@ import '../../widgets/search_appbar.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HomeUsed extends StatefulWidget {
-  HomeUsed({
+class HomeNew extends StatefulWidget {
+  HomeNew({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<HomeUsed> createState() => _HomeUsedState();
+  State<HomeNew> createState() => _HomeNewState();
 }
 
-class _HomeUsedState extends State<HomeUsed> {
-  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
-  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
+class _HomeNewState extends State<HomeNew> {
+  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
+  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
+  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  
   TextEditingController _textFieldController = TextEditingController();
 
   final List<Map<String, String>> _listElements = [
@@ -50,8 +52,7 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "image": "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
     },
   ];
 
@@ -65,14 +66,14 @@ class _HomeUsedState extends State<HomeUsed> {
             secondaryColor: _secondaryColor,
             textFieldController: _textFieldController,
             showMenuButton: true,
-            showCameraButton: false),
+            showCameraButton: true),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
       body: _found(context),
       bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
+          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
     );
   }
 
@@ -102,7 +103,7 @@ class _HomeUsedState extends State<HomeUsed> {
                         onTap: () {
                           print(_listElements[index]["title"]);
                           Navigator.pushNamed(
-                              context, LibglossRoutes.USED_BOOK_DETAILS,
+                              context, LibglossRoutes.NEW_BOOK_DETAILS,
                               arguments: _listElements[index]);
                         },
                         child: Container(
@@ -139,7 +140,7 @@ class _HomeUsedState extends State<HomeUsed> {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color.fromRGBO(16, 112, 130, 1),
+                          color: _blueColor,
                           fontSize: 12,
                         ),
                       )

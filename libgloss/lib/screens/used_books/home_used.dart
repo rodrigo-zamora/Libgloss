@@ -7,51 +7,59 @@ import '../../widgets/search_appbar.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HomeNew extends StatefulWidget {
-  HomeNew({
+class HomeUsed extends StatefulWidget {
+  HomeUsed({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<HomeNew> createState() => _HomeNewState();
+  State<HomeUsed> createState() => _HomeUsedState();
 }
 
-class _HomeNewState extends State<HomeNew> {
-  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
+class _HomeUsedState extends State<HomeUsed> {
+  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
+  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
+  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
+  
   TextEditingController _textFieldController = TextEditingController();
 
   final List<Map<String, String>> _listElements = [
     {
-      "title": "And Then There Were None",
-      "author": "Agatha Christie",
-      "image": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
+      "title": "Maze Runner",
+      "author": "James Dashner",
+      "image": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
+      "vendedor": "Ernesto Contreras",
     },
     {
-      "title": "Gone Girl",
-      "author": "Gillian Flynn",
-      "image": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
+      "title": "Bajo la Misma Estrella",
+      "author": "John Green",
+      "image": "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
+      "vendedor": "Lupita Gómez",
     },
     {
-      "title": "Harry Potter and the Deahtly Hallows",
-      "author": "J.K. Rowling",
-      "image": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
+      "title": "El niño de la pijama de rayas",
+      "author": "John Boyne",
+      "image": "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
+      "vendedor": "Julian Vico",
     },
     {
-      "title": "Cien años de soledad",
-      "author": "Gabriel García Márquez",
-      "image": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
+      "title": "El Principito",
+      "author": "Antoine de Saint-Exupéry",
+      "image": "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
+      "vendedor": "Maria Lucia Perera",
     },
     {
-      "title": "The Hunger Games",
-      "author": "Suzanne Collins",
-      "image": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
+      "title": "1984",
+      "author": "George Orwell",
+      "image": "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
+      "vendedor": "Roman Dominguez",
     },
     {
-      "title": "The Lord of the Rings",
-      "author": "J.R.R. Tolkien",
-      "image":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "title": "El señor de las moscas",
+      "author": "William Golding",
+      "image": "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
+      "vendedor": "Maria Asuncion Perez",
     },
   ];
 
@@ -65,14 +73,14 @@ class _HomeNewState extends State<HomeNew> {
             secondaryColor: _secondaryColor,
             textFieldController: _textFieldController,
             showMenuButton: true,
-            showCameraButton: true),
+            showCameraButton: false),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
       body: _found(context),
       bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
+          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 
@@ -102,11 +110,11 @@ class _HomeNewState extends State<HomeNew> {
                         onTap: () {
                           print(_listElements[index]["title"]);
                           Navigator.pushNamed(
-                              context, LibglossRoutes.NEW_BOOK_DETAILS,
+                              context, LibglossRoutes.USED_BOOK_DETAILS,
                               arguments: _listElements[index]);
                         },
                         child: Container(
-                          height: (MediaQuery.of(context).size.height / 4.7),
+                          height: (MediaQuery.of(context).size.height / 5.2),
                           child: CachedNetworkImage(
                             imageUrl: "${_listElements[index]["image"]}",
                             placeholder: (context, url) => Center(
@@ -126,7 +134,7 @@ class _HomeNewState extends State<HomeNew> {
                         "${_listElements[index]["title"]}",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        maxLines: 2,
+                        //maxLines: 2,
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -139,7 +147,27 @@ class _HomeNewState extends State<HomeNew> {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color.fromRGBO(16, 112, 130, 1),
+                          color: _blueColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "vendido por",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        "${_listElements[index]["vendedor"]}",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: _greenColor,
                           fontSize: 12,
                         ),
                       )

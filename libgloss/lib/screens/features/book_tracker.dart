@@ -8,6 +8,8 @@ import '../../widgets/side_menu.dart';
 class BookTracker extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(244, 210, 255, 1);
   final Color _secondaryColor = Color.fromRGBO(192, 85, 229, 1);
+  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  
   final TextEditingController _textFieldController = TextEditingController();
 
   BookTracker({super.key});

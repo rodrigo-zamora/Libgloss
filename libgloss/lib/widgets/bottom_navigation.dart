@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/screens/features/book_tracker.dart';
-import 'package:libgloss/screens/home/home_new.dart';
-import 'package:libgloss/screens/user_options.dart';
+import 'package:libgloss/screens/new_books/home_new.dart';
+import 'package:libgloss/screens/user/user_options.dart';
 
 import '../config/routes.dart';
-import '../screens/home/home_used.dart';
+import '../screens/used_books/home_used.dart';
 
 class BottomNavigation extends StatelessWidget {
   final _selectedItem;
