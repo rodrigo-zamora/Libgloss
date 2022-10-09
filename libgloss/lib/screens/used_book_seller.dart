@@ -5,7 +5,9 @@ import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
 
 class UsedBookSeller extends StatelessWidget {
-  final Color _appBarColor = Color.fromRGBO(199, 246, 255, 1);
+  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
+  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
+  
   final TextEditingController _textFieldController = TextEditingController();
 
   UsedBookSeller({super.key});
@@ -16,8 +18,8 @@ class UsedBookSeller extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-          primaryColor: _appBarColor,
-          secondaryColor: _appBarColor,
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
           textFieldController: _textFieldController,
           showMenuButton: false,
           showCameraButton: false,

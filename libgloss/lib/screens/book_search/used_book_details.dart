@@ -1,19 +1,40 @@
 import 'package:flutter/material.dart';
 
-class UsedBookDetails extends StatelessWidget {
+import '../../config/routes.dart';
+import '../../widgets/bottom_navigation.dart';
+import '../../widgets/search_appbar.dart';
+import '../../widgets/side_menu.dart';
+class UsedBookDetails extends StatefulWidget {
   const UsedBookDetails({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<UsedBookDetails> createState() => _UsedBookDetailsState();
+}
+
+class _UsedBookDetailsState extends State<UsedBookDetails> {
+  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
+  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
+
+  TextEditingController _textFieldController = TextEditingController();
+
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Material App Bar'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SearchAppBar(
+            primaryColor: _primaryColor,
+            secondaryColor: _secondaryColor,
+            textFieldController: _textFieldController,
+            showMenuButton: false,
+            showCameraButton: false),
       ),
-      body: const Center(
-        child: Text('Hello World'),
+      drawer: SideMenu(
+        sideMenuColor: _primaryColor,
       ),
+      body: Container(),
+      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
     );
   }
 }

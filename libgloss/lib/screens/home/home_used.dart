@@ -7,18 +7,18 @@ import '../../widgets/search_appbar.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-class Home extends StatefulWidget {
-  Home({
+class HomeUsed extends StatefulWidget {
+  HomeUsed({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Home> createState() => _MainPageState();
+  State<HomeUsed> createState() => _HomeUsedState();
 }
 
-class _MainPageState extends State<Home> {
-  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
+class _HomeUsedState extends State<HomeUsed> {
+  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
+  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
   TextEditingController _textFieldController = TextEditingController();
 
   final List<Map<String, String>> _listElements = [
@@ -71,7 +71,7 @@ class _MainPageState extends State<Home> {
         sideMenuColor: _primaryColor,
       ),
       body: _found(context),
-      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
+      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME_USED),
     );
   }
 

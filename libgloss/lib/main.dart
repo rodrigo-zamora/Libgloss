@@ -4,9 +4,11 @@ import 'package:libgloss/config/routes.dart';
 import 'screens/user_options.dart';
 import 'screens/book_search/new_book_details.dart';
 import 'screens/book_search/used_book_details.dart';
-import 'screens/home/home.dart';
+import 'screens/home/home_new.dart';
 import 'screens/features/book_tracker.dart';
 import 'screens/used_book_seller.dart';
+import 'screens/home/home_used.dart';
+
 
 void main() {
   runApp(Libgloss());
@@ -19,14 +21,15 @@ class Libgloss extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: HomeNew(),
       routes: _registerRoutes(),
     );
   }
 
   Map<String, WidgetBuilder> _registerRoutes() {
     return {
-      LibglossRoutes.HOME: (context) => Home(),
+      LibglossRoutes.HOME: (context) => HomeNew(),
+      LibglossRoutes.HOME_USED: (context) => HomeUsed(),
       LibglossRoutes.OPTIONS: (context) => UserOptions(),
       LibglossRoutes.NEW_BOOK_DETAILS: (context) => NewBookDetails(),
       LibglossRoutes.USED_BOOK_DETAILS: (context) => UsedBookDetails(),

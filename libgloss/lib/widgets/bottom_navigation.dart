@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/screens/features/book_tracker.dart';
-import 'package:libgloss/screens/home/home.dart';
+import 'package:libgloss/screens/home/home_new.dart';
 import 'package:libgloss/screens/used_book_seller.dart';
 import 'package:libgloss/screens/user_options.dart';
 
 import '../config/routes.dart';
+import '../screens/home/home_used.dart';
 
 class BottomNavigation extends StatelessWidget {
   final selectedItem;
@@ -26,7 +27,7 @@ class BottomNavigation extends StatelessWidget {
 
     var _routes = {
       LibglossRoutes.HOME: 0,
-      LibglossRoutes.USED_BOOK_SELLER: 1,
+      LibglossRoutes.HOME_USED: 1,
       LibglossRoutes.BOOK_TRACKER: 2,
       LibglossRoutes.OPTIONS: 3,
     };
@@ -61,7 +62,7 @@ class BottomNavigation extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => Home(),
+                pageBuilder: (context, animation1, animation2) => HomeNew(),
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),
@@ -72,8 +73,7 @@ class BottomNavigation extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) =>
-                    UsedBookSeller(),
+                pageBuilder: (context, animation1, animation2) => HomeUsed(),
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),

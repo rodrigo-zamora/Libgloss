@@ -1,6 +1,7 @@
 class LibglossRoutes {
-  static const HOME = "/home";
-  static const OPTIONS = "/options";
+  static const HOME = "/home_new";
+  static const HOME_USED = "/home_used";
+  static const OPTIONS = "/user_options";
   static const NEW_BOOK_DETAILS = "/new_book_details";
   static const USED_BOOK_DETAILS = "/used_book_details";
   static const USED_BOOK_SELLER = "/used_book_seller";

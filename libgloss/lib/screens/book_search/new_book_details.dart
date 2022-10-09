@@ -15,7 +15,8 @@ class NewBookDetails extends StatefulWidget {
 }
 
 class _NewBookDetailsState extends State<NewBookDetails> {
-  Color _mainColor = Color.fromRGBO(199, 246, 255, 1);
+  Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
+  Color _secondaryColor = Color.fromRGBO(124, 196, 209, 1);
 
   TextEditingController _textFieldController = TextEditingController();
 
@@ -24,14 +25,14 @@ class _NewBookDetailsState extends State<NewBookDetails> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            primaryColor: _mainColor,
-            secondaryColor: _mainColor,
+            primaryColor: _primaryColor,
+            secondaryColor: _secondaryColor,
             textFieldController: _textFieldController,
             showMenuButton: false,
             showCameraButton: false),
       ),
       drawer: SideMenu(
-        sideMenuColor: _mainColor,
+        sideMenuColor: _primaryColor,
       ),
       body: Container(),
       bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
