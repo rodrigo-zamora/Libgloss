@@ -37,7 +37,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
       ),
       body: Container(),
       bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
+          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 }

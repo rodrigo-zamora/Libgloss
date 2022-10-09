@@ -27,7 +27,7 @@ class UsedBookSeller extends StatelessWidget {
       ),
       body: Container(),
       bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.USED_BOOK_SELLER,
+          selectedItem: LibglossRoutes.HOME_USED,
           iconColor: _secondaryColor),
     );
   }
