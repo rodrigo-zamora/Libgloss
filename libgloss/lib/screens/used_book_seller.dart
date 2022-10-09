@@ -7,7 +7,7 @@ import '../../widgets/search_appbar.dart';
 class UsedBookSeller extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
   final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
-  
+
   final TextEditingController _textFieldController = TextEditingController();
 
   UsedBookSeller({super.key});
@@ -26,8 +26,9 @@ class UsedBookSeller extends StatelessWidget {
         ),
       ),
       body: Container(),
-      bottomNavigationBar:
-          BottomNavigation(selectedItem: LibglossRoutes.USED_BOOK_SELLER),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.USED_BOOK_SELLER,
+          iconColor: _secondaryColor),
     );
   }
 }

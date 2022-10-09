@@ -4,6 +4,7 @@ import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
 import '../../widgets/side_menu.dart';
+
 class UsedBookDetails extends StatefulWidget {
   const UsedBookDetails({
     Key? key,
@@ -34,7 +35,8 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
         sideMenuColor: _primaryColor,
       ),
       body: Container(),
-      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
     );
   }
 }

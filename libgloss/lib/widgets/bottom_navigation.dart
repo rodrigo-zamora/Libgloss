@@ -4,26 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/screens/features/book_tracker.dart';
 import 'package:libgloss/screens/home/home_new.dart';
-import 'package:libgloss/screens/used_book_seller.dart';
 import 'package:libgloss/screens/user_options.dart';
 
 import '../config/routes.dart';
 import '../screens/home/home_used.dart';
 
 class BottomNavigation extends StatelessWidget {
-  final selectedItem;
+  final _selectedItem;
+  final Color _iconColor;
 
   BottomNavigation({
     Key? key,
     required String selectedItem,
-  })  : selectedItem = selectedItem,
+    required Color iconColor,
+  })  : _selectedItem = selectedItem,
+        _iconColor = iconColor,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (kDebugMode)
       print(
-          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $selectedItem");
+          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $_selectedItem");
 
     var _routes = {
       LibglossRoutes.HOME: 0,
@@ -53,8 +55,8 @@ class BottomNavigation extends StatelessWidget {
           label: 'Opciones',
         ),
       ],
-      currentIndex: _routes[selectedItem]!,
-      selectedItemColor: Colors.black,
+      currentIndex: _routes[_selectedItem]!,
+      selectedItemColor: _iconColor,
       onTap: (index) {
         switch (index) {
           case 0:

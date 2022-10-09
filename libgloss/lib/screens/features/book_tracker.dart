@@ -25,8 +25,9 @@ class BookTracker extends StatelessWidget {
         ),
       ),
       body: Container(),
-      bottomNavigationBar:
-          BottomNavigation(selectedItem: LibglossRoutes.BOOK_TRACKER),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.BOOK_TRACKER,
+          iconColor: _secondaryColor),
     );
   }
 }

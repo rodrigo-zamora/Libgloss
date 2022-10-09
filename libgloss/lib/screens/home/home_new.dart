@@ -71,7 +71,8 @@ class _HomeNewState extends State<HomeNew> {
         sideMenuColor: _primaryColor,
       ),
       body: _found(context),
-      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
     );
   }
 

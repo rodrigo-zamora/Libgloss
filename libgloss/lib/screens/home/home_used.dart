@@ -71,7 +71,8 @@ class _HomeUsedState extends State<HomeUsed> {
         sideMenuColor: _primaryColor,
       ),
       body: _found(context),
-      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME_USED),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 

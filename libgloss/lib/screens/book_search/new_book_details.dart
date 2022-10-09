@@ -35,7 +35,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         sideMenuColor: _primaryColor,
       ),
       body: Container(),
-      bottomNavigationBar: BottomNavigation(selectedItem: LibglossRoutes.HOME),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
     );
   }
 }

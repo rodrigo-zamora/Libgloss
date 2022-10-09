@@ -25,8 +25,8 @@ class UserOptions extends StatelessWidget {
         ),
       ),
       body: Container(),
-      bottomNavigationBar:
-          BottomNavigation(selectedItem: LibglossRoutes.OPTIONS),
+      bottomNavigationBar: BottomNavigation(
+          selectedItem: LibglossRoutes.OPTIONS, iconColor: _secondaryColor),
     );
   }
 }
