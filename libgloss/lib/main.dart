@@ -13,7 +13,11 @@ class Libgloss extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LibglossRoutes.getHomeRoute(),
-      routes: LibglossRoutes.getRoutes(),
+      onGenerateRoute: (settings) {
+        return SlideRoute(
+            page: LibglossRoutes.getRoutes()[settings.name]!(context),
+            settings: settings);
+      },
     );
   }
 }
