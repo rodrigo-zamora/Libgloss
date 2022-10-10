@@ -133,7 +133,7 @@ class _SideMenuState extends State<SideMenu> {
       title: Text(
         itemName,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 13,
         ),
       ),
       onTap: () {
