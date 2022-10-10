@@ -51,8 +51,8 @@ class BottomNavigation extends StatelessWidget {
           label: 'Seguimiento',
         ),
         BottomNavigationBarItem(
-          icon: FaIcon(FontAwesomeIcons.gear),
-          label: 'Opciones',
+          icon: FaIcon(FontAwesomeIcons.userGear),
+          label: 'Mi Perfil',
         ),
       ],
       currentIndex: _routes[_selectedItem]!,
