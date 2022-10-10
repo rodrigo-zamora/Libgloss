@@ -3,6 +3,7 @@ import 'package:libgloss/config/routes.dart';
 
 import '../../../widgets/bottom_navigation.dart';
 import '../../../widgets/search_appbar.dart';
+import '../../model/user.dart';
 
 class UserOptions extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(248, 187, 176, 1);
@@ -11,6 +12,13 @@ class UserOptions extends StatelessWidget {
   final Color _iconColors = Color.fromRGBO(36, 36, 36, 1);
 
   final TextEditingController _textFieldController = TextEditingController();
+
+  static const user = User (
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+    name: "Agnes Betancourt",
+    email: "agnes.betancourt@gmail.com",
+    isSeller: false,
+  );
 
   UserOptions({super.key});
 
@@ -34,10 +42,18 @@ class UserOptions extends StatelessWidget {
           children: [
             SizedBox(height: 20),
             Text(
-              "Agnes Betancourt",
+              user.name,
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
+                color: _iconColors,
+              ),
+            ),
+            Text(
+              user.email,
+              style: TextStyle(
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
                 color: _iconColors,
               ),
             ),
@@ -80,8 +96,11 @@ class UserOptions extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
-          CircleAvatar(
-            backgroundImage: AssetImage("assets/images/temporary_user.jpeg"),
+          GestureDetector(
+            onTap: () { print("HI"); },
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(user.image),
+            ),
           ),
           Positioned(
             bottom: 0,
@@ -94,7 +113,8 @@ class UserOptions extends StatelessWidget {
                 splashColor: _secondaryColor, 
                 onPressed: () {},
                 child: Icon(
-                  Icons.photo_camera_outlined,
+                  //Icons.photo_camera_outlined,
+                  Icons.edit_outlined,
                   color: _iconColors,
                   size: 22,
                 ),
