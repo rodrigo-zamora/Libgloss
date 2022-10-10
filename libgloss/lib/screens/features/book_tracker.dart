@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 
 import '../../widgets/bottom_navigation.dart';
+import '../../widgets/online_image.dart';
 import '../../widgets/search_appbar.dart';
 import '../../widgets/side_menu.dart';
 
@@ -76,10 +77,111 @@ class BookTracker extends StatelessWidget {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _buildTrackerBody(),
+      body: Column(
+        children: [
+          Expanded(
+            child: _trackingWidget(),
+          ),
+          Expanded(
+            child: _wishListWidget(),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigation(
           selectedItem: LibglossRoutes.BOOK_TRACKER,
           iconColor: _secondaryColor),
+    );
+  }
+
+  Widget _trackingBookItem(Map<String, String> item) {
+    return Container(
+      padding: EdgeInsets.only(left: 12, right: 12),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    height: 150,
+                    child: OnlineImage(
+                      imageUrl: item["image"]!,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Column(
+                      children: [
+                        Text(
+                          item["title"]!,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          item["author"]!,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: _blueColor,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Plataforma: ${item["plataforma"]}",
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Precio deseado: \$${item["precio"]}",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Tiempo: ${item["tiempo"]}",
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -87,7 +189,7 @@ class BookTracker extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 10,
+          height: 12,
         ),
         Text(
           'Seguimientos',
@@ -97,49 +199,102 @@ class BookTracker extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 12,
         ),
         SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Container(
-                  color: _primaryColor,
-                  width: 250,
-                  height: 150,
-                  child: Text('Seguimiento 1'),
-                ),
-                Container(
-                  color: _secondaryColor,
-                  width: 150,
-                  child: Text(
-                    'Seguimiento 2',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Container(
-                  color: _primaryColor,
-                  width: 150,
-                  child: Text('Seguimiento 3'),
-                ),
-              ],
-            )),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (var item in _listSeguimientos) _trackingBookItem(item),
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  Widget _wishListWidget() {
+  Widget _wishListItem(Map<String, String> item) {
     return Container(
-      color: _secondaryColor,
+      padding: EdgeInsets.only(left: 12, right: 12),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    height: 150,
+                    child: OnlineImage(
+                      imageUrl: item["image"]!,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Column(
+                      children: [
+                        Text(
+                          item["title"]!,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          item["author"]!,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: _blueColor,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 12,
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildTrackerBody() {
-    return Column(children: <Widget>[
-      Expanded(child: _trackingWidget()),
-      Expanded(child: _wishListWidget()),
-    ]);
+  Widget _wishListWidget() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 12,
+        ),
+        Text(
+          'Lista de deseos',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 12,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (var item in _wishList) _wishListItem(item),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
