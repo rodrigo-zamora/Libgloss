@@ -1,3 +1,13 @@
+import 'package:flutter/material.dart';
+
+import '../screens/features/book_tracker.dart';
+import '../screens/new_books/home_new.dart';
+import '../screens/new_books/new_book_details.dart';
+import '../screens/used_books/home_used.dart';
+import '../screens/used_books/used_book_details.dart';
+import '../screens/used_books/used_book_seller.dart';
+import '../screens/user/user_options.dart';
+
 class LibglossRoutes {
   static const HOME = "/home_new";
   static const HOME_USED = "/home_used";
@@ -6,4 +16,20 @@ class LibglossRoutes {
   static const USED_BOOK_DETAILS = "/used_book_details";
   static const USED_BOOK_SELLER = "/used_book_seller";
   static const BOOK_TRACKER = "/book_tracker";
+
+  static Map<String, WidgetBuilder> getRoutes() {
+    return {
+      HOME: (context) => HomeNew(),
+      HOME_USED: (context) => HomeUsed(),
+      OPTIONS: (context) => UserOptions(),
+      NEW_BOOK_DETAILS: (context) => NewBookDetails(),
+      USED_BOOK_DETAILS: (context) => UsedBookDetails(),
+      USED_BOOK_SELLER: (context) => UsedBookSeller(),
+      BOOK_TRACKER: (context) => BookTracker(),
+    };
+  }
+
+  static Widget getHomeRoute() {
+    return HomeNew();
+  }
 }

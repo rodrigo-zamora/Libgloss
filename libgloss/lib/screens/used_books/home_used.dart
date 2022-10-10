@@ -3,9 +3,8 @@ import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
 import '../../widgets/bottom_navigation.dart';
+import '../../widgets/online_image.dart';
 import '../../widgets/search_appbar.dart';
-
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -120,15 +119,8 @@ class _HomeUsedState extends State<HomeUsed> {
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 5.2),
-                          child: CachedNetworkImage(
+                          child: OnlineImage(
                             imageUrl: "${_listElements[index]["image"]}",
-                            placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(
-                                color: _secondaryColor,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
                           ),
                         ),
                       ),

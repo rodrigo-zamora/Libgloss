@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/online_image.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
-
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeNew extends StatefulWidget {
   HomeNew({
@@ -20,7 +19,7 @@ class _HomeNewState extends State<HomeNew> {
   final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
   final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-  
+
   TextEditingController _textFieldController = TextEditingController();
 
   final List<Map<String, String>> _listElements = [
@@ -52,7 +51,8 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image": "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "image":
+          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
     },
   ];
 
@@ -108,15 +108,8 @@ class _HomeNewState extends State<HomeNew> {
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
-                          child: CachedNetworkImage(
-                            imageUrl: "${_listElements[index]["image"]}",
-                            placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(
-                                color: _secondaryColor,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                          child: OnlineImage(
+                            imageUrl: _listElements[index]["image"]!,
                           ),
                         ),
                       ),
@@ -143,7 +136,7 @@ class _HomeNewState extends State<HomeNew> {
                           color: _blueColor,
                           fontSize: 12,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 );
