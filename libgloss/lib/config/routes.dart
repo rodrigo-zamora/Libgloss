@@ -22,7 +22,12 @@ class LibglossRoutes {
       HOME: (context) => HomeNew(),
       HOME_USED: (context) => HomeUsed(),
       OPTIONS: (context) => UserOptions(),
-      NEW_BOOK_DETAILS: (context) => NewBookDetails(),
+      NEW_BOOK_DETAILS: (context) => NewBookDetails(
+        //arguments: ModalRoute.of(context)?.settings.arguments as Map<String, String>?,
+        title: ModalRoute.of(context)?.settings.arguments as String?,
+        author: ModalRoute.of(context)?.settings.arguments as String?,
+        image: ModalRoute.of(context)?.settings.arguments as String?,
+      ),
       USED_BOOK_DETAILS: (context) => UsedBookDetails(),
       USED_BOOK_SELLER: (context) => UsedBookSeller(),
       BOOK_TRACKER: (context) => BookTracker(),

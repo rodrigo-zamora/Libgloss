@@ -5,6 +5,7 @@ import 'package:libgloss/widgets/side_menu.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
+import 'new_book_details.dart';
 
 class HomeNew extends StatefulWidget {
   HomeNew({
@@ -102,9 +103,18 @@ class _HomeNewState extends State<HomeNew> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
-                          Navigator.pushNamed(
-                              context, LibglossRoutes.NEW_BOOK_DETAILS,
-                              arguments: _listElements[index]);
+                          /*  Navigator.pushNamed(
+                            context, LibglossRoutes.NEW_BOOK_DETAILS,
+                            //arguments: _listElements[index],
+                          ); */
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => NewBookDetails(
+                                title: _listElements[index]["title"],
+                                author: _listElements[index]["author"],
+                                image: _listElements[index]["image"],
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
