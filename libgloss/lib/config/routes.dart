@@ -27,6 +27,7 @@ class LibglossRoutes {
         title: ModalRoute.of(context)?.settings.arguments as String?,
         author: ModalRoute.of(context)?.settings.arguments as String?,
         image: ModalRoute.of(context)?.settings.arguments as String?,
+        isbn: ModalRoute.of(context)?.settings.arguments as String?,
       ),
       USED_BOOK_DETAILS: (context) => UsedBookDetails(),
       USED_BOOK_SELLER: (context) => UsedBookSeller(),

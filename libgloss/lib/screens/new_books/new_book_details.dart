@@ -10,6 +10,7 @@ class NewBookDetails extends StatefulWidget {
   String? title;
   String? author;
   String? image;
+  String? isbn;
 
   NewBookDetails({
     Key? key,
@@ -17,6 +18,7 @@ class NewBookDetails extends StatefulWidget {
     required this.title,
     required this.author,
     required this.image,
+    required this.isbn,
   }) : super(key: key);
 
   @override
@@ -36,7 +38,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     "title": widget.title,
     "author": widget.author,
     "image": widget.image,
-    "isbn": "xxx-xxxxxxxxxx",
+    "isbn": widget.isbn,
     "amazon": 200.00,
     "gonvill": 150.00,
     "gandhi": 158.00,

@@ -28,32 +28,37 @@ class _HomeNewState extends State<HomeNew> {
       "title": "And Then There Were None",
       "author": "Agatha Christie",
       "image": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
+      "isbn": "978-0062073488",
     },
     {
       "title": "Gone Girl",
       "author": "Gillian Flynn",
       "image": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
+      "isbn": "978-0307588371",
     },
     {
       "title": "Harry Potter and the Deahtly Hallows",
       "author": "J.K. Rowling",
       "image": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
+      "isbn": "978-0545139700",
     },
     {
       "title": "Cien años de soledad",
       "author": "Gabriel García Márquez",
       "image": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
+      "isbn": "978-1644734728",
     },
     {
       "title": "The Hunger Games",
       "author": "Suzanne Collins",
       "image": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
+      "isbn": "978-0439023481",
     },
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "image": "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "isbn": "978-0544003415",
     },
   ];
 
@@ -112,6 +117,7 @@ class _HomeNewState extends State<HomeNew> {
                                 title: _listElements[index]["title"],
                                 author: _listElements[index]["author"],
                                 image: _listElements[index]["image"],
+                                isbn: _listElements[index]["isbn"],
                               ),
                             ),
                           );
