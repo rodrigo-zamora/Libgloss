@@ -122,7 +122,9 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
               ),
-              onPressed: () {}, 
+              onPressed: () {
+                Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER);
+              }, 
               child: _text("Contactar Vendedor", _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
             ),
           ],
