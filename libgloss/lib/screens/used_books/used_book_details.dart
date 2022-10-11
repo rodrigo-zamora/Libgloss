@@ -4,6 +4,7 @@ import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
 import '../../widgets/side_menu.dart';
+import 'used_book_seller.dart';
 
 class UsedBookDetails extends StatefulWidget {
   String? title;
@@ -113,20 +114,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
               ),
             ),
             SizedBox(height: 20.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _secondaryColor,
-                foregroundColor: _primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.0),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER);
-              }, 
-              child: _text("Contactar Vendedor", _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
-            ),
+            _buttonSeller(context),
           ],
         ),
       ),
@@ -171,6 +159,31 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
           ),
         ),
       ]
+    );
+  }
+
+  ElevatedButton _buttonSeller(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _secondaryColor,
+        foregroundColor: _primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      ),
+      onPressed: () {
+        /* Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER); */
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => UsedBookSeller(
+            vendedor: _libro["vendedor"],
+            localizacion: _libro["localizacion"],
+            contacto: _libro["contacto"],
+          ),
+        ),
+      );
+      }, 
+      child: _text("Contactar Vendedor", _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
     );
   }
   

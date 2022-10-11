@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/screens/used_books/used_book_details.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/online_image.dart';
 import '../../widgets/search_appbar.dart';
+import 'used_book_details.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({

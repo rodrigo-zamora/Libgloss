@@ -39,7 +39,11 @@ class LibglossRoutes {
         localizacion: ModalRoute.of(context)?.settings.arguments as String?,
         contacto: ModalRoute.of(context)?.settings.arguments as String?,
       ),
-      USED_BOOK_SELLER: (context) => UsedBookSeller(),
+      USED_BOOK_SELLER: (context) => UsedBookSeller(
+        vendedor: ModalRoute.of(context)?.settings.arguments as String?,
+        localizacion: ModalRoute.of(context)?.settings.arguments as String?,
+        contacto: ModalRoute.of(context)?.settings.arguments as String?,
+      ),
       BOOK_TRACKER: (context) => BookTracker(),
     };
   }
