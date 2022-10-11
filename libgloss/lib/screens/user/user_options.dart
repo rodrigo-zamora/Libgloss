@@ -64,8 +64,9 @@ class _UserOptionsState extends State<UserOptions> {
             ),
             SizedBox(height: 20),
             _profilePicture(),
-            _sellButton(),
+            _sellerButton(),
             _followers(user.isSeller),
+            SizedBox(height: 10),
             _lowButton(
               Icons.person_outlined, 
               "Mi Cuenta", 
@@ -114,7 +115,9 @@ class _UserOptionsState extends State<UserOptions> {
               child: FloatingActionButton(
                 backgroundColor: _primaryColor,
                 splashColor: _secondaryColor, 
-                onPressed: () {},
+                onPressed: () {
+                  _show();
+                },
                 child: Icon(
                   //Icons.photo_camera_outlined,
                   Icons.edit_outlined,
@@ -131,7 +134,7 @@ class _UserOptionsState extends State<UserOptions> {
 
   Padding _lowButton(IconData icon, String text, Function() onPressed) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: TextButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(_tertiaryColor),
@@ -173,7 +176,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Padding _sellButton() {
+  Padding _sellerButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 90),
       child: TextButton(
@@ -235,12 +238,12 @@ class _UserOptionsState extends State<UserOptions> {
               color: _secondaryColor,
               thickness: 0.5,
             ),
-            _buildButton(30, 'Seguidos'),
+            _buildButton(90, 'Seguidores'),
             VerticalDivider(
               color: _secondaryColor,
               thickness: 0.5,
             ),
-            _buildButton(90, 'Seguidores'),
+            _buildButton(30, 'Seguidos'),
           ],
         ),
       );
@@ -249,7 +252,27 @@ class _UserOptionsState extends State<UserOptions> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildButton(30, 'Seguidos'),
+            _buildButton(4.9, 'Ranking'),
+            VerticalDivider(
+              color: _secondaryColor,
+              thickness: 0.5,
+            ),
+            SizedBox(
+              width: 88,
+              child: Text(
+                "¡Convierteté en vendedor!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: _iconColors,
+                ),
+              ),
+            ),
+            VerticalDivider(
+              color: _secondaryColor,
+              thickness: 0.5,
+            ),
+            _buildButton(45, 'Seguidos'),
           ],
         ),
       );
@@ -283,6 +306,23 @@ class _UserOptionsState extends State<UserOptions> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _show () {
+    return AlertDialog(
+      title: Text('AlertDialog Title'),
+      content: Text('AlertDialog description'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 }
