@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
-
 import '../../../widgets/bottom_navigation.dart';
 import '../../../widgets/search_appbar.dart';
 import '../../model/user.dart';
 
-class UserOptions extends StatelessWidget {
+class UserOptions extends StatefulWidget {
+
+  UserOptions({super.key});
+
+  @override
+  State<UserOptions> createState() => _UserOptionsState();
+}
+
+class _UserOptionsState extends State<UserOptions> {
   final Color _primaryColor = Color.fromRGBO(248, 187, 176, 1);
   final Color _secondaryColor = Color.fromRGBO(245, 128, 107, 1);
   final Color _tertiaryColor = Color.fromRGBO(251, 236, 233, 1);
   final Color _iconColors = Color.fromRGBO(36, 36, 36, 1);
-
+  
   final TextEditingController _textFieldController = TextEditingController();
 
-  static const user = User (
+  var user = User (
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
     name: "Agnes Betancourt",
     email: "agnes.betancourt@gmail.com",
-    isSeller: false,
+    isSeller: true,
   );
-
-  UserOptions({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,23 +64,24 @@ class UserOptions extends StatelessWidget {
             ),
             SizedBox(height: 20),
             _profilePicture(),
-            SizedBox(height: 20),
-            _button(
+            _sellButton(),
+            _followers(user.isSeller),
+            _lowButton(
               Icons.person_outlined, 
               "Mi Cuenta", 
               () {}
             ),
-            _button(
+            _lowButton(
               Icons.notifications_outlined, 
               "Notificaciones y mensajes", 
               () {}
             ),
-            _button(
+            _lowButton(
               Icons.help_outline, 
               "Configuración", 
               () {}
             ),
-            _button(
+            _lowButton(
               Icons.logout_outlined, 
               "Salir", 
               () {}
@@ -96,11 +102,8 @@ class UserOptions extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
-          GestureDetector(
-            onTap: () { print("HI"); },
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(user.image),
-            ),
+          CircleAvatar(
+            backgroundImage: NetworkImage(user.image),
           ),
           Positioned(
             bottom: 0,
@@ -126,7 +129,7 @@ class UserOptions extends StatelessWidget {
     );
   }
 
-  Padding _button(IconData icon, String text, Function() onPressed) {
+  Padding _lowButton(IconData icon, String text, Function() onPressed) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: TextButton(
@@ -166,6 +169,119 @@ class UserOptions extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding _sellButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 90),
+      child: TextButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(_primaryColor),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          padding: MaterialStateProperty.all(
+            EdgeInsets.all(10),
+          ),
+          overlayColor: MaterialStateColor.resolveWith((states) => _tertiaryColor),
+        ),
+        onPressed: () {
+          user.isSeller = !user.isSeller;
+          setState(() {});
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: _text(user.isSeller),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Text _text (bool isSeller) {
+    if (!isSeller) {
+      return Text(
+        "Convertirse en Vendedor",
+        style: TextStyle(
+          color: _iconColors,
+        ),
+        textAlign: TextAlign.center,
+      );
+    } else {
+      return Text(
+        "Ya eres Vendedor",
+        style: TextStyle(
+          color: _iconColors,
+        ),
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+
+  Widget _followers (bool isSeller) {
+    if (isSeller) {
+      return IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildButton(4.8, 'Ranking'),
+            VerticalDivider(
+              color: _secondaryColor,
+              thickness: 0.5,
+            ),
+            _buildButton(30, 'Seguidos'),
+            VerticalDivider(
+              color: _secondaryColor,
+              thickness: 0.5,
+            ),
+            _buildButton(90, 'Seguidores'),
+          ],
+        ),
+      );
+    } else {
+      return IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildButton(30, 'Seguidos'),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _buildButton(double number, String text) {
+    var numberDisplay;
+    if (number % 1 == 0) numberDisplay = number.toInt().toString();
+    else numberDisplay = number.toString();
+    return MaterialButton (
+      padding: EdgeInsets.all(5),
+      onPressed: () {},
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Column(
+        children: [
+          Text(
+            numberDisplay,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: _iconColors,
+            ),
+          ),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              color: _iconColors,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -2,9 +2,9 @@ class User {
   final String image;
   final String name;
   final String email;
-  final bool isSeller;
+  bool isSeller;
 
-  const User({
+  User({
     required this.image,
     required this.name,
     required this.email,
