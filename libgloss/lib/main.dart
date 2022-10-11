@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/slide_route.dart';
 
 void main() {
   runApp(Libgloss());
@@ -15,8 +17,9 @@ class Libgloss extends StatelessWidget {
       home: LibglossRoutes.getHomeRoute(),
       onGenerateRoute: (settings) {
         return SlideRoute(
-            page: LibglossRoutes.getRoutes()[settings.name]!(context),
-            settings: settings);
+          page: LibglossRoutes.getRoutes()[settings.name]!(context),
+          settings: settings,
+        );
       },
     );
   }
