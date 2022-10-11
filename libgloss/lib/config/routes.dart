@@ -29,7 +29,16 @@ class LibglossRoutes {
         image: ModalRoute.of(context)?.settings.arguments as String?,
         isbn: ModalRoute.of(context)?.settings.arguments as String?,
       ),
-      USED_BOOK_DETAILS: (context) => UsedBookDetails(),
+      USED_BOOK_DETAILS: (context) => UsedBookDetails(
+        title: ModalRoute.of(context)?.settings.arguments as String?,
+        author: ModalRoute.of(context)?.settings.arguments as String?,
+        image: ModalRoute.of(context)?.settings.arguments as String?,
+        vendedor: ModalRoute.of(context)?.settings.arguments as String?,
+        isbn: ModalRoute.of(context)?.settings.arguments as String?,
+        precio: ModalRoute.of(context)?.settings.arguments as String?,
+        localizacion: ModalRoute.of(context)?.settings.arguments as String?,
+        contacto: ModalRoute.of(context)?.settings.arguments as String?,
+      ),
       USED_BOOK_SELLER: (context) => UsedBookSeller(),
       BOOK_TRACKER: (context) => BookTracker(),
     };

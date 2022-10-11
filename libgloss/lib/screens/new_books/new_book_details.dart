@@ -90,10 +90,10 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                   width: 0.5
                 ),  
                 children: [
-                  _row("Amazon", _blueColor, "${_libro["amazon"]}"),
-                  _row("Gonvill", _blueColor, "${_libro["gonvill"]}"),
-                  _row("Gandhi", _redColor, "${_libro["gandhi"]}"),
-                  _row("El Sótano", _redColor, "${_libro["sotano"]}"),
+                  _row("Amazon", _blueColor, "\$${_libro["amazon"]}"),
+                  _row("Gonvill", _blueColor, "\$${_libro["gonvill"]}"),
+                  _row("Gandhi", _redColor, "\$${_libro["gandhi"]}"),
+                  _row("El Sótano", _redColor, "\$${_libro["sotano"]}"),
                 ],
               ),
             ),
