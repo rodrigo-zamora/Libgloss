@@ -5,15 +5,8 @@ import '../../../widgets/bottom_navigation.dart';
 import '../../../widgets/search_appbar.dart';
 
 class UsedBookSeller extends StatefulWidget {
-  String? vendedor; 
-  String? localizacion;
-  String? contacto;
-
   UsedBookSeller({
     super.key,
-    required this.vendedor,
-    required this.localizacion,
-    required this.contacto,
   });
 
   @override
@@ -28,6 +21,8 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
 
   @override
   Widget build(BuildContext context) {
+    final _args = ModalRoute.of(context)!.settings.arguments;
+    _args as Map<String, dynamic>;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -46,7 +41,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
           children: [
             SizedBox(height: 20),
             Text(
-              widget.vendedor as String,
+              _args["vendedor"] as String,
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -54,7 +49,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
               ),
             ),
             Text(
-              widget.localizacion as String,
+              _args["localizacion"] as String,
               style: TextStyle(
                 fontSize: 14,
                 fontStyle: FontStyle.italic,
@@ -62,7 +57,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
               ),
             ),
             Text(
-              widget.contacto as String,
+              _args["contacto"] as String,
               style: TextStyle(
                 fontSize: 14,
                 fontStyle: FontStyle.italic,
@@ -75,8 +70,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
         ),
       ),
       bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME_USED,
-          iconColor: _secondaryColor),
+          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 }

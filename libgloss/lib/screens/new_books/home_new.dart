@@ -57,7 +57,8 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image": "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
+      "image":
+          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
       "isbn": "978-0544003415",
     },
   ];
@@ -108,19 +109,7 @@ class _HomeNewState extends State<HomeNew> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
-                          /*  Navigator.pushNamed(
-                            context, LibglossRoutes.NEW_BOOK_DETAILS,
-                            //arguments: _listElements[index],
-                          ); */
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => NewBookDetails(
-                                title: _listElements[index]["title"],
-                                author: _listElements[index]["author"],
-                                image: _listElements[index]["image"],
-                                isbn: _listElements[index]["isbn"],
-                              ),
-                            ),
-                          );
+                          // TODO: Add bloc event to search _listElements[index]["title"]
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),

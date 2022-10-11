@@ -138,22 +138,7 @@ class _HomeUsedState extends State<HomeUsed> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
-                          /* Navigator.pushNamed(
-                            context, LibglossRoutes.USED_BOOK_DETAILS,
-                            arguments: _listElements[index]); */
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => UsedBookDetails(
-                                title: _listElements[index]["title"],
-                                author: _listElements[index]["author"],
-                                image: _listElements[index]["image"],
-                                vendedor: _listElements[index]["vendedor"],
-                                isbn: _listElements[index]["isbn"],
-                                precio: "${_listElements[index]["precio"]}",
-                                localizacion: _listElements[index]["localizacion"],
-                                contacto: _listElements[index]["contacto"],
-                              ),
-                            ),
-                          );
+                          // TODO: Add bloc event to navigate to book details
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 5.2),

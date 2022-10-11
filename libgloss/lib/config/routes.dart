@@ -22,28 +22,9 @@ class LibglossRoutes {
       HOME: (context) => HomeNew(),
       HOME_USED: (context) => HomeUsed(),
       OPTIONS: (context) => UserOptions(),
-      NEW_BOOK_DETAILS: (context) => NewBookDetails(
-        //arguments: ModalRoute.of(context)?.settings.arguments as Map<String, String>?,
-        title: ModalRoute.of(context)?.settings.arguments as String?,
-        author: ModalRoute.of(context)?.settings.arguments as String?,
-        image: ModalRoute.of(context)?.settings.arguments as String?,
-        isbn: ModalRoute.of(context)?.settings.arguments as String?,
-      ),
-      USED_BOOK_DETAILS: (context) => UsedBookDetails(
-        title: ModalRoute.of(context)?.settings.arguments as String?,
-        author: ModalRoute.of(context)?.settings.arguments as String?,
-        image: ModalRoute.of(context)?.settings.arguments as String?,
-        vendedor: ModalRoute.of(context)?.settings.arguments as String?,
-        isbn: ModalRoute.of(context)?.settings.arguments as String?,
-        precio: ModalRoute.of(context)?.settings.arguments as String?,
-        localizacion: ModalRoute.of(context)?.settings.arguments as String?,
-        contacto: ModalRoute.of(context)?.settings.arguments as String?,
-      ),
-      USED_BOOK_SELLER: (context) => UsedBookSeller(
-        vendedor: ModalRoute.of(context)?.settings.arguments as String?,
-        localizacion: ModalRoute.of(context)?.settings.arguments as String?,
-        contacto: ModalRoute.of(context)?.settings.arguments as String?,
-      ),
+      NEW_BOOK_DETAILS: (context) => NewBookDetails(),
+      USED_BOOK_DETAILS: (context) => UsedBookDetails(),
+      USED_BOOK_SELLER: (context) => UsedBookSeller(),
       BOOK_TRACKER: (context) => BookTracker(),
     };
   }
