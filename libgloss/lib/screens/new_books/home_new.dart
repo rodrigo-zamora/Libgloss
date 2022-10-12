@@ -5,7 +5,6 @@ import 'package:libgloss/widgets/side_menu.dart';
 
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
-import 'new_book_details.dart';
 
 class HomeNew extends StatefulWidget {
   HomeNew({

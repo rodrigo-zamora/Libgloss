@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/routes.dart';
+
+import '../blocs/search/bloc/search_bloc.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({
@@ -36,87 +40,112 @@ class SearchAppBar extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
       ),
       flexibleSpace: SafeArea(
-        child: Column(
+        child: _buildSearchBar(context),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
+    return Column(
+      children: [
+        Row(
           children: [
-            Row(
+            if (_showMenuButton)
+              IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            if (!_showMenuButton)
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (_showMenuButton)
-                  IconButton(
-                    icon: Icon(Icons.menu),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                if (!_showMenuButton)
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 325,
-                      height: 30,
-                      child: TextField(
-                        textAlign: TextAlign.left,
-                        textAlignVertical: TextAlignVertical(y: 1),
-                        controller: _textFieldController,
-                        decoration: InputDecoration(
-                          hintText: "Buscar en Libgloss",
-                          suffixIcon: _showCameraButton
-                              ? GestureDetector(
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    color: Color.fromARGB(255, 53, 53, 53),
-                                  ),
-                                  onTap: () => print("Camera button pressed"),
-                                )
-                              : null,
-                          hintStyle: TextStyle(
-                            fontSize: 15,
-                          ),
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
+                SizedBox(
+                  width: 325,
+                  height: 30,
+                  child: TextField(
+                    textAlign: TextAlign.left,
+                    textAlignVertical: TextAlignVertical(y: 1),
+                    controller: _textFieldController,
+                    onSubmitted: (value) {
+                      // TODO: Add filters to search
+                      Map<String, dynamic> filters = {};
+
+                      if (kDebugMode)
+                        print(
+                            "\u001b[32m[SearchAppBar] Current screen is $LibglossRoutes.CURRENT_SCREEN");
+                      if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME) {
+                        Navigator.pushNamed(context, LibglossRoutes.SEARCH_NEW,
+                            arguments: filters);
+                      }
+
+                      BlocProvider.of<SearchBloc>(context).add(
+                        SearchBoookEvent(
+                          query: value,
+                          filters: filters,
                         ),
+                      );
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Buscar en Libgloss",
+                      suffixIcon: _showCameraButton
+                          ? GestureDetector(
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Color.fromARGB(255, 53, 53, 53),
+                              ),
+                              onTap: () {
+                                // TODO: Add camera button event
+                              },
+                            )
+                          : null,
+                      hintStyle: TextStyle(
+                        fontSize: 15,
                       ),
-                    )
-                  ],
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: 32,
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.topLeft,
-                      color: _secondaryColor,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 12),
-                        child: Image.asset(
-                          'assets/images/onlybunny.png',
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(
+                          width: 0,
+                          style: BorderStyle.none,
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Column(
+              children: [
+                Container(
+                  height: 32,
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.topLeft,
+                  color: _secondaryColor,
+                  child: Container(
+                    margin: EdgeInsets.only(left: 12),
+                    child: Image.asset(
+                      'assets/images/onlybunny.png',
+                    ),
+                  ),
                 ),
               ],
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }

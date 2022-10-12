@@ -60,18 +60,25 @@ class BottomNavigation extends StatelessWidget {
       onTap: (index) {
         switch (index) {
           case 0:
-            if (kDebugMode) print('[BottomNavigation] Redirecting to Home');
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => HomeNew(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (LibglossRoutes.CURRENT_ROUTE != LibglossRoutes.HOME) {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Home');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => HomeNew(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            }
             break;
+          // TODO: Fix navigation between all routes
           case 1:
-            if (kDebugMode) print('[BottomNavigation] Redirecting to Search');
+            if (kDebugMode)
+              print('\u001b[36m[BottomNavigation] Redirecting to Search');
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
@@ -83,7 +90,8 @@ class BottomNavigation extends StatelessWidget {
             break;
           case 2:
             if (kDebugMode)
-              print('[BottomNavigation] Redirecting to BookTracker');
+              print('\u001b[36m[BottomNavigation] Redirecting to BookTracker');
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
@@ -95,7 +103,8 @@ class BottomNavigation extends StatelessWidget {
             break;
           case 3:
             if (kDebugMode)
-              print('[BottomNavigation] Redirecting to UserOptions');
+              print('\u001b[36m[BottomNavigation] Redirecting to UserOptions');
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(

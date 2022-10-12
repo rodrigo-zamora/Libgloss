@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/slide_route.dart';
 
+import 'blocs/search/bloc/search_bloc.dart';
+
 void main() {
-  runApp(Libgloss());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SearchBloc(),
+        ),
+      ],
+      child: Libgloss(),
+    ),
+  );
 }
 
 class Libgloss extends StatelessWidget {
