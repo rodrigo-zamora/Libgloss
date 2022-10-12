@@ -80,7 +80,7 @@ class SearchAppBar extends StatelessWidget {
 
                       if (kDebugMode)
                         print(
-                            "\u001b[32m[SearchAppBar] Current screen is $LibglossRoutes.CURRENT_SCREEN");
+                            "\u001b[32m[SearchAppBar] Current screen is ${LibglossRoutes.CURRENT_ROUTE}");
                       if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME) {
                         Navigator.pushNamed(context, LibglossRoutes.SEARCH_NEW,
                             arguments: filters);
