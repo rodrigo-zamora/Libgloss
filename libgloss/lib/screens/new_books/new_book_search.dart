@@ -65,7 +65,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                     ),
                   ),
                   Image.asset(
-                    'assets/images/loading_bunny.gif',
+                    'assets/images/loading_bunny_blue.gif',
                   ),
                 ],
               ),
