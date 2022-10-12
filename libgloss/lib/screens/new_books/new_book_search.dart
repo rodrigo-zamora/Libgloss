@@ -30,7 +30,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
             textFieldController: _textFieldController,
-            showMenuButton: true,
+            showMenuButton: false,
             showCameraButton: true),
       ),
       drawer: SideMenu(
@@ -53,7 +53,23 @@ class _NewBookSearchState extends State<NewBookSearch> {
           case SearchInitial:
             return Container();
           case SearchLoading:
-            return Container();
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Buscando libros...",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/images/loading_bunny.gif',
+                  ),
+                ],
+              ),
+            );
           default:
             return Container();
         }

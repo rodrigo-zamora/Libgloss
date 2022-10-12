@@ -19,6 +19,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(SearchLoading());
 
     // TODO: Add API call
-    emit(SearchLoaded(books: []));
+    //emit(SearchLoaded(books: []));
   }
 }
