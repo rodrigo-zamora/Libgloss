@@ -85,6 +85,10 @@ class SearchAppBar extends StatelessWidget {
                         Navigator.pushNamed(context, LibglossRoutes.SEARCH_NEW,
                             arguments: filters);
                       }
+                      if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME_USED) {
+                        Navigator.pushNamed(context, LibglossRoutes.SEARCH_USED,
+                            arguments: filters);
+                      }
 
                       BlocProvider.of<SearchBloc>(context).add(
                         SearchBoookEvent(
