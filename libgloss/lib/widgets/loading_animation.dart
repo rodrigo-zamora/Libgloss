@@ -23,15 +23,27 @@ class _LoadingAnimationState extends State<LoadingAnimation>{
       child: DefaultTextStyle(
         style: TextStyle(
           fontSize: 30.0,
-          fontFamily: 'Cats',
+          fontFamily: 'Elegant',
           color: widget._animationColor,
         ),
         child: AnimatedTextKit(
           animatedTexts: [
-            TypewriterAnimatedText('Discipline is the best tool'),
-            TypewriterAnimatedText('Design first, then code'),
-            TypewriterAnimatedText('Do not patch bugs out, rewrite them'),
-            TypewriterAnimatedText('Do not test bugs out, design them out'),
+            TypewriterAnimatedText(
+              '\"For what do we live,', 
+              speed: Duration(milliseconds: 32),
+            ),
+            TypewriterAnimatedText(
+              'but to make sport for our neighbours,', 
+              speed: Duration(milliseconds: 39),
+            ),
+            TypewriterAnimatedText(
+              'and laugh at them in our turn?\"', 
+              speed: Duration(milliseconds: 39),
+            ),
+            TypewriterAnimatedText(
+              '- Pride and Prejudice by Jane Austen', 
+              speed: Duration(milliseconds: 40),
+            ),
           ],
           onTap: () {
             print("Tap Event");

@@ -18,9 +18,9 @@ class SearchBoookEvent extends SearchEvent {
 
   @override
   List<dynamic> get props => [
-        query,
-        filters,
-      ];
+      query,
+      filters,
+    ];
 
   @override
   String toString() => 'SearchBoookEvent { query: $query, filters: $filters }';
