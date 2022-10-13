@@ -95,7 +95,6 @@ class _HomeNewState extends State<HomeNew> {
         child: SearchAppBar(
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
-            textFieldController: _textFieldController,
             showMenuButton: true,
             showCameraButton: true),
       ),

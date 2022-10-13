@@ -98,7 +98,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
         child: SearchAppBar(
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
-            textFieldController: _textFieldController,
             showMenuButton: false,
             showCameraButton: true),
       ),
@@ -200,7 +199,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       height: (MediaQuery.of(context).size.height / 4.7),
                       child: OnlineImage(
                         imageUrl: _listElements[index]["image"]!,
-                            width: 100,
+                        width: 100,
                       ),
                     ),
                   ),

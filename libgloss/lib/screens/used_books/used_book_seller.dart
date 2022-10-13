@@ -29,7 +29,6 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          textFieldController: _textFieldController,
           showMenuButton: false,
           showCameraButton: false,
         ),

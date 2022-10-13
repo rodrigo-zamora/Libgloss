@@ -100,7 +100,6 @@ class _HomeUsedState extends State<HomeUsed> {
         child: SearchAppBar(
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
-            textFieldController: _textFieldController,
             showMenuButton: true,
             showCameraButton: false),
       ),

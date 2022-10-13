@@ -35,7 +35,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         child: SearchAppBar(
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
-            textFieldController: _textFieldController,
             showMenuButton: false,
             showCameraButton: false),
       ),

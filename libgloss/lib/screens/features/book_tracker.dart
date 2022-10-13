@@ -69,7 +69,6 @@ class BookTracker extends StatelessWidget {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          textFieldController: _textFieldController,
           showMenuButton: true,
           showCameraButton: false,
         ),

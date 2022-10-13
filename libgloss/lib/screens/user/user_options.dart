@@ -39,7 +39,6 @@ class _UserOptionsState extends State<UserOptions> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          textFieldController: _textFieldController,
           showMenuButton: true,
           showCameraButton: false,
         ),

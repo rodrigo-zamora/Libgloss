@@ -7,23 +7,22 @@ import 'package:libgloss/config/routes.dart';
 import '../../blocs/search/bloc/search_bloc.dart';
 
 class SearchAppBar extends StatelessWidget {
-  const SearchAppBar({
+  SearchAppBar({
     Key? key,
     required Color primaryColor,
     required Color secondaryColor,
-    required TextEditingController textFieldController,
     required bool showMenuButton,
     required bool showCameraButton,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
-        _textFieldController = textFieldController,
         _showMenuButton = showMenuButton,
         _showCameraButton = showCameraButton,
+        _textFieldController = TextEditingController(),
         super(key: key);
 
+  final TextEditingController _textFieldController;
   final Color _primaryColor;
   final Color _secondaryColor;
-  final TextEditingController _textFieldController;
   final bool _showMenuButton;
   final bool _showCameraButton;
 

@@ -33,7 +33,6 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
         child: SearchAppBar(
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
-            textFieldController: _textFieldController,
             showMenuButton: false,
             showCameraButton: false),
       ),
