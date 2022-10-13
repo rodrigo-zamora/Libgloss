@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/routes.dart';
-import '../../widgets/bottom_navigation.dart';
-import '../../widgets/loading_animation.dart';
-import '../../widgets/online_image.dart';
-import '../../widgets/search_appbar.dart';
-import '../../widgets/side_menu.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/animations/loading_animation.dart';
+import '../../widgets/shared/online_image.dart';
+import '../../widgets/shared/search_appbar.dart';
+import '../../widgets/shared/side_menu.dart';
 
 // TODO: ADD BOOK API
 

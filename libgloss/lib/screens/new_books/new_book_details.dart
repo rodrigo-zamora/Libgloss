@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:libgloss/widgets/online_image.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
 
 import '../../config/routes.dart';
-import '../../widgets/bottom_navigation.dart';
-import '../../widgets/search_appbar.dart';
-import '../../widgets/side_menu.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
+import '../../widgets/shared/side_menu.dart';
 
 class NewBookDetails extends StatefulWidget {
   NewBookDetails({

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 
-import '../blocs/search/bloc/search_bloc.dart';
+import '../../blocs/search/bloc/search_bloc.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({

@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../widgets/bottom_navigation.dart';
-import '../../../widgets/search_appbar.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
 import '../../model/user.dart';
 
 class UserOptions extends StatefulWidget {

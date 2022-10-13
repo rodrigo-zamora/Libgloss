@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 
-import '../../widgets/bottom_navigation.dart';
-import '../../widgets/online_image.dart';
-import '../../widgets/search_appbar.dart';
-import '../../widgets/side_menu.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/online_image.dart';
+import '../../widgets/shared/search_appbar.dart';
+import '../../widgets/shared/side_menu.dart';
 
 class BookTracker extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(244, 210, 255, 1);

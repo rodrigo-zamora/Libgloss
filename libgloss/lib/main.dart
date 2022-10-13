@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/widgets/slide_route.dart';
+import 'package:libgloss/widgets/animations/slide_route.dart';
 
 import 'config/blocs.dart';
 

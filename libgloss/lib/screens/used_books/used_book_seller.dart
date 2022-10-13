@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 
-import '../../../widgets/bottom_navigation.dart';
-import '../../../widgets/search_appbar.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
 
 class UsedBookSeller extends StatefulWidget {
   UsedBookSeller({

@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/widgets/online_image.dart';
-import 'package:libgloss/widgets/side_menu.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
-import '../../widgets/bottom_navigation.dart';
-import '../../widgets/search_appbar.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
 
 class HomeNew extends StatefulWidget {
   HomeNew({
