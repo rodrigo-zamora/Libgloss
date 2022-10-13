@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/search/bloc/search_bloc.dart';
 import '../config/routes.dart';
 
 class SideMenu extends StatefulWidget {
@@ -149,7 +151,8 @@ class _SideMenuState extends State<SideMenu> {
         Map<String, dynamic> filters = {};
         filters[itemCategory] = itemName;
         if (kDebugMode)
-          print("\u001b[32m[SideMenu] Adding filter: " + filters.toString());
+          print("\u001b[32m[SideMenu] Searching with filter: " +
+              filters.toString());
         switch (LibglossRoutes.CURRENT_ROUTE) {
           case LibglossRoutes.HOME:
             Navigator.pushNamed(
@@ -157,15 +160,23 @@ class _SideMenuState extends State<SideMenu> {
               LibglossRoutes.SEARCH_NEW,
               arguments: filters,
             );
-            break;
-          case LibglossRoutes.SEARCH_USED:
+            return;
+          case LibglossRoutes.HOME_USED:
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_USED,
               arguments: filters,
             );
+            return;
+          default:
             break;
         }
+        BlocProvider.of<SearchBloc>(context).add(
+          SearchBoookEvent(
+            query: "",
+            filters: filters,
+          ),
+        );
       },
     );
   }
