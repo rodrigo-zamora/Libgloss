@@ -98,53 +98,70 @@ class BookTracker extends StatelessWidget {
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Column(
         children: [
-          Row(
+          Stack(
             children: [
-              Column(
-                children: [
-                  SizedBox(
-                    width: 100,
-                    height: 150,
-                    child: OnlineImage(
-                      imageUrl: item["image"]!,
-                    ),
+              Positioned(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 14, right: 14),
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            height: 150,
+                            child: OnlineImage(
+                              imageUrl: item["image"]!,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(bottom: 12),
+                            child: Column(
+                              children: [
+                                Text(
+                                  item["title"]!,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  item["author"]!,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: _blueColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-              Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(bottom: 12),
-                    child: Column(
-                      children: [
-                        Text(
-                          item["title"]!,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          item["author"]!,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: _blueColor,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  icon: Icon(Icons.edit, color: _secondaryColor,),
+                  onPressed: () {
+                    print("HI");
+                  },
+                )
               ),
             ],
           ),
-          SizedBox(
-            height: 24,
-          ),
+          SizedBox(height: 24,),
           Column(
             children: [
               Row(
