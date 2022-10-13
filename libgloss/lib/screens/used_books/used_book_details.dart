@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/details/bloc/details_bloc.dart';
 import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
@@ -24,9 +26,11 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
 
   TextEditingController _textFieldController = TextEditingController();
 
+  Map<String, dynamic> _args = {};
+
   Widget build(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments;
-    _args as Map<String, dynamic>;
+    //final _args = ModalRoute.of(context)!.settings.arguments;
+    //_args as Map<String, dynamic>;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -40,14 +44,32 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _main(context, _args),
+      body: _details(),
       bottomNavigationBar: BottomNavigation(
           selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 
-  SingleChildScrollView _main(
-      BuildContext context, Map<String, dynamic> _args) {
+  BlocConsumer<DetailsBloc, DetailsState> _details() {
+    return BlocConsumer<DetailsBloc, DetailsState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state is DetailsLoadingState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is DetailsLoadedState) {
+          _args = state.list;
+          print(_args);
+          return _main(context, _args);
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  SingleChildScrollView _main(BuildContext context, Map<String, dynamic> _args) {
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,

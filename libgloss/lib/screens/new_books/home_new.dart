@@ -134,6 +134,7 @@ class _HomeNewState extends State<HomeNew> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
+                          // TODO: Checar que si este bien hecho el bloc
                           BlocProvider.of<DetailsBloc>(context).add(
                             DetailsMoveEvent(
                               list: _listElements[index]

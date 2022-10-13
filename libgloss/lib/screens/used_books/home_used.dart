@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
+import '../../blocs/details/bloc/details_bloc.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/online_image.dart';
 import '../../widgets/search_appbar.dart';
@@ -138,7 +140,14 @@ class _HomeUsedState extends State<HomeUsed> {
                       GestureDetector(
                         onTap: () {
                           print(_listElements[index]["title"]);
-                          // TODO: Add bloc event to navigate to book details
+                          // TODO: Checar que si este bien hecho el bloc
+                          BlocProvider.of<DetailsBloc>(context).add(
+                            DetailsMoveEvent(
+                              list: _listElements[index]
+                            ));
+                          Navigator.pushNamed(
+                            context, LibglossRoutes.USED_BOOK_DETAILS,
+                          );
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 5.2),
