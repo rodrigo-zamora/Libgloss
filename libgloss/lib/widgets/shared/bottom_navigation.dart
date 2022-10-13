@@ -25,7 +25,7 @@ class BottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     if (kDebugMode)
       print(
-          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $_selectedItem");
+          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $_selectedItem\n\u001b[36m[BottomNavigation] Current screen: ${ModalRoute.of(context)?.settings.name}");
 
     var _routes = {
       LibglossRoutes.HOME: 0,
@@ -58,6 +58,7 @@ class BottomNavigation extends StatelessWidget {
       currentIndex: _routes[_selectedItem]!,
       selectedItemColor: _iconColor,
       onTap: (index) {
+        // TODO: Fix navigation between all routes
         switch (index) {
           case 0:
             if (LibglossRoutes.CURRENT_ROUTE != LibglossRoutes.HOME) {
@@ -72,21 +73,37 @@ class BottomNavigation extends StatelessWidget {
                   reverseTransitionDuration: Duration.zero,
                 ),
               );
+            } else if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME &&
+                ModalRoute.of(context)?.settings.name ==
+                    LibglossRoutes.NEW_BOOK_DETAILS) {
+              if (kDebugMode)
+                print(
+                    '\u001b[36m[BottomNavigation] Redirecting to Home from NewBookDetails');
+              Navigator.pop(context);
             }
             break;
-          // TODO: Fix navigation between all routes
           case 1:
-            if (kDebugMode)
-              print('\u001b[36m[BottomNavigation] Redirecting to Search');
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => HomeUsed(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (LibglossRoutes.CURRENT_ROUTE != LibglossRoutes.HOME_USED) {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Search');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => HomeUsed(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else if (LibglossRoutes.CURRENT_ROUTE ==
+                    LibglossRoutes.HOME_USED &&
+                ModalRoute.of(context)?.settings.name ==
+                    LibglossRoutes.USED_BOOK_DETAILS) {
+              if (kDebugMode)
+                print(
+                    '\u001b[36m[BottomNavigation] Redirecting to Search from UsedBookDetails');
+              Navigator.pop(context);
+            }
             break;
           case 2:
             if (kDebugMode)
