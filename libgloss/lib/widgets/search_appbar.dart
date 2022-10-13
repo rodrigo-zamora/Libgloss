@@ -62,6 +62,14 @@ class SearchAppBar extends StatelessWidget {
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
+                  switch (LibglossRoutes.CURRENT_ROUTE) {
+                    case LibglossRoutes.SEARCH_NEW:
+                      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
+                      break;
+                    case LibglossRoutes.SEARCH_USED:
+                      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
+                      break;
+                  }
                 },
               ),
             Column(

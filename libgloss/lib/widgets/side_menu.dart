@@ -156,6 +156,7 @@ class _SideMenuState extends State<SideMenu> {
           print("\u001b[32m[SideMenu] Current route: " +
               LibglossRoutes.CURRENT_ROUTE);
         }
+        Navigator.pop(context);
         switch (LibglossRoutes.CURRENT_ROUTE) {
           case LibglossRoutes.HOME:
             Navigator.pushNamed(
