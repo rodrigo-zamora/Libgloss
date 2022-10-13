@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,8 +6,11 @@ import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
+import '../../widgets/loading_animation.dart';
 import '../../widgets/search_appbar.dart';
 import '../../widgets/side_menu.dart';
+
+// TODO: ADD BOOK API
 
 class NewBookSearch extends StatefulWidget {
   const NewBookSearch({super.key});
@@ -57,13 +61,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Buscando libros...",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  LoadingAnimation(animationColor: _secondaryColor),
                   Image.asset(
                     'assets/images/loading_bunny_blue.gif',
                   ),
@@ -76,4 +74,5 @@ class _NewBookSearchState extends State<NewBookSearch> {
       },
     );
   }
+
 }

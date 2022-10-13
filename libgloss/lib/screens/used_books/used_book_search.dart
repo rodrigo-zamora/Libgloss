@@ -5,6 +5,7 @@ import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
+import '../../widgets/loading_animation.dart';
 import '../../widgets/search_appbar.dart';
 import '../../widgets/side_menu.dart';
 
@@ -57,13 +58,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Buscando libros...",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  LoadingAnimation(animationColor: _secondaryColor),
                   Image.asset(
                     'assets/images/loading_bunny_green.gif',
                   ),
