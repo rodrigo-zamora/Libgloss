@@ -186,7 +186,7 @@ class _UserOptionsState extends State<UserOptions> {
   Padding _sellerButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 90),
-      child: TextButton(
+      child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(_primaryColor),
           shape: MaterialStateProperty.all(
