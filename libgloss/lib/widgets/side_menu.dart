@@ -150,9 +150,12 @@ class _SideMenuState extends State<SideMenu> {
       onTap: () {
         Map<String, dynamic> filters = {};
         filters[itemCategory] = itemName;
-        if (kDebugMode)
+        if (kDebugMode) {
           print("\u001b[32m[SideMenu] Searching with filter: " +
               filters.toString());
+          print("\u001b[32m[SideMenu] Current route: " +
+              LibglossRoutes.CURRENT_ROUTE);
+        }
         switch (LibglossRoutes.CURRENT_ROUTE) {
           case LibglossRoutes.HOME:
             Navigator.pushNamed(
@@ -160,14 +163,21 @@ class _SideMenuState extends State<SideMenu> {
               LibglossRoutes.SEARCH_NEW,
               arguments: filters,
             );
-            return;
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_NEW;
+            break;
           case LibglossRoutes.HOME_USED:
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_USED,
               arguments: filters,
             );
-            return;
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_USED;
+            break;
+          // Hide the side menu when the user is in the search page
+          case LibglossRoutes.SEARCH_NEW:
+          case LibglossRoutes.SEARCH_USED:
+            Navigator.pop(context);
+            break;
           default:
             break;
         }
