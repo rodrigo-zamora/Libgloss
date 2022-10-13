@@ -112,6 +112,7 @@ class BookTracker extends StatelessWidget {
                             height: 150,
                             child: OnlineImage(
                               imageUrl: item["image"]!,
+                              width: 100,
                             ),
                           ),
                         ],
@@ -150,18 +151,22 @@ class BookTracker extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  icon: Icon(Icons.edit, color: _secondaryColor,),
-                  onPressed: () {
-                    print("HI");
-                  },
-                )
-              ),
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: _secondaryColor,
+                    ),
+                    onPressed: () {
+                      print("HI");
+                    },
+                  )),
             ],
           ),
-          SizedBox(height: 24,),
+          SizedBox(
+            height: 24,
+          ),
           Column(
             children: [
               Row(
@@ -245,6 +250,7 @@ class BookTracker extends StatelessWidget {
                     height: 150,
                     child: OnlineImage(
                       imageUrl: item["image"]!,
+                      width: 100,
                     ),
                   ),
                 ],

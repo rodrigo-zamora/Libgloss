@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
-import '../../blocs/details/bloc/details_bloc.dart';
 import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/loading_animation.dart';
@@ -156,19 +155,14 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: Text(
-                  "TEMPORAL SEARCH",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: _greenColor)),
+                child: Text("TEMPORAL SEARCH",
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: _greenColor)),
               ),
-              Divider(
-                color: _greenColor,
-                thickness: 1,
-                height: 1
-              ),
-              _found( context),
+              Divider(color: _greenColor, thickness: 1, height: 1),
+              _found(context),
             ],
           ),
         ),
@@ -199,19 +193,17 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                   GestureDetector(
                     onTap: () {
                       print(_listElements[index]["title"]);
-                      // TODO: Checar que si este bien hecho el bloc
-                      BlocProvider.of<DetailsBloc>(context).add(
-                        DetailsMoveEvent(
-                          list: _listElements[index]
-                        ));
                       Navigator.pushNamed(
-                        context, LibglossRoutes.USED_BOOK_DETAILS,
+                        context,
+                        LibglossRoutes.USED_BOOK_DETAILS,
+                        arguments: _listElements[index],
                       );
                     },
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 5.2),
                       child: OnlineImage(
                         imageUrl: "${_listElements[index]["image"]}",
+                            width: 100,
                       ),
                     ),
                   ),

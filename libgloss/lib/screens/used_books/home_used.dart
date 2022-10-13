@@ -1,13 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
-import '../../blocs/details/bloc/details_bloc.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/online_image.dart';
 import '../../widgets/search_appbar.dart';
-import 'used_book_details.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -139,20 +138,20 @@ class _HomeUsedState extends State<HomeUsed> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          print(_listElements[index]["title"]);
-                          // TODO: Checar que si este bien hecho el bloc
-                          BlocProvider.of<DetailsBloc>(context).add(
-                            DetailsMoveEvent(
-                              list: _listElements[index]
-                            ));
+                          if (kDebugMode)
+                            print(
+                                "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
                           Navigator.pushNamed(
-                            context, LibglossRoutes.USED_BOOK_DETAILS,
+                            context,
+                            LibglossRoutes.USED_BOOK_DETAILS,
+                            arguments: _listElements[index],
                           );
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 5.2),
                           child: OnlineImage(
                             imageUrl: "${_listElements[index]["image"]}",
+                            width: 100,
                           ),
                         ),
                       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
-import '../../blocs/details/bloc/details_bloc.dart';
 import '../../config/routes.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/loading_animation.dart';
@@ -153,19 +152,14 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: Text(
-                  "TEMPORAL SEARCH",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: _blueColor)),
+                child: Text("TEMPORAL SEARCH",
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: _blueColor)),
               ),
-              Divider(
-                color: _blueColor,
-                thickness: 1,
-                height: 1
-              ),
-              _found( context),
+              Divider(color: _blueColor, thickness: 1, height: 1),
+              _found(context),
             ],
           ),
         ),
@@ -196,19 +190,17 @@ class _NewBookSearchState extends State<NewBookSearch> {
                   GestureDetector(
                     onTap: () {
                       print(_listElements[index]["title"]);
-                      // TODO: Checar que si este bien hecho el bloc
-                      BlocProvider.of<DetailsBloc>(context).add(
-                        DetailsMoveEvent(
-                          list: _listElements[index]
-                        ));
                       Navigator.pushNamed(
-                        context, LibglossRoutes.NEW_BOOK_DETAILS,
+                        context,
+                        LibglossRoutes.NEW_BOOK_DETAILS,
+                        arguments: _listElements[index],
                       );
                     },
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 4.7),
                       child: OnlineImage(
                         imageUrl: _listElements[index]["image"]!,
+                            width: 100,
                       ),
                     ),
                   ),
@@ -244,5 +236,4 @@ class _NewBookSearchState extends State<NewBookSearch> {
       ),
     );
   }
-
 }

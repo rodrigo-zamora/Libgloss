@@ -1,10 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/online_image.dart';
 import 'package:libgloss/widgets/side_menu.dart';
 
-import '../../blocs/details/bloc/details_bloc.dart';
 import '../../widgets/bottom_navigation.dart';
 import '../../widgets/search_appbar.dart';
 
@@ -133,20 +132,20 @@ class _HomeNewState extends State<HomeNew> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          print(_listElements[index]["title"]);
-                          // TODO: Checar que si este bien hecho el bloc
-                          BlocProvider.of<DetailsBloc>(context).add(
-                            DetailsMoveEvent(
-                              list: _listElements[index]
-                            ));
+                          if (kDebugMode)
+                            print(
+                                "[HomeNew] Moving to details of ${_listElements[index]["title"]}");
                           Navigator.pushNamed(
-                            context, LibglossRoutes.NEW_BOOK_DETAILS,
+                            context,
+                            LibglossRoutes.NEW_BOOK_DETAILS,
+                            arguments: _listElements[index],
                           );
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: OnlineImage(
                             imageUrl: _listElements[index]["image"]!,
+                            width: 100,
                           ),
                         ),
                       ),
