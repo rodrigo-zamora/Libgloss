@@ -203,6 +203,7 @@ class BookTracker extends StatelessWidget {
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           child: Row(
             children: [
               for (var item in _listSeguimientos) _trackingBookItem(item),
@@ -288,6 +289,7 @@ class BookTracker extends StatelessWidget {
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           child: Row(
             children: [
               for (var item in _wishList) _wishListItem(item),
