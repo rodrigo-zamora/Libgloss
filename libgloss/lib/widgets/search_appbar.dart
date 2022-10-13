@@ -82,12 +82,19 @@ class SearchAppBar extends StatelessWidget {
                         print(
                             "\u001b[32m[SearchAppBar] Current screen is ${LibglossRoutes.CURRENT_ROUTE}");
                       if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME) {
-                        Navigator.pushNamed(context, LibglossRoutes.SEARCH_NEW,
-                            arguments: filters);
+                        Navigator.pushNamed(
+                          context,
+                          LibglossRoutes.SEARCH_NEW,
+                          arguments: filters,
+                        );
                       }
-                      if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME_USED) {
-                        Navigator.pushNamed(context, LibglossRoutes.SEARCH_USED,
-                            arguments: filters);
+                      if (LibglossRoutes.CURRENT_ROUTE ==
+                          LibglossRoutes.HOME_USED) {
+                        Navigator.pushNamed(
+                          context,
+                          LibglossRoutes.SEARCH_USED,
+                          arguments: filters,
+                        );
                       }
 
                       BlocProvider.of<SearchBloc>(context).add(

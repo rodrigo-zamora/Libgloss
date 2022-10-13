@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../config/routes.dart';
+
 class SideMenu extends StatefulWidget {
   SideMenu({
     Key? key,
@@ -118,12 +120,19 @@ class _SideMenuState extends State<SideMenu> {
           },
         ),
         if (mockedData[categoryName]!["isExpanded"] as bool)
-          ...categoryItems.map((e) => _buildCategoryItem(e)).toList(),
+          ...categoryItems
+              .map(
+                (e) => _buildCategoryItem(
+                  e,
+                  categoryName,
+                ),
+              )
+              .toList(),
       ],
     );
   }
 
-  Widget _buildCategoryItem(String itemName) {
+  Widget _buildCategoryItem(String itemName, String itemCategory) {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.only(left: 24),
@@ -137,7 +146,26 @@ class _SideMenuState extends State<SideMenu> {
         ),
       ),
       onTap: () {
-        // TODO: Implement navigation to the selected item
+        Map<String, dynamic> filters = {};
+        filters[itemCategory] = itemName;
+        if (kDebugMode)
+          print("\u001b[32m[SideMenu] Adding filter: " + filters.toString());
+        switch (LibglossRoutes.CURRENT_ROUTE) {
+          case LibglossRoutes.HOME:
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_NEW,
+              arguments: filters,
+            );
+            break;
+          case LibglossRoutes.SEARCH_USED:
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_USED,
+              arguments: filters,
+            );
+            break;
+        }
       },
     );
   }
