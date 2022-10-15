@@ -6,6 +6,7 @@ import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/animations/loading_animation.dart';
+import '../../widgets/shared/filter.dart';
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
@@ -153,12 +154,8 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: Text("TEMPORAL SEARCH",
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: _greenColor)),
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
+                child: Filter(primary: _primaryColor, secondary: _secondaryColor),
               ),
               Divider(color: _greenColor, thickness: 1, height: 1),
               _found(context),
