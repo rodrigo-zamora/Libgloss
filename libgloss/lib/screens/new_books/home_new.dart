@@ -21,8 +21,6 @@ class _HomeNewState extends State<HomeNew> {
   final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
 
-  TextEditingController _textFieldController = TextEditingController();
-
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "And Then There Were None",
@@ -93,10 +91,12 @@ class _HomeNewState extends State<HomeNew> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            primaryColor: _primaryColor,
-            secondaryColor: _secondaryColor,
-            showMenuButton: true,
-            showCameraButton: true),
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: true,
+          showCameraButton: true,
+          showSearchField: true,
+        ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,

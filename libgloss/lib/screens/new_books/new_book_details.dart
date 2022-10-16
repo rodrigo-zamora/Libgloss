@@ -22,8 +22,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   final Color _redColor = Color.fromRGBO(130, 48, 16, 1);
   final Color _defaultColor = Color.fromRGBO(0, 0, 0, 1);
 
-  TextEditingController _textFieldController = TextEditingController();
-
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
@@ -33,10 +31,12 @@ class _NewBookDetailsState extends State<NewBookDetails> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            primaryColor: _primaryColor,
-            secondaryColor: _secondaryColor,
-            showMenuButton: false,
-            showCameraButton: false),
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: false,
+          showCameraButton: false,
+          showSearchField: true,
+        ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,

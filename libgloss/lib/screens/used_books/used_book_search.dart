@@ -24,8 +24,6 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
   final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
 
-  TextEditingController _textFieldController = TextEditingController();
-
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "Maze Runner",
@@ -100,10 +98,12 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            primaryColor: _primaryColor,
-            secondaryColor: _secondaryColor,
-            showMenuButton: false,
-            showCameraButton: false),
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: false,
+          showCameraButton: false,
+          showSearchField: true,
+        ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
@@ -154,9 +154,10 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
+                padding:
+                    EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
                 child: Filter(
-                  primary: _primaryColor, 
+                  primary: _primaryColor,
                   secondary: _secondaryColor,
                   tertiary: _greenColor,
                 ),

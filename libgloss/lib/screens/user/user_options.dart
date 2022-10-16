@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
@@ -20,8 +19,6 @@ class _UserOptionsState extends State<UserOptions> {
   final Color _tertiaryColor = Color.fromRGBO(251, 236, 233, 1);
   final Color _iconColors = Color.fromRGBO(36, 36, 36, 1);
 
-  final TextEditingController _textFieldController = TextEditingController();
-
   var user = User(
     image:
         'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
@@ -41,6 +38,7 @@ class _UserOptionsState extends State<UserOptions> {
           secondaryColor: _secondaryColor,
           showMenuButton: true,
           showCameraButton: false,
+          showSearchField: true,
         ),
       ),
       body: Container(

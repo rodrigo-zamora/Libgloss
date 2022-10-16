@@ -25,8 +25,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
   final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
 
-  TextEditingController _textFieldController = TextEditingController();
-
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "And Then There Were None",
@@ -97,10 +95,12 @@ class _NewBookSearchState extends State<NewBookSearch> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            primaryColor: _primaryColor,
-            secondaryColor: _secondaryColor,
-            showMenuButton: false,
-            showCameraButton: true),
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: false,
+          showCameraButton: true,
+          showSearchField: true,
+        ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
@@ -151,9 +151,10 @@ class _NewBookSearchState extends State<NewBookSearch> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
+                padding:
+                    EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
                 child: Filter(
-                  primary: _primaryColor, 
+                  primary: _primaryColor,
                   secondary: _secondaryColor,
                   tertiary: _blueColor,
                 ),

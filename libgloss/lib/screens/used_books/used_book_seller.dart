@@ -17,8 +17,6 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
   final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
   final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
 
-  final TextEditingController _textFieldController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
@@ -31,6 +29,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
           secondaryColor: _secondaryColor,
           showMenuButton: false,
           showCameraButton: false,
+          showSearchField: true,
         ),
       ),
       body: Container(

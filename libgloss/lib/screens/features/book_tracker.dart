@@ -74,6 +74,7 @@ class BookTracker extends StatelessWidget {
           secondaryColor: _secondaryColor,
           showMenuButton: true,
           showCameraButton: false,
+          showSearchField: true,
         ),
       ),
       drawer: SideMenu(
