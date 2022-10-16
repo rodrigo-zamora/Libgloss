@@ -23,10 +23,6 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode)
-      print(
-          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $_selectedItem\n\u001b[36m[BottomNavigation] Current screen: ${ModalRoute.of(context)?.settings.name}");
-
     var _routes = {
       LibglossRoutes.HOME: 0,
       LibglossRoutes.HOME_USED: 1,

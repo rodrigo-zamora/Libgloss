@@ -28,8 +28,6 @@ class SearchAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode)
-      print("[SearchAppBar] Building SearchAppBar with color $_primaryColor");
     return AppBar(
       backgroundColor: _primaryColor,
       toolbarHeight: 80,
@@ -138,7 +136,7 @@ class SearchAppBar extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             )
           ],

@@ -22,6 +22,7 @@ class _SideMenuState extends State<SideMenu> {
   var mockedData = {
     "Género": {
       "isExpanded": true,
+      "keyword": "genre",
       "items": [
         "Acción",
         "Aventura",
@@ -36,6 +37,7 @@ class _SideMenuState extends State<SideMenu> {
     },
     "Autor": {
       "isExpanded": true,
+      "keyword": "author",
       "items": [
         "Agatha Christie",
         "J.K. Rowling",
@@ -48,6 +50,7 @@ class _SideMenuState extends State<SideMenu> {
     },
     "Rango de precios": {
       "isExpanded": true,
+      "keyword": "price",
       "items": [
         "Menos de \$100",
         "Entre \$100 y \$200",
@@ -126,7 +129,7 @@ class _SideMenuState extends State<SideMenu> {
               .map(
                 (e) => _buildCategoryItem(
                   e,
-                  categoryName,
+                  mockedData[categoryName]!["keyword"] as String,
                 ),
               )
               .toList(),
@@ -134,7 +137,7 @@ class _SideMenuState extends State<SideMenu> {
     );
   }
 
-  Widget _buildCategoryItem(String itemName, String itemCategory) {
+  Widget _buildCategoryItem(String itemName, String categoryKeyword) {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.only(left: 24),
@@ -149,7 +152,7 @@ class _SideMenuState extends State<SideMenu> {
       ),
       onTap: () {
         Map<String, dynamic> filters = {};
-        filters[itemCategory] = itemName;
+        filters[categoryKeyword] = itemName;
         if (kDebugMode) {
           print("\u001b[32m[SideMenu] Searching with filter: " +
               filters.toString());
