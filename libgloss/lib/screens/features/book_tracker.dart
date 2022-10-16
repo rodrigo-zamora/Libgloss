@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../widgets/shared/bottom_navigation.dart';
-import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
+
+import 'tracking_item.dart';
+import 'wish_item.dart';
 
 class BookTracker extends StatelessWidget {
   final Color _primaryColor = Color.fromRGBO(244, 210, 255, 1);
   final Color _secondaryColor = Color.fromRGBO(215, 132, 243, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
 
-  final TextEditingController _textFieldController = TextEditingController();
-
   BookTracker({super.key});
+  final controllerT = PageController(viewportFraction: 0.8, keepPage: true);
+  final controllerW = PageController(viewportFraction: 0.8, keepPage: true);
 
   final List<Map<String, String>> _listSeguimientos = [
     {
@@ -42,7 +45,7 @@ class BookTracker extends StatelessWidget {
     },
   ];
 
-  final List<Map<String, String>> _wishList = [
+  late final List<Map<String, String>> _wishList = [
     {
       "title": "Gone Girl",
       "author": "Gillian Flynn",
@@ -78,10 +81,11 @@ class BookTracker extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
+          SizedBox(
             child: _trackingWidget(),
           ),
-          Expanded(
+          SizedBox(height: 20,),
+          SizedBox(
             child: _wishListWidget(),
           ),
         ],
@@ -89,120 +93,6 @@ class BookTracker extends StatelessWidget {
       bottomNavigationBar: BottomNavigation(
           selectedItem: LibglossRoutes.BOOK_TRACKER,
           iconColor: _secondaryColor),
-    );
-  }
-
-  Widget _trackingBookItem(Map<String, String> item) {
-    return Container(
-      padding: EdgeInsets.only(left: 12, right: 12),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Positioned(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 14, right: 14),
-                  child: Row(
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            width: 100,
-                            height: 150,
-                            child: OnlineImage(
-                              imageUrl: item["image"]!,
-                              width: 100,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(bottom: 12),
-                            child: Column(
-                              children: [
-                                Text(
-                                  item["title"]!,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                Text(
-                                  item["author"]!,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: _blueColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: _secondaryColor,
-                    ),
-                    onPressed: () {
-                      print("HI");
-                    },
-                  )),
-            ],
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Plataforma: ${item["plataforma"]}",
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Precio deseado: \$${item["precio"]}",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Tiempo: ${item["tiempo"]}",
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -222,74 +112,31 @@ class BookTracker extends StatelessWidget {
         SizedBox(
           height: 12,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: BouncingScrollPhysics(),
-          child: Row(
-            children: [
-              for (var item in _listSeguimientos) _trackingBookItem(item),
-            ],
+        SizedBox(
+          height: 240,
+          child: PageView.builder(
+            controller: controllerT,
+            itemBuilder: (_, index) {
+              //return pages[index % pages.length];
+              return TrackingItem(item: _listSeguimientos[index % _listSeguimientos.length]);
+            },
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SmoothPageIndicator(
+          controller: controllerT,
+          count: _listSeguimientos.length,
+          effect: WormEffect(
+            dotHeight: 8,
+            dotWidth: 16,
+            type: WormType.thin,
+            activeDotColor: _secondaryColor,
+            // strokeWidth: 5,
           ),
         ),
       ],
-    );
-  }
-
-  Widget _wishListItem(Map<String, String> item) {
-    return Container(
-      padding: EdgeInsets.only(left: 12, right: 12),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    width: 100,
-                    height: 150,
-                    child: OnlineImage(
-                      imageUrl: item["image"]!,
-                      width: 100,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(bottom: 12),
-                    child: Column(
-                      children: [
-                        Text(
-                          item["title"]!,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          item["author"]!,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: _blueColor,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 12,
-          ),
-        ],
-      ),
     );
   }
 
@@ -309,13 +156,28 @@ class BookTracker extends StatelessWidget {
         SizedBox(
           height: 12,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: BouncingScrollPhysics(),
-          child: Row(
-            children: [
-              for (var item in _wishList) _wishListItem(item),
-            ],
+        SizedBox(
+          height: 180,
+          child: PageView.builder(
+            controller: controllerW,
+            itemBuilder: (_, index) {
+              //return pages[index % pages.length];
+              return WishItem(item: _wishList[index % _wishList.length]);
+            },
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SmoothPageIndicator(
+          controller: controllerW,
+          count: _wishList.length,
+          effect: WormEffect(
+            dotHeight: 8,
+            dotWidth: 16,
+            type: WormType.thin,
+            activeDotColor: _secondaryColor,
+            // strokeWidth: 5,
           ),
         ),
       ],
