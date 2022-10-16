@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 class Filter extends StatelessWidget {
   final _primaryColor;
   final _secondaryColor;
+  final _tertiaryColor;
 
   Filter({
     Key? key,
     required Color primary,
     required Color secondary,
+    required Color tertiary,
   })  : _primaryColor = primary,
         _secondaryColor = secondary,
+        _tertiaryColor = tertiary,
         super(key: key);
 
   @override
@@ -26,7 +29,7 @@ class Filter extends StatelessWidget {
           EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
         overlayColor:
-            MaterialStateColor.resolveWith((states) => _primaryColor),
+            MaterialStateColor.resolveWith((states) => _secondaryColor),
       ),
       onPressed: () {},
       child: Row(
@@ -35,13 +38,13 @@ class Filter extends StatelessWidget {
             child: Text(
               "Filter",
               style: TextStyle(
-                color: _secondaryColor,
+                color: _tertiaryColor,
               ),
             ),
           ),
           Icon(
             Icons.expand_more,
-            color: _secondaryColor,
+            color: _tertiaryColor,
             size: 20,
           ),
         ],

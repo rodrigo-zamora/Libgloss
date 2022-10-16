@@ -152,7 +152,11 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
-                child: Filter(primary: _primaryColor, secondary: _secondaryColor),
+                child: Filter(
+                  primary: _primaryColor, 
+                  secondary: _secondaryColor,
+                  tertiary: _blueColor,
+                ),
               ),
               Divider(color: _blueColor, thickness: 1, height: 1),
               _found(context),
