@@ -18,10 +18,26 @@ class SearchBoookEvent extends SearchEvent {
 
   @override
   List<dynamic> get props => [
-      query,
-      filters,
-    ];
+        query,
+        filters,
+      ];
 
   @override
   String toString() => 'SearchBoookEvent { query: $query, filters: $filters }';
+}
+
+class BookDetailsEvent extends SearchEvent {
+  final String bookId;
+
+  const BookDetailsEvent({
+    required String this.bookId,
+  });
+
+  @override
+  List<dynamic> get props => [
+        bookId,
+      ];
+
+  @override
+  String toString() => 'BookDetailsEvent { bookId: $bookId }';
 }

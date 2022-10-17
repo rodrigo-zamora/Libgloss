@@ -47,7 +47,17 @@ class _NewBookSearchState extends State<NewBookSearch> {
 
   BlocConsumer<SearchBloc, SearchState> _searchBook(BuildContext context) {
     return BlocConsumer<SearchBloc, SearchState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is SearchError) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+        }
+      },
       builder: (context, state) {
         if (kDebugMode)
           print(

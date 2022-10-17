@@ -36,3 +36,17 @@ class SearchError extends SearchState {
   @override
   String toString() => 'SearchError { message: $message }';
 }
+
+class BookLoading extends SearchState {}
+
+class BookLoaded extends SearchState {
+  final Map<String, dynamic> bookDetails;
+
+  const BookLoaded({required this.bookDetails});
+
+  @override
+  List<dynamic> get props => [bookDetails];
+
+  @override
+  String toString() => 'BookLoaded { bookDetails: $bookDetails }';
+}

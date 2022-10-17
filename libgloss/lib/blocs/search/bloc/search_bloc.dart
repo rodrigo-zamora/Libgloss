@@ -11,16 +11,28 @@ part 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc() : super(SearchInitial()) {
     on<SearchEvent>(_searchBook);
+    on<BookDetailsEvent>(_bookDetails);
   }
 
-  final BOOK_API = 'https://libgloss.herokuapp.com/api/books/search';
+  final BOOK_API = 'https://libgloss.herokuapp.com/api/';
 
   FutureOr<void> _searchBook(SearchEvent event, Emitter emit) async {
     if (kDebugMode) print('\x1B[32m[SearchBloc] ${event}');
     emit(SearchLoading());
 
+    String query = (event as SearchBoookEvent).query;
+    Map<String, dynamic> filters = (event).filters;
+
+    String filterQuery = '';
+    filters.forEach((key, value) {
+      if (value != null) {
+        filterQuery += '&$key=$value';
+      }
+    });
+
     try {
-      final uri = Uri.parse(BOOK_API + '?title=${event.props[0]}');
+      final uri =
+          Uri.parse(BOOK_API + 'books/search?title=$query' + filterQuery);
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
       emit(SearchLoaded(
@@ -29,5 +41,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if (kDebugMode) print('\x1B[31m[SearchBloc] An error occured: $e');
       emit(SearchError(message: e.toString()));
     }
+  }
+
+  FutureOr<void> _bookDetails(SearchEvent event, Emitter emit) {
+    if (kDebugMode) print('\x1B[32m[SearchBloc] ${event}');
+    emit(BookLoading());
+    // TODO: implement _bookDetails
+    emit(BookLoaded(bookDetails: {}));
   }
 }
