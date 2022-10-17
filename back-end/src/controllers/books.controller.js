@@ -3,55 +3,30 @@ const mlController = require('../controllers/online/ml');
 const amzController = require('../controllers/online/amz');
 
 const booksController = {
-    search: async (query) => {
 
-        query.title = query.title.replaceAll(' ', '%20');
+    // Handle search requests, including title, category, and ISBN
+    searchBooks: async (query ) => {
+        let books = [];
 
-        let time = new Date();
+        // Replace spaces with '%20' to make a valid URL
+        let title = query.title.replace(/ /g, '%20');
 
-        console.log('Searching books with query', query.title);
-
-        let books = await googleController.searchISBN(query.title);
-        console.log('\tFound', books.length, 'books in Google Books');
-        return books;
-
-        /*for (let i = 0; i < 1; i++) {
-            let book = ISBNList[i];
-            let amzPrice = await amzController.getPrice(book.isbn);
-            let mlPrice = await mlController.getPrice(book.isbn);
-            book.price = {
-                amz: amzPrice == 0 ? null : amzPrice,
-                ml: mlPrice == 0 ? null : mlPrice
-            }
-            books.push(book);
-        }
-
-        books.sort((a, b) => {
-            if (a.price.amz == null) {
-                return 1;
-            } else if (b.price.amz == null) {
-                return -1;
-            } else {
-                return a.price.amz - b.price.amz;
-            }
-        });*/
-
-        let time2 = new Date();
-
-        console.log('Took', time2 - time, 'ms to search in Google');
-
+        if (title) books = await googleController.searchTitle(query.title);
+        else if (query.category) books = await googleController.searchCategory(query.category);
+        else if (query.isbn) books = await googleController.searchISBN(query.isbn);
         return books;
     },
-    getDetails: async (ISBN) => {
-        console.log('Getting details of book with ISBN', ISBN)
 
-        let amzPrice = await amzController.getPrice(ISBN);
-        let mlPrice = await mlController.getPrice(ISBN);
-
-        details = {
-            amz: amzPrice == 0 ? null: amzPrice,
-            ml: mlPrice == 0 ? null : mlPrice
+    // Get price and availability details for a book, given its ISBN
+    getDetails: async (query) => {
+        let details = {};
+        let amzPrice = await amzController.getPrice(query.isbn);
+        //let mlPrice = await mlController.getPrice(query.isbn);
+        if (query.isbn) {
+            details.amz = amzPrice ? amzPrice : null;
+            //details.ml = mlPrice ? mlPrice : null;
         }
+        return details;
     }
 }
 

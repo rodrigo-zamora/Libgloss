@@ -20,29 +20,6 @@ const mlController = {
 
         return price;
     },
-    searchBook: async (query) => {
-        let books = [];
-        
-        let url = `${BASE_URL}/${query}`;
-        console.log('Searching books in MercadoLibre with url', url);
-
-        let response = await cloudscraper.get(url, {method: 'GET'});
-        const $ = cheerio.load(response);
-        const booksList = $('.ui-search-layout__item');
-        console.log('\tFound', booksList.length, 'books');
-
-        booksList.each((i, book) => {
-            let bookData = {
-                title: $(book).find('.ui-search-item__title').text(),
-                price: $(book).find('.price-tag-fraction')[0].children[0].data,
-                link: $(book).find('.ui-search-link').attr('href'),
-                isbn: $(book).find('.ui-search-item__group--title').text()
-            };
-            books.push(bookData);
-        });
-
-        return books;
-    }
 }
 
 module.exports = mlController;
