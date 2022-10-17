@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens/features/book_tracker.dart';
+import '../screens/tracker/book_tracker.dart';
 import '../screens/features/scanner.dart';
 import '../screens/new_books/home_new.dart';
 import '../screens/new_books/new_book_details.dart';

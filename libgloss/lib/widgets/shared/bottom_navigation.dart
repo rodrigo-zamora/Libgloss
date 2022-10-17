@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:libgloss/screens/features/book_tracker.dart';
+import 'package:libgloss/screens/tracker/book_tracker.dart';
 import 'package:libgloss/screens/new_books/home_new.dart';
 import 'package:libgloss/screens/user/user_options.dart';
 
