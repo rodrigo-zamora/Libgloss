@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:http/http.dart' as http;
 
 part 'search_event.dart';
 part 'search_state.dart';
@@ -10,29 +13,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchEvent>(_searchBook);
   }
 
-  // TODO: Add BOOK API
-  final BOOK_API = '';
+  final BOOK_API = 'https://libgloss.herokuapp.com/api/books/search';
 
   FutureOr<void> _searchBook(SearchEvent event, Emitter emit) async {
-    if (kDebugMode) print('[SearchBloc] ${event}');
+    if (kDebugMode) print('\x1B[32m[SearchBloc] ${event}');
     emit(SearchLoading());
 
-    Timer? _timer;
-    int _recordDuration = 10;
-    int _current = 0;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        _current++;
-        print("\t\tTime recorded: $_current");
-        if (_current >= _recordDuration) {
-          _timer?.cancel();
-          _timer = null;
-          _current = 0;
-          print("\t\tTimer cancelled");
-        }
-      });
-    await Future.delayed(Duration(seconds: 10));
-    emit(SearchTempLoaded());
-    // TODO: Add API call
-    //emit(SearchLoaded(books: []));
+    try {
+      final uri = Uri.parse(BOOK_API + '?title=${event.props[0]}');
+      if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
+      var response = await http.get(uri);
+      emit(SearchLoaded(
+          books: response.body == '[]' ? [] : jsonDecode(response.body)));
+    } catch (e) {
+      if (kDebugMode) print('\x1B[31m[SearchBloc] An error occured: $e');
+      emit(SearchError(message: e.toString()));
+    }
   }
 }

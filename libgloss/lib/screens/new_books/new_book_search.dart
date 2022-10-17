@@ -11,8 +11,6 @@ import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
-// TODO: ADD BOOK API
-
 class NewBookSearch extends StatefulWidget {
   const NewBookSearch({super.key});
 
@@ -24,70 +22,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
   final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
   final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-
-  final List<Map<String, dynamic>> _listElements = [
-    {
-      "title": "And Then There Were None",
-      "author": "Agatha Christie",
-      "image": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
-      "isbn": "978-0062073488",
-      "amazon": 100,
-      "gonvill": 101,
-      "gandhi": 102,
-      "sotano": 103,
-    },
-    {
-      "title": "Gone Girl",
-      "author": "Gillian Flynn",
-      "image": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
-      "isbn": "978-0307588371",
-      "amazon": 201,
-      "gonvill": 202,
-      "gandhi": 203,
-      "sotano": 204,
-    },
-    {
-      "title": "Harry Potter and the Deahtly Hallows",
-      "author": "J.K. Rowling",
-      "image": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
-      "isbn": "978-0545139700",
-      "amazon": 301,
-      "gonvill": 302,
-      "gandhi": 303,
-      "sotano": 304,
-    },
-    {
-      "title": "Cien años de soledad",
-      "author": "Gabriel García Márquez",
-      "image": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
-      "isbn": "978-1644734728",
-      "amazon": 401,
-      "gonvill": 402,
-      "gandhi": 403,
-      "sotano": 404,
-    },
-    {
-      "title": "The Hunger Games",
-      "author": "Suzanne Collins",
-      "image": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
-      "isbn": "978-0439023481",
-      "amazon": 501,
-      "gonvill": 502,
-      "gandhi": 503,
-      "sotano": 504,
-    },
-    {
-      "title": "The Lord of the Rings",
-      "author": "J.R.R. Tolkien",
-      "image":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
-      "isbn": "978-0544003415",
-      "amazon": 601,
-      "gonvill": 602,
-      "gandhi": 603,
-      "sotano": 604,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +67,8 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 ],
               ),
             );
-          case SearchTempLoaded:
-            return _search(context);
+          case SearchLoaded:
+            return _search(context, state.props[0]);
           default:
             return Container();
         }
@@ -142,7 +76,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
     );
   }
 
-  Column _search(BuildContext context) {
+  Column _search(BuildContext context, List<dynamic> books) {
     return Column(
       children: [
         Expanded(
@@ -160,7 +94,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 ),
               ),
               Divider(color: _blueColor, thickness: 1, height: 1),
-              _found(context),
+              _found(context, books),
             ],
           ),
         ),
@@ -168,7 +102,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
     );
   }
 
-  Expanded _found(BuildContext context) {
+  Expanded _found(BuildContext context, List<dynamic> books) {
     return Expanded(
       child: SizedBox(
         child: GridView.builder(
@@ -182,7 +116,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
             childAspectRatio: MediaQuery.of(context).size.width /
                 (MediaQuery.of(context).size.height / 1.5),
           ),
-          itemCount: _listElements.length,
+          itemCount: books.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
               //color: Colors.teal[100],
@@ -190,17 +124,17 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      print(_listElements[index]["title"]);
+                      print(books[index]["title"]);
                       Navigator.pushNamed(
                         context,
                         LibglossRoutes.NEW_BOOK_DETAILS,
-                        arguments: _listElements[index],
+                        arguments: books[index],
                       );
                     },
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 4.7),
                       child: OnlineImage(
-                        imageUrl: _listElements[index]["image"]!,
+                        imageUrl: books[index]["thumbnail"]!,
                         width: 100,
                       ),
                     ),
@@ -209,7 +143,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                     height: 8,
                   ),
                   Text(
-                    "${_listElements[index]["title"]}",
+                    "${books[index]["title"]}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     maxLines: 2,
@@ -220,8 +154,9 @@ class _NewBookSearchState extends State<NewBookSearch> {
                   SizedBox(
                     height: 5,
                   ),
+                  // TODO: Fix authors list
                   Text(
-                    "${_listElements[index]["author"]}",
+                    "${books[index]["authors"]}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
