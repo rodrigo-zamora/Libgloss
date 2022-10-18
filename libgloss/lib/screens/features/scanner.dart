@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../blocs/search/bloc/search_bloc.dart';
 import '../../widgets/shared/search_appbar.dart';
 
 class Scanner extends StatelessWidget {
@@ -38,7 +41,7 @@ class Scanner extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text('No barcode detected'),
+                  content: Text('No se ha podido leer el código'),
                 ),
               );
           } else {
@@ -47,9 +50,27 @@ class Scanner extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text('Barcode detected: $code'),
+                  content: Text('Códiog ISBN detectado: $code'),
                 ),
               );
+            switch (LibglossRoutes.CURRENT_ROUTE) {
+              case LibglossRoutes.HOME:
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.SEARCH_NEW,
+                );
+                break;
+              case LibglossRoutes.HOME_USED:
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.SEARCH_USED,
+                );
+                break;
+            }
+            BlocProvider.of<SearchBloc>(context).add(SearchBoookEvent(
+              query: code,
+              filters: {},
+            ));
           }
         });
   }
