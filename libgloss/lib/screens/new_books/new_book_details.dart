@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
 import '../../config/routes.dart';
@@ -25,6 +27,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
+
+    print(_args);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -60,25 +64,16 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["author"]}", _blueColor, 15.0, FontWeight.normal,
+            _text("${_args["authors"]}", _blueColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 5),
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["image"]! as String),
+            _image(_args["thumbnail"]! as String),
             SizedBox(height: 20.0),
             Container(
-              child: Table(
-                border: TableBorder.all(
-                    color: Colors.black, style: BorderStyle.solid, width: 0.5),
-                children: [
-                  _row("Amazon", _blueColor, "\$${_args["amazon"]}"),
-                  _row("Gonvill", _blueColor, "\$${_args["gonvill"]}"),
-                  _row("Gandhi", _redColor, "\$${_args["gandhi"]}"),
-                  _row("El Sótano", _redColor, "\$${_args["sotano"]}"),
-                ],
-              ),
+              child: _getPrices(),
             ),
             SizedBox(height: 20.0),
             GestureDetector(
@@ -146,5 +141,32 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ),
       ),
     ]);
+  }
+
+  BlocConsumer<SearchBloc, SearchState> _getPrices() {
+    return BlocConsumer<SearchBloc, SearchState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        switch (state.runtimeType) {
+          case BookLoaded:
+            // TODO: Add price containers
+            /*Table(
+                border: TableBorder.all(
+                    color: Colors.black, style: BorderStyle.solid, width: 0.5),
+                children: [
+                  _row("Amazon", _blueColor, "\$${_args["amazon"]}"),
+                  _row("Gonvill", _blueColor, "\$${_args["gonvill"]}"),
+                  _row("Gandhi", _redColor, "\$${_args["gandhi"]}"),
+                  _row("El Sótano", _redColor, "\$${_args["sotano"]}"),
+                ],
+              ), */
+            return Container();
+          case BookLoading:
+          default:
+            // TODO: Add shimmer effect
+            return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }

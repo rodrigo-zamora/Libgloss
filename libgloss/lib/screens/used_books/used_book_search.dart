@@ -122,22 +122,21 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
           print(
               "\u001b[35m[SearchAppBar] Building SearchBar with state $state");
         switch (state.runtimeType) {
-          case SearchInitial:
-            return Container();
           case SearchLoading:
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LoadingAnimation(animationColor: _secondaryColor),
+                  //LoadingAnimation(animationColor: _secondaryColor),
                   Image.asset(
                     'assets/images/loading_bunny_green.gif',
                   ),
                 ],
               ),
             );
-          case SearchTempLoaded:
+          case SearchLoaded:
             return _search(context);
+          case SearchInitial:
           default:
             return Container();
         }

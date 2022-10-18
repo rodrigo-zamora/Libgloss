@@ -30,9 +30,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       }
     });
 
+    final uri = Uri.parse(BOOK_API + 'books/search?title=$query' + filterQuery);
+
     try {
-      final uri =
-          Uri.parse(BOOK_API + 'books/search?title=$query' + filterQuery);
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
       emit(SearchLoaded(
@@ -43,10 +43,24 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  FutureOr<void> _bookDetails(SearchEvent event, Emitter emit) {
+  FutureOr<void> _bookDetails(SearchEvent event, Emitter emit) async {
     if (kDebugMode) print('\x1B[32m[SearchBloc] ${event}');
     emit(BookLoading());
-    // TODO: implement _bookDetails
+
+    String bookId = (event as BookDetailsEvent).bookId;
+
+    final uri = Uri.parse(BOOK_API + 'books/$bookId');
+
+    try {
+      if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
+      var response = await http.get(uri);
+      emit(BookLoaded(
+          bookDetails: response.body == '[]' ? [] : jsonDecode(response.body)));
+    } catch (e) {
+      if (kDebugMode) print('\x1B[31m[SearchBloc] An error occured: $e');
+      emit(SearchError(message: e.toString()));
+    }
+
     emit(BookLoaded(bookDetails: {}));
   }
 }

@@ -15,30 +15,42 @@ class Scanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
-        child: SearchAppBar(
-          primaryColor: _primaryColor,
-          secondaryColor: _secondaryColor,
-          showMenuButton: false,
-          showCameraButton: false,
-          showSearchField: false,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80),
+          child: SearchAppBar(
+            primaryColor: _primaryColor,
+            secondaryColor: _secondaryColor,
+            showMenuButton: false,
+            showCameraButton: false,
+            showSearchField: false,
+          ),
         ),
-      ),
-      body: _buildScanner());
+        body: _buildScanner(context));
   }
 
-  MobileScanner _buildScanner() {
+  MobileScanner _buildScanner(BuildContext context) {
     return MobileScanner(
-      allowDuplicates: false,
-      controller: cameraController,
-      onDetect: (barcode, args) {
-        if (barcode.rawValue == null) {
-          debugPrint('Failed to scan Barcode');
-        } else {
-          final String code = barcode.rawValue!;
-          debugPrint('Barcode found! $code');
-        }
-      });
+        allowDuplicates: false,
+        controller: cameraController,
+        onDetect: (barcode, args) {
+          if (barcode.rawValue == null) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text('No barcode detected'),
+                ),
+              );
+          } else {
+            final String code = barcode.rawValue!;
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text('Barcode detected: $code'),
+                ),
+              );
+          }
+        });
   }
 }

@@ -31,50 +31,50 @@ class TrackingItem extends StatelessWidget {
             children: [
               Positioned(
                 child: Row(
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 150,
+                          child: OnlineImage(
+                            imageUrl: item["image"]!,
                             width: 100,
-                            height: 150,
-                            child: OnlineImage(
-                              imageUrl: item["image"]!,
-                              width: 100,
-                            ),
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(bottom: 12),
-                            child: Column(
-                              children: [
-                                Text(
-                                  item["title"]!,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Column(
+                            children: [
+                              Text(
+                                item["title"]!,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontSize: 14,
                                 ),
-                                Text(
-                                  item["author"]!,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: _blueColor,
-                                    fontSize: 12,
-                                  ),
+                              ),
+                              Text(
+                                item["author"]!,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: _blueColor,
+                                  fontSize: 12,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Positioned(
                   top: 0,
