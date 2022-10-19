@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../blocs/search/bloc/search_bloc.dart';
+import '../../config/routes.dart';
 
 class SideMenu extends StatefulWidget {
   SideMenu({
@@ -18,6 +22,7 @@ class _SideMenuState extends State<SideMenu> {
   var mockedData = {
     "Género": {
       "isExpanded": true,
+      "keyword": "genre",
       "items": [
         "Acción",
         "Aventura",
@@ -32,6 +37,7 @@ class _SideMenuState extends State<SideMenu> {
     },
     "Autor": {
       "isExpanded": true,
+      "keyword": "author",
       "items": [
         "Agatha Christie",
         "J.K. Rowling",
@@ -44,6 +50,7 @@ class _SideMenuState extends State<SideMenu> {
     },
     "Rango de precios": {
       "isExpanded": true,
+      "keyword": "price",
       "items": [
         "Menos de \$100",
         "Entre \$100 y \$200",
@@ -118,12 +125,19 @@ class _SideMenuState extends State<SideMenu> {
           },
         ),
         if (mockedData[categoryName]!["isExpanded"] as bool)
-          ...categoryItems.map((e) => _buildCategoryItem(e)).toList(),
+          ...categoryItems
+              .map(
+                (e) => _buildCategoryItem(
+                  e,
+                  mockedData[categoryName]!["keyword"] as String,
+                ),
+              )
+              .toList(),
       ],
     );
   }
 
-  Widget _buildCategoryItem(String itemName) {
+  Widget _buildCategoryItem(String itemName, String categoryKeyword) {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.only(left: 24),
@@ -137,7 +151,46 @@ class _SideMenuState extends State<SideMenu> {
         ),
       ),
       onTap: () {
-        // TODO: Implement navigation to the selected item
+        Map<String, dynamic> filters = {};
+        filters[categoryKeyword] = itemName;
+        if (kDebugMode) {
+          print("\u001b[32m[SideMenu] Searching with filter: " +
+              filters.toString());
+          print("\u001b[32m[SideMenu] Current route: " +
+              LibglossRoutes.CURRENT_ROUTE);
+        }
+        Navigator.pop(context);
+        switch (LibglossRoutes.CURRENT_ROUTE) {
+          case LibglossRoutes.HOME:
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_NEW,
+              arguments: filters,
+            );
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_NEW;
+            break;
+          case LibglossRoutes.HOME_USED:
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_USED,
+              arguments: filters,
+            );
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_USED;
+            break;
+          // Hide the side menu when the user is in the search page
+          case LibglossRoutes.SEARCH_NEW:
+          case LibglossRoutes.SEARCH_USED:
+            Navigator.pop(context);
+            break;
+          default:
+            break;
+        }
+        BlocProvider.of<SearchBloc>(context).add(
+          SearchBoookEvent(
+            query: "",
+            filters: filters,
+          ),
+        );
       },
     );
   }

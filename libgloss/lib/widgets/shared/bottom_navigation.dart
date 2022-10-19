@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:libgloss/screens/features/book_tracker.dart';
+import 'package:libgloss/screens/tracker/book_tracker.dart';
 import 'package:libgloss/screens/new_books/home_new.dart';
 import 'package:libgloss/screens/user/user_options.dart';
 
-import '../config/routes.dart';
-import '../screens/used_books/home_used.dart';
+import '../../config/routes.dart';
+import '../../screens/used_books/home_used.dart';
 
 class BottomNavigation extends StatelessWidget {
   final _selectedItem;
@@ -23,10 +23,6 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode)
-      print(
-          "[BottomNavigation] Building BottomNavigationBar with selectedItem: $_selectedItem");
-
     var _routes = {
       LibglossRoutes.HOME: 0,
       LibglossRoutes.HOME_USED: 1,
@@ -58,32 +54,57 @@ class BottomNavigation extends StatelessWidget {
       currentIndex: _routes[_selectedItem]!,
       selectedItemColor: _iconColor,
       onTap: (index) {
+        // TODO: Fix navigation between all routes
         switch (index) {
           case 0:
-            if (kDebugMode) print('[BottomNavigation] Redirecting to Home');
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => HomeNew(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (LibglossRoutes.CURRENT_ROUTE != LibglossRoutes.HOME) {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Home');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => HomeNew(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME &&
+                ModalRoute.of(context)?.settings.name ==
+                    LibglossRoutes.NEW_BOOK_DETAILS) {
+              if (kDebugMode)
+                print(
+                    '\u001b[36m[BottomNavigation] Redirecting to Home from NewBookDetails');
+              Navigator.pop(context);
+            }
             break;
           case 1:
-            if (kDebugMode) print('[BottomNavigation] Redirecting to Search');
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => HomeUsed(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (LibglossRoutes.CURRENT_ROUTE != LibglossRoutes.HOME_USED) {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Search');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => HomeUsed(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else if (LibglossRoutes.CURRENT_ROUTE ==
+                    LibglossRoutes.HOME_USED &&
+                ModalRoute.of(context)?.settings.name ==
+                    LibglossRoutes.USED_BOOK_DETAILS) {
+              if (kDebugMode)
+                print(
+                    '\u001b[36m[BottomNavigation] Redirecting to Search from UsedBookDetails');
+              Navigator.pop(context);
+            }
             break;
           case 2:
             if (kDebugMode)
-              print('[BottomNavigation] Redirecting to BookTracker');
+              print('\u001b[36m[BottomNavigation] Redirecting to BookTracker');
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
@@ -95,7 +116,8 @@ class BottomNavigation extends StatelessWidget {
             break;
           case 3:
             if (kDebugMode)
-              print('[BottomNavigation] Redirecting to UserOptions');
+              print('\u001b[36m[BottomNavigation] Redirecting to UserOptions');
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(

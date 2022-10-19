@@ -1,11 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
-import '../../../widgets/bottom_navigation.dart';
-import '../../../widgets/search_appbar.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
 import '../../model/user.dart';
 
 class UserOptions extends StatefulWidget {
-
   UserOptions({super.key});
 
   @override
@@ -17,11 +18,10 @@ class _UserOptionsState extends State<UserOptions> {
   final Color _secondaryColor = Color.fromRGBO(245, 128, 107, 1);
   final Color _tertiaryColor = Color.fromRGBO(251, 236, 233, 1);
   final Color _iconColors = Color.fromRGBO(36, 36, 36, 1);
-  
-  final TextEditingController _textFieldController = TextEditingController();
 
-  var user = User (
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+  var user = User(
+    image:
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
     name: "Agnes Betancourt",
     email: "agnes.betancourt@gmail.com",
     isSeller: true,
@@ -36,9 +36,9 @@ class _UserOptionsState extends State<UserOptions> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          textFieldController: _textFieldController,
           showMenuButton: true,
           showCameraButton: false,
+          showSearchField: true,
         ),
       ),
       body: Container(
@@ -68,26 +68,11 @@ class _UserOptionsState extends State<UserOptions> {
             _sellerButton(),
             _followers(user.isSeller),
             SizedBox(height: 10),
-            _lowButton(
-              Icons.person_outlined, 
-              "Mi Cuenta", 
-              () {}
-            ),
-            _lowButton(
-              Icons.notifications_outlined, 
-              "Notificaciones y mensajes", 
-              () {}
-            ),
-            _lowButton(
-              Icons.help_outline, 
-              "Configuración", 
-              () {}
-            ),
-            _lowButton(
-              Icons.logout_outlined, 
-              "Salir", 
-              () {}
-            ),
+            _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
+            _lowButton(Icons.notifications_outlined,
+                "Notificaciones y mensajes", () {}),
+            _lowButton(Icons.help_outline, "Configuración", () {}),
+            _lowButton(Icons.logout_outlined, "Salir", () {}),
           ],
         ),
       ),
@@ -98,39 +83,56 @@ class _UserOptionsState extends State<UserOptions> {
 
   SizedBox _profilePicture() {
     return SizedBox(
-      height: 110,
-      width: 110,
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.none,
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(user.image),
-          ),
-          Positioned(
-            bottom: 0,
-            right: -10,
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: FloatingActionButton(
-                backgroundColor: _primaryColor,
-                splashColor: _secondaryColor, 
-                onPressed: () {
-                  _show();
-                },
-                child: Icon(
-                  //Icons.photo_camera_outlined,
-                  Icons.edit_outlined,
-                  color: _iconColors,
-                  size: 22,
+        height: 110,
+        width: 110,
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            CachedNetworkImage(
+              placeholder: (context, url) {
+                return ClipOval(
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 100,
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                );
+              },
+              fit: BoxFit.contain,
+              imageUrl: user.image,
+              imageBuilder: (context, imageProvider) {
+                return CircleAvatar(
+                  backgroundImage: imageProvider,
+                );
+              },
+            ),
+            Positioned(
+              bottom: 0,
+              right: -10,
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: FloatingActionButton(
+                  backgroundColor: _primaryColor,
+                  splashColor: _secondaryColor,
+                  onPressed: () {
+                    _show();
+                  },
+                  child: Icon(
+                    //Icons.photo_camera_outlined,
+                    Icons.edit_outlined,
+                    color: _iconColors,
+                    size: 22,
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
-      )
-    );
+            )
+          ],
+        ));
   }
 
   Padding _lowButton(IconData icon, String text, Function() onPressed) {
@@ -147,7 +149,8 @@ class _UserOptionsState extends State<UserOptions> {
           padding: MaterialStateProperty.all(
             EdgeInsets.all(10),
           ),
-          overlayColor: MaterialStateColor.resolveWith((states) => _primaryColor),
+          overlayColor:
+              MaterialStateColor.resolveWith((states) => _primaryColor),
         ),
         onPressed: onPressed,
         child: Row(
@@ -180,7 +183,7 @@ class _UserOptionsState extends State<UserOptions> {
   Padding _sellerButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 90),
-      child: TextButton(
+      child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(_primaryColor),
           shape: MaterialStateProperty.all(
@@ -191,7 +194,8 @@ class _UserOptionsState extends State<UserOptions> {
           padding: MaterialStateProperty.all(
             EdgeInsets.all(10),
           ),
-          overlayColor: MaterialStateColor.resolveWith((states) => _tertiaryColor),
+          overlayColor:
+              MaterialStateColor.resolveWith((states) => _tertiaryColor),
         ),
         onPressed: () {
           user.isSeller = !user.isSeller;
@@ -208,7 +212,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Text _text (bool isSeller) {
+  Text _text(bool isSeller) {
     if (!isSeller) {
       return Text(
         "Convertirse en Vendedor",
@@ -228,7 +232,7 @@ class _UserOptionsState extends State<UserOptions> {
     }
   }
 
-  Widget _followers (bool isSeller) {
+  Widget _followers(bool isSeller) {
     if (isSeller) {
       return IntrinsicHeight(
         child: Row(
@@ -282,9 +286,11 @@ class _UserOptionsState extends State<UserOptions> {
 
   Widget _buildButton(double number, String text) {
     var numberDisplay;
-    if (number % 1 == 0) numberDisplay = number.toInt().toString();
-    else numberDisplay = number.toString();
-    return MaterialButton (
+    if (number % 1 == 0)
+      numberDisplay = number.toInt().toString();
+    else
+      numberDisplay = number.toString();
+    return MaterialButton(
       padding: EdgeInsets.all(5),
       onPressed: () {},
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -310,7 +316,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Widget _show () {
+  Widget _show() {
     return AlertDialog(
       title: Text('AlertDialog Title'),
       content: Text('AlertDialog description'),

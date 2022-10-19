@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/widgets/side_menu.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
-import '../../widgets/bottom_navigation.dart';
-import '../../widgets/online_image.dart';
-import '../../widgets/search_appbar.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/online_image.dart';
+import '../../widgets/shared/search_appbar.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -21,14 +22,16 @@ class _HomeUsedState extends State<HomeUsed> {
   final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
   final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
 
-  TextEditingController _textFieldController = TextEditingController();
-
-  final List<Map<String, String>> _listElements = [
+  final List<Map<String, dynamic>> _listElements = [
     {
       "title": "Maze Runner",
       "author": "James Dashner",
       "image": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
       "vendedor": "Ernesto Contreras",
+      "isbn": "978-6077547327",
+      "precio": 100,
+      "localizacion": "Guadalajara, Jalisco",
+      "contacto": "1111111111",
     },
     {
       "title": "Bajo la Misma Estrella",
@@ -36,6 +39,10 @@ class _HomeUsedState extends State<HomeUsed> {
       "image":
           "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
       "vendedor": "Lupita Gómez",
+      "isbn": "978-6073114233",
+      "precio": 95,
+      "localizacion": "Zapopan, Jalisco",
+      "contacto": "2222222222",
     },
     {
       "title": "El niño de la pijama de rayas",
@@ -43,6 +50,10 @@ class _HomeUsedState extends State<HomeUsed> {
       "image":
           "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
       "vendedor": "Julian Vico",
+      "isbn": "978-6073193320",
+      "precio": 70,
+      "localizacion": "Tlajomulco, Jalisco",
+      "contacto": "3333333333",
     },
     {
       "title": "El Principito",
@@ -50,6 +61,10 @@ class _HomeUsedState extends State<HomeUsed> {
       "image":
           "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
       "vendedor": "Maria Lucia Perera",
+      "isbn": "978-6070730535",
+      "precio": 50,
+      "localizacion": "Tlaquepaque, Jalisco",
+      "contacto": "4444444444",
     },
     {
       "title": "1984",
@@ -57,6 +72,10 @@ class _HomeUsedState extends State<HomeUsed> {
       "image":
           "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
       "vendedor": "Roman Dominguez",
+      "isbn": "978-6073116336",
+      "precio": 80,
+      "localizacion": "El Salto, Jalisco",
+      "contacto": "5555555555",
     },
     {
       "title": "El señor de las moscas",
@@ -64,6 +83,10 @@ class _HomeUsedState extends State<HomeUsed> {
       "image":
           "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
       "vendedor": "Maria Asuncion Perez",
+      "isbn": "978-8420674179",
+      "precio": 120,
+      "localizacion": "Tonalá, Jalisco",
+      "contacto": "6666666666",
     },
   ];
 
@@ -73,11 +96,12 @@ class _HomeUsedState extends State<HomeUsed> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
-            primaryColor: _primaryColor,
-            secondaryColor: _secondaryColor,
-            textFieldController: _textFieldController,
-            showMenuButton: true,
-            showCameraButton: false),
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: true,
+          showCameraButton: false,
+          showSearchField: true,
+        ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
@@ -112,15 +136,20 @@ class _HomeUsedState extends State<HomeUsed> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          print(_listElements[index]["title"]);
+                          if (kDebugMode)
+                            print(
+                                "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
                           Navigator.pushNamed(
-                              context, LibglossRoutes.USED_BOOK_DETAILS,
-                              arguments: _listElements[index]);
+                            context,
+                            LibglossRoutes.USED_BOOK_DETAILS,
+                            arguments: _listElements[index],
+                          );
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 5.2),
                           child: OnlineImage(
                             imageUrl: "${_listElements[index]["image"]}",
+                            width: 100,
                           ),
                         ),
                       ),

@@ -7,10 +7,13 @@ class OnlineImage extends StatefulWidget {
   OnlineImage({
     Key? key,
     required String imageUrl,
+    required double width,
   })  : _imageUrl = imageUrl,
+        _width = width,
         super(key: key);
 
   final String _imageUrl;
+  final double _width;
 
   @override
   State<OnlineImage> createState() => _OnlineImageState();
@@ -26,7 +29,7 @@ class _OnlineImageState extends State<OnlineImage> {
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            width: 100,
+            width: widget._width,
             color: Colors.grey[300],
           ),
         );
