@@ -22,7 +22,7 @@ class _SideMenuState extends State<SideMenu> {
   var mockedData = {
     "Género": {
       "isExpanded": true,
-      "keyword": "genre",
+      "keyword": "category",
       "items": [
         "Acción",
         "Aventura",

@@ -30,7 +30,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       }
     });
 
-    final uri = Uri.parse(BOOK_API + 'books/search?title=$query' + filterQuery);
+    var uri;
+
+    if (query == '') {
+      uri = Uri.parse(BOOK_API + 'books/search?$filterQuery');
+    } else {
+      uri = Uri.parse(BOOK_API + 'books/search?title=$query' + filterQuery);
+    }
 
     try {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
