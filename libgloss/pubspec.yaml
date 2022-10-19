@@ -96,16 +96,16 @@ flutter:
   fonts:
     - family: Elegant 
       fonts:
-        - asset: fonts/ELEGANT-TYPEWRITER.ttf
+        - asset: assets/fonts/ELEGANT-TYPEWRITER.ttf
     - family: Bubbles 
       fonts:
-        - asset: fonts/FuzzyBubbles-Regular.ttf
+        - asset: assets/fonts/FuzzyBubbles-Regular.ttf
     - family: Milky 
       fonts:
-        - asset: fonts/Milky-Coffee.ttf
+        - asset: assets/fonts/Milky-Coffee.ttf
     - family: Cats 
       fonts:
-        - asset: fonts/Robot.otf
+        - asset: assets/fonts/Robot.otf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
