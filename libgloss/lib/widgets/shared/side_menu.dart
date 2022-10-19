@@ -179,8 +179,20 @@ class _SideMenuState extends State<SideMenu> {
             break;
           // Hide the side menu when the user is in the search page
           case LibglossRoutes.SEARCH_NEW:
+            Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_NEW,
+              arguments: filters,
+            );
+            break;
           case LibglossRoutes.SEARCH_USED:
             Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_USED,
+              arguments: filters,
+            );
             break;
           default:
             break;
