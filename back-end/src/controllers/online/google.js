@@ -44,6 +44,23 @@ const googleController = {
 
         let url = `${BASE_URL}isbn:${ISBN}`;
         return await makeRequest(url);
+    },
+    search: async (title, category, author, isbn) => {
+        let query = '';
+        if (title) query += `intitle:${title}+`;
+        if (category) query += `subject:${category}+`;
+        if (author) query += `inauthor:${author}+`;
+        if (isbn) query += `isbn:${isbn}+`;
+
+        // Remove last '+' if present
+        if (query.charAt(query.length - 1) == '+') query = query.slice(0, -1);
+
+        console.log('\tSearching for books with query', query);
+
+        let url = `${BASE_URL}${query}`;
+
+        console.log('\tURL:', url);
+        return await makeRequest(url);
     }
 }
 
