@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ import '../../config/routes.dart';
 import '../../screens/used_books/home_used.dart';
 
 class BottomNavigation extends StatelessWidget {
+  final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
   final _selectedItem;
   final Color _iconColor;
 
@@ -48,7 +50,7 @@ class BottomNavigation extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: FaIcon(FontAwesomeIcons.userGear),
-          label: 'Mi Perfil',
+          label: isLoggedIn ? 'Mi perfil' : 'Iniciar sesión',
         ),
       ],
       currentIndex: _routes[_selectedItem]!,
@@ -115,17 +117,36 @@ class BottomNavigation extends StatelessWidget {
             );
             break;
           case 3:
-            if (kDebugMode)
-              print('\u001b[36m[BottomNavigation] Redirecting to UserOptions');
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => UserOptions(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (isLoggedIn) {
+              if (kDebugMode)
+                print(
+                    '\u001b[36m[BottomNavigation] Redirecting to UserOptions');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      UserOptions(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Login page');
+
+              // TODO: Create login page and redirect to it
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      UserOptions(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            }
             break;
         }
       },
