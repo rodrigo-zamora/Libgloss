@@ -65,7 +65,7 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: MediaQuery.of(context).size.width * 0.5,
       child: Drawer(
         child: ListView(
           children: [
@@ -209,7 +209,7 @@ class _SideMenuState extends State<SideMenu> {
 
   Widget _buildDrawerHeader() {
     return Container(
-      width: 200,
+      width: MediaQuery.of(context).size.width * 0.5,
       color: widget._sideMenuColor,
       child: Column(
         children: [

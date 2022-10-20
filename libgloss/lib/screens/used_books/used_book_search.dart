@@ -145,6 +145,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
   }
 
   Column _search(BuildContext context) {
+    var left = MediaQuery.of(context).size.width * 0.70;
     return Column(
       children: [
         Expanded(
@@ -154,7 +155,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 padding:
-                    EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
+                    EdgeInsets.only(top: 10, bottom: 10, left: left, right: 10),
                 child: Filter(
                   primary: _primaryColor,
                   secondary: _secondaryColor,
