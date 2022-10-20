@@ -25,7 +25,7 @@ class _LoadingAnimationState extends State<LoadingAnimation>{
         style: TextStyle(
           fontSize: 30.0,
           fontFamily: 'Elegant',
-          color: widget._animationColor,
+          color: widget()._animationColor,
         ),
         child: _buildAnimatedText(),
       ),

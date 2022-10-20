@@ -23,13 +23,13 @@ class _OnlineImageState extends State<OnlineImage> {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget._imageUrl,
+      imageUrl: widget()._imageUrl,
       placeholder: (context, url) {
         return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            width: widget._width,
+            width: widget()._width,
             color: Colors.grey[300],
           ),
         );

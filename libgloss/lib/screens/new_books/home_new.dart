@@ -7,6 +7,7 @@ import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
+import '../../config/colors.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 
@@ -41,9 +42,9 @@ class _HomeNewState extends State<HomeNew> {
     FlutterNativeSplash.remove();
   }
 
-  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
   final List<Map<String, dynamic>> _listElements = [
     {

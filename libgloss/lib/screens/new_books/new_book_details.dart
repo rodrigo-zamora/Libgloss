@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
+import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -18,11 +19,11 @@ class NewBookDetails extends StatefulWidget {
 }
 
 class _NewBookDetailsState extends State<NewBookDetails> {
-  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-  final Color _redColor = Color.fromRGBO(130, 48, 16, 1);
-  final Color _defaultColor = Color.fromRGBO(0, 0, 0, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _redColor = ColorSelector.getRed();
+  final Color _defaultColor = ColorSelector.getBlack();
 
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;

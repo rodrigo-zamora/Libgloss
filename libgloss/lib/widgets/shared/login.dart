@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../../config/colors.dart';
 import '../../config/routes.dart';
 import 'bottom_navigation.dart';
 import 'search_appbar.dart';
 
-class LogInForm extends StatefulWidget {
-  var _currentRoute;
-  
-  LogInForm({
-    Key? key,
-    required route,
-  })  : _currentRoute = route,
-        super(key: key);
+class LogInForm extends StatefulWidget {  
+  LogInForm({super.key});
 
   @override
   State<LogInForm> createState() => _LogInFormState();
 }
 
 class _LogInFormState extends State<LogInForm> {
-  final Color _primaryColor = Color.fromRGBO(248, 187, 176, 1);
-  final Color _secondaryColor = Color.fromRGBO(245, 128, 107, 1);
-  final Color _tertiaryColor = Color.fromRGBO(251, 236, 233, 1);
-  final Color _iconColors = Color.fromRGBO(36, 36, 36, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _tertiaryColor = ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _iconColors = ColorSelector.getGrey();
+  final AssetImage _logo = ColorSelector.getBackground(LibglossRoutes.CURRENT_ROUTE);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class _LogInFormState extends State<LogInForm> {
       ),
       body: _inside(),
       bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.OPTIONS, iconColor: _secondaryColor),
+          selectedItem: LibglossRoutes.CURRENT_ROUTE, iconColor: _secondaryColor),
     );
   }
 
@@ -87,7 +83,7 @@ class _LogInFormState extends State<LogInForm> {
           width: MediaQuery.of(context).size.height * 0.15,
           alignment: Alignment.center,
           child: Image(
-            image: AssetImage('assets/images/background_o.png'),
+            image: _logo,
             fit: BoxFit.fill,
           ),
         ),

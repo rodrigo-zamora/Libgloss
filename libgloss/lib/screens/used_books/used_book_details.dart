@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
+import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -16,11 +17,11 @@ class UsedBookDetails extends StatefulWidget {
 }
 
 class _UsedBookDetailsState extends State<UsedBookDetails> {
-  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
-  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-  final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
-  final Color _defaultColor = Color.fromRGBO(0, 0, 0, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _blueColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
+  final Color _defaultColor = ColorSelector.getBlack();
 
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;

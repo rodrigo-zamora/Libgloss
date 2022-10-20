@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../config/colors.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
@@ -10,9 +11,9 @@ import 'tracking_item.dart';
 import 'wish_item.dart';
 
 class BookTracker extends StatelessWidget {
-  final Color _primaryColor = Color.fromRGBO(244, 210, 255, 1);
-  final Color _secondaryColor = Color.fromRGBO(215, 132, 243, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
   BookTracker({super.key});
   final controllerT = PageController(viewportFraction: 0.8, keepPage: true);
