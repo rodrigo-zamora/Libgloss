@@ -1,8 +1,6 @@
 name: Build android
 
 on:
-  push:
-    branches: [ "front" ]
   pull_request:
     branches: [ "master", "development" ]
 
