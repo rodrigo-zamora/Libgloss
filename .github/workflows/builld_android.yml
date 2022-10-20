@@ -19,7 +19,17 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.3.4'
-      - run: |
+
+      - name: Create google services file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON  }}
+        run: |
+          cd libgloss/android/app/
+          touch google-services.json
+          echo $DATA > google-services.json
+
+      - name: Create build
+        run: |
           cd libgloss
           flutter pub get
           flutter build apk
