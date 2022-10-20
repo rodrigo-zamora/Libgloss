@@ -16,20 +16,32 @@ class OnlineImage extends StatefulWidget {
   final double _width;
 
   @override
-  State<OnlineImage> createState() => _OnlineImageState();
+  State<OnlineImage> createState() => _OnlineImageState(
+        imageUrl: _imageUrl,
+        width: _width,
+      );
 }
 
 class _OnlineImageState extends State<OnlineImage> {
+  _OnlineImageState({
+    required String imageUrl,
+    required double width,
+  })  : _imageUrl = imageUrl,
+        _width = width;
+
+  final String _imageUrl;
+  final double _width;
+
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget._imageUrl,
+      imageUrl: _imageUrl,
       placeholder: (context, url) {
         return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            width: widget._width,
+            width: _width,
             color: Colors.grey[300],
           ),
         );
