@@ -19,7 +19,7 @@ class UsedBookDetails extends StatefulWidget {
 class _UsedBookDetailsState extends State<UsedBookDetails> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
   final Color _defaultColor = ColorSelector.getBlack();
 

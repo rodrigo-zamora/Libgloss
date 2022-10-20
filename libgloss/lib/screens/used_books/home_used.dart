@@ -20,7 +20,7 @@ class HomeUsed extends StatefulWidget {
 class _HomeUsedState extends State<HomeUsed> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
 
   final List<Map<String, dynamic>> _listElements = [
