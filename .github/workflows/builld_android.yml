@@ -1,0 +1,36 @@
+name: Build android
+
+on:
+  push:
+    branches: [ "front" ]
+  pull_request:
+    branches: [ "master", "development" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.4'
+
+      - name: Create google services file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON  }}
+        run: |
+          cd libgloss/android/app/
+          touch google-services.json
+          echo $DATA > google-services.json
+
+      - name: Create build
+        run: |
+          cd libgloss
+          flutter pub get
+          flutter build apk
+          flutter build appbundle
