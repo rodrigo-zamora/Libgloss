@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release-apk
-          path: ${{ github.workspace }}/libgloss/build/app/outputs/apk/release/*.apk
+          path: ${{ github.workspace }}/libgloss/build/app/outputs/apk/release/app-release.apk
