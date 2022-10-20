@@ -89,8 +89,11 @@ flutter:
       - assets/images/loading_bunny_green.gif
       - assets/images/icon.png
 
+      - assets/images/silhouette.png
+      - assets/images/background_o.png
+      - assets/images/background_p.png
+
       - assets/images/random.png
-      - assets/images/background.png
       #- assets/images/onlybunny_50.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/screens/tracker/book_tracker.dart';
 import 'package:libgloss/screens/new_books/home_new.dart';
+import 'package:libgloss/widgets/shared/login.dart';
 import 'package:libgloss/screens/user/user_options.dart';
 
 import '../../config/routes.dart';
@@ -119,8 +120,7 @@ class BottomNavigation extends StatelessWidget {
           case 3:
             if (isLoggedIn) {
               if (kDebugMode)
-                print(
-                    '\u001b[36m[BottomNavigation] Redirecting to UserOptions');
+                print('\u001b[36m[BottomNavigation] Redirecting to UserOptions');
               LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
               Navigator.pushReplacement(
                 context,
@@ -134,14 +134,15 @@ class BottomNavigation extends StatelessWidget {
             } else {
               if (kDebugMode)
                 print('\u001b[36m[BottomNavigation] Redirecting to Login page');
-
               // TODO: Create login page and redirect to it
               LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
-                      UserOptions(),
+                      LogInForm(
+                        route: LibglossRoutes.CURRENT_ROUTE,
+                      ),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
