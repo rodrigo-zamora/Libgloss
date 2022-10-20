@@ -210,7 +210,7 @@ class _SideMenuState extends State<SideMenu> {
   Widget _buildDrawerHeader() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.5,
-      color: widget()._sideMenuColor,
+      color: widget._sideMenuColor,
       child: Column(
         children: [
           Row(
