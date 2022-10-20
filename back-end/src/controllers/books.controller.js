@@ -5,15 +5,18 @@ const amzController = require('../controllers/online/amz');
 const booksController = {
 
     // Handle search requests, including title, category, and ISBN
-    searchBooks: async (query ) => {
+    searchBooks: async (query) => {
         let books = [];
 
         // Replace spaces with '%20' to make a valid URL
-        let title = query.title.replace(/ /g, '%20');
+        books = await googleController.search(
+            query.title ? query.title.replace(/ /g, '%20') : null,
+            query.category ? query.category : null,
+            query.author ? query.author.replace(/ /g, '%20') : null,
+            query.isbn ? query.isbn : null,
+            query.publisher ? query.publisher : null
+        );
 
-        if (title) books = await googleController.searchTitle(query.title);
-        else if (query.category) books = await googleController.searchCategory(query.category);
-        else if (query.isbn) books = await googleController.searchISBN(query.isbn);
         return books;
     },
 
@@ -23,7 +26,7 @@ const booksController = {
         let amzPrice = await amzController.getPrice(query.isbn);
         //let mlPrice = await mlController.getPrice(query.isbn);
         if (query.isbn) {
-            details.amz = amzPrice ? amzPrice : null;
+            details.amazon = amzPrice ? amzPrice : null;
             //details.ml = mlPrice ? mlPrice : null;
         }
         return details;
