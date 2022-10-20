@@ -1,6 +1,6 @@
 const bent = require('bent');
 
-const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
+const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=40&q=';
 
 const categories = {
     "Acción": "action",
@@ -13,7 +13,7 @@ const categories = {
     "Thriller": "thriller",
 }
 
-async function makeRequest(url) {
+async function makeRequest(url, randomize) {
     let books = [];
     let response = await bent('json')(url);
     response.items.forEach(book => {
@@ -34,6 +34,10 @@ async function makeRequest(url) {
             console.log('\x1b[33mBook with title:', book.volumeInfo.title, 'has no ISBN_13\x1b[0m');
         }
     });
+
+    // Randomize books for better UX
+    if (randomize) books.sort(() => Math.random() - 0.5);
+
     return books;
 }
 
@@ -42,25 +46,25 @@ const googleController = {
         console.log('\tSearching for books with title', title);
 
         let url = `${BASE_URL}${title}`;
-        return await makeRequest(url);
+        return await makeRequest(url, false);
     },
     searchCategory: async (category) => {
         console.log('\tSearching for books with category', category);
 
         let url = `${BASE_URL}subject:${category}`;
-        return await makeRequest(url);
+        return await makeRequest(url, true);
     },
     searchISBN: async (ISBN) => {
         console.log('\tSearching for books with ISBN', ISBN);
 
         let url = `${BASE_URL}isbn:${ISBN}`;
-        return await makeRequest(url);
+        return await makeRequest(url, false);
     },
     searchByPublisher: async (publisher) => {
         console.log('\tSearching for books with publisher', publisher);
 
         let url = `${BASE_URL}inpublisher:${publisher}`;
-        return await makeRequest(url);
+        return await makeRequest(url, false);
     },
     search: async (title, category, author, isbn, publisher) => {
 
@@ -85,7 +89,7 @@ const googleController = {
         let url = `${BASE_URL}${query}`;
 
         console.log('\tURL:', url);
-        return await makeRequest(url);
+        return await makeRequest(url, false);
     }
 }
 
