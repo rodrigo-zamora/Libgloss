@@ -2,6 +2,17 @@ const bent = require('bent');
 
 const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 
+const categories = {
+    "Acción": "action",
+    "Aventura": "adventure",
+    "Ciencia Ficción": "science-fiction",
+    "Fantasía": "fantasy",
+    "Misterio": "mystery",
+    "Romance": "romance",
+    "Terror": "horror",
+    "Thriller": "thriller",
+}
+
 async function makeRequest(url) {
     let books = [];
     let response = await bent('json')(url);
@@ -45,18 +56,32 @@ const googleController = {
         let url = `${BASE_URL}isbn:${ISBN}`;
         return await makeRequest(url);
     },
-    search: async (title, category, author, isbn) => {
+    searchByPublisher: async (publisher) => {
+        console.log('\tSearching for books with publisher', publisher);
+
+        let url = `${BASE_URL}inpublisher:${publisher}`;
+        return await makeRequest(url);
+    },
+    search: async (title, category, author, isbn, publisher) => {
+
+        console.log('Searching for books with query', { title, category, author, isbn, publisher });
+
         let query = '';
+
+        // Switch category name from spanish to english
+        if (category) {
+            category = categories[category];
+        }
+
         if (title) query += `intitle:${title}+`;
         if (category) query += `subject:${category}+`;
         if (author) query += `inauthor:${author}+`;
         if (isbn) query += `isbn:${isbn}+`;
+        if (publisher) query += `inpublisher:${publisher}+`;
 
         // Remove last '+' if present
         if (query.charAt(query.length - 1) == '+') query = query.slice(0, -1);
-
-        console.log('\tSearching for books with query', query);
-
+        
         let url = `${BASE_URL}${query}`;
 
         console.log('\tURL:', url);

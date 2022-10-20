@@ -11,9 +11,10 @@ const booksController = {
         // Replace spaces with '%20' to make a valid URL
         books = await googleController.search(
             query.title ? query.title.replace(/ /g, '%20') : null,
-            query.category ? query.category.replace(/ /g, '%20') : null,
+            query.category ? query.category : null,
             query.author ? query.author.replace(/ /g, '%20') : null,
-            query.isbn ? query.isbn.replace(/ /g, '%20') : null
+            query.isbn ? query.isbn : null,
+            query.publisher ? query.publisher : null
         );
 
         return books;
