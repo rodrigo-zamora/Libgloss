@@ -34,7 +34,9 @@ jobs:
           flutter pub get
           flutter build apk
           flutter build appbundle
-      - uses: actions/upload-artifact@v1
+
+      - name: Upload build
+        uses: actions/upload-artifact@v1
         with:
           name: release-apk
-          path: build/app/outputs/apk/release/libgloss.apk
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
