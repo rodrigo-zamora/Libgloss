@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 
+import '../../config/colors.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 
@@ -14,8 +15,8 @@ class UsedBookSeller extends StatefulWidget {
 }
 
 class _UsedBookSellerState extends State<UsedBookSeller> {
-  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
-  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
 
   @override
   Widget build(BuildContext context) {

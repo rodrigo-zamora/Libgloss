@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
+import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/animations/loading_animation.dart';
@@ -19,9 +20,9 @@ class NewBookSearch extends StatefulWidget {
 }
 
 class _NewBookSearchState extends State<NewBookSearch> {
-  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +88,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
   }
 
   Column _search(BuildContext context, List<dynamic> books) {
+    var left = MediaQuery.of(context).size.width * 0.70;
     return Column(
       children: [
         Expanded(
@@ -96,7 +98,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 padding:
-                    EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
+                    EdgeInsets.only(top: 10, bottom: 10, left: left, right: 10),
                 child: Filter(
                   primary: _primaryColor,
                   secondary: _secondaryColor,

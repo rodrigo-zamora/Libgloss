@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
@@ -17,16 +18,16 @@ class HomeUsed extends StatefulWidget {
 }
 
 class _HomeUsedState extends State<HomeUsed> {
-  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
-  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-  final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
 
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "Maze Runner",
       "author": "James Dashner",
-      "image": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
+      "thumbnail": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
       "vendedor": "Ernesto Contreras",
       "isbn": "978-6077547327",
       "precio": 100,
@@ -36,7 +37,7 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "Bajo la Misma Estrella",
       "author": "John Green",
-      "image":
+      "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
       "vendedor": "Lupita Gómez",
       "isbn": "978-6073114233",
@@ -47,7 +48,7 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "El niño de la pijama de rayas",
       "author": "John Boyne",
-      "image":
+      "thumbnail":
           "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
       "vendedor": "Julian Vico",
       "isbn": "978-6073193320",
@@ -58,7 +59,7 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "El Principito",
       "author": "Antoine de Saint-Exupéry",
-      "image":
+      "thumbnail":
           "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
       "vendedor": "Maria Lucia Perera",
       "isbn": "978-6070730535",
@@ -69,7 +70,7 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "1984",
       "author": "George Orwell",
-      "image":
+      "thumbnail":
           "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
       "vendedor": "Roman Dominguez",
       "isbn": "978-6073116336",
@@ -80,7 +81,7 @@ class _HomeUsedState extends State<HomeUsed> {
     {
       "title": "El señor de las moscas",
       "author": "William Golding",
-      "image":
+      "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
       "vendedor": "Maria Asuncion Perez",
       "isbn": "978-8420674179",
@@ -148,7 +149,7 @@ class _HomeUsedState extends State<HomeUsed> {
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 5.2),
                           child: OnlineImage(
-                            imageUrl: "${_listElements[index]["image"]}",
+                            imageUrl: "${_listElements[index]["thumbnail"]}",
                             width: 100,
                           ),
                         ),

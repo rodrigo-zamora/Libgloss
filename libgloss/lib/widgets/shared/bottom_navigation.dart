@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/screens/tracker/book_tracker.dart';
 import 'package:libgloss/screens/new_books/home_new.dart';
+import 'package:libgloss/widgets/shared/login.dart';
 import 'package:libgloss/screens/user/user_options.dart';
 
 import '../../config/routes.dart';
 import '../../screens/used_books/home_used.dart';
 
 class BottomNavigation extends StatelessWidget {
+  final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
   final _selectedItem;
   final Color _iconColor;
 
@@ -48,7 +51,7 @@ class BottomNavigation extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: FaIcon(FontAwesomeIcons.userGear),
-          label: 'Mi Perfil',
+          label: isLoggedIn ? 'Mi perfil' : 'Iniciar sesión',
         ),
       ],
       currentIndex: _routes[_selectedItem]!,
@@ -102,30 +105,62 @@ class BottomNavigation extends StatelessWidget {
             }
             break;
           case 2:
-            if (kDebugMode)
-              print('\u001b[36m[BottomNavigation] Redirecting to BookTracker');
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => BookTracker(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (isLoggedIn) {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to BookTracker');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => BookTracker(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Login page');
+              // TODO: Create login page and redirect to it
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => LogInForm(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            }
             break;
           case 3:
-            if (kDebugMode)
-              print('\u001b[36m[BottomNavigation] Redirecting to UserOptions');
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => UserOptions(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
+            if (isLoggedIn) {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to UserOptions');
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      UserOptions(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            } else {
+              if (kDebugMode)
+                print('\u001b[36m[BottomNavigation] Redirecting to Login page');
+              // TODO: Create login page and redirect to it
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      LogInForm(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            }
             break;
         }
       },

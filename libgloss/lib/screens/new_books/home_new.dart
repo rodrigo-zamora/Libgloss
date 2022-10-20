@@ -1,9 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
+import '../../config/colors.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 
@@ -17,15 +21,36 @@ class HomeNew extends StatefulWidget {
 }
 
 class _HomeNewState extends State<HomeNew> {
-  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  void initialization() async {
+    // This is where you can initialize the resources needed by your app while
+    // the splash screen is displayed.  Remove the following example because
+    // delaying the user experience is a bad design practice!
+    // ignore_for_file: avoid_print
+    print('ready in 3...');
+    await Future.delayed(const Duration(seconds: 1));
+    print('ready in 2...');
+    await Future.delayed(const Duration(seconds: 1));
+    print('ready in 1...');
+    await Future.delayed(const Duration(seconds: 1));
+    print('go!');
+    FlutterNativeSplash.remove();
+  }
+
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "And Then There Were None",
       "author": "Agatha Christie",
-      "image": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
+      "thumbnail": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
       "isbn": "978-0062073488",
       "amazon": 100,
       "gonvill": 101,
@@ -35,7 +60,7 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "Gone Girl",
       "author": "Gillian Flynn",
-      "image": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
+      "thumbnail": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
       "isbn": "978-0307588371",
       "amazon": 201,
       "gonvill": 202,
@@ -45,7 +70,7 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "Harry Potter and the Deahtly Hallows",
       "author": "J.K. Rowling",
-      "image": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
+      "thumbnail": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
       "isbn": "978-0545139700",
       "amazon": 301,
       "gonvill": 302,
@@ -55,7 +80,7 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "Cien años de soledad",
       "author": "Gabriel García Márquez",
-      "image": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
+      "thumbnail": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
       "isbn": "978-1644734728",
       "amazon": 401,
       "gonvill": 402,
@@ -65,7 +90,7 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "The Hunger Games",
       "author": "Suzanne Collins",
-      "image": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
+      "thumbnail": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
       "isbn": "978-0439023481",
       "amazon": 501,
       "gonvill": 502,
@@ -75,7 +100,7 @@ class _HomeNewState extends State<HomeNew> {
     {
       "title": "The Lord of the Rings",
       "author": "J.R.R. Tolkien",
-      "image":
+      "thumbnail":
           "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
       "isbn": "978-0544003415",
       "amazon": 601,
@@ -143,7 +168,7 @@ class _HomeNewState extends State<HomeNew> {
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: OnlineImage(
-                            imageUrl: _listElements[index]["image"]!,
+                            imageUrl: _listElements[index]["thumbnail"]!,
                             width: 100,
                           ),
                         ),

@@ -22,7 +22,7 @@ class _SideMenuState extends State<SideMenu> {
   var mockedData = {
     "Género": {
       "isExpanded": true,
-      "keyword": "genre",
+      "keyword": "category",
       "items": [
         "Acción",
         "Aventura",
@@ -65,7 +65,7 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: MediaQuery.of(context).size.width * 0.5,
       child: Drawer(
         child: ListView(
           children: [
@@ -179,8 +179,20 @@ class _SideMenuState extends State<SideMenu> {
             break;
           // Hide the side menu when the user is in the search page
           case LibglossRoutes.SEARCH_NEW:
+            Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_NEW,
+              arguments: filters,
+            );
+            break;
           case LibglossRoutes.SEARCH_USED:
             Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_USED,
+              arguments: filters,
+            );
             break;
           default:
             break;
@@ -197,7 +209,7 @@ class _SideMenuState extends State<SideMenu> {
 
   Widget _buildDrawerHeader() {
     return Container(
-      width: 200,
+      width: MediaQuery.of(context).size.width * 0.5,
       color: widget._sideMenuColor,
       child: Column(
         children: [

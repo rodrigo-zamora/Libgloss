@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
+import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/animations/loading_animation.dart';
@@ -19,10 +20,10 @@ class UsedBookSearch extends StatefulWidget {
 }
 
 class _UsedBookSearchState extends State<UsedBookSearch> {
-  final Color _primaryColor = Color.fromRGBO(211, 241, 173, 1);
-  final Color _secondaryColor = Color.fromRGBO(118, 174, 46, 1);
-  final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
-  final Color _greenColor = Color.fromRGBO(78, 120, 25, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
 
   final List<Map<String, dynamic>> _listElements = [
     {
@@ -145,6 +146,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
   }
 
   Column _search(BuildContext context) {
+    var left = MediaQuery.of(context).size.width * 0.70;
     return Column(
       children: [
         Expanded(
@@ -154,7 +156,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
                 padding:
-                    EdgeInsets.only(top: 10, bottom: 10, left: 280, right: 10),
+                    EdgeInsets.only(top: 10, bottom: 10, left: left, right: 10),
                 child: Filter(
                   primary: _primaryColor,
                   secondary: _secondaryColor,

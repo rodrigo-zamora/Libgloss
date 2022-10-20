@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../config/colors.dart';
+import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
 
 class TrackingItem extends StatelessWidget {
@@ -9,9 +11,9 @@ class TrackingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color _primaryColor = Color.fromRGBO(244, 210, 255, 1);
-    final Color _secondaryColor = Color.fromRGBO(215, 132, 243, 1);
-    final Color _blueColor = Color.fromRGBO(16, 112, 130, 1);
+    final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
     return Container(
       alignment: Alignment.center,

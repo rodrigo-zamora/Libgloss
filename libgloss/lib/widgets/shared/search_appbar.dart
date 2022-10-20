@@ -51,32 +51,38 @@ class SearchAppBar extends StatelessWidget {
         Row(
           children: [
             if (_showMenuButton)
-              IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
+              Container(
+                width: MediaQuery.of(context).size.width * 0.12,
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
               ),
             if (!_showMenuButton)
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                  switch (LibglossRoutes.CURRENT_ROUTE) {
-                    case LibglossRoutes.SEARCH_NEW:
-                      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
-                      break;
-                    case LibglossRoutes.SEARCH_USED:
-                      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
-                      break;
-                  }
-                },
+              Container(
+                width: MediaQuery.of(context).size.width * 0.12,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    switch (LibglossRoutes.CURRENT_ROUTE) {
+                      case LibglossRoutes.SEARCH_NEW:
+                        LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
+                        break;
+                      case LibglossRoutes.SEARCH_USED:
+                        LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
+                        break;
+                    }
+                  },
+                ),
               ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 325,
+                  width: MediaQuery.of(context).size.width * 0.83,
                   height: 30,
                   child: _buildSearchField(context),
                 ),
