@@ -74,7 +74,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["image"]!),
+            _image(_args["thumbnail"]!),
             SizedBox(height: 20.0),
             _text("Información", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
