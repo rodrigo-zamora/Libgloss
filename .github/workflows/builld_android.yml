@@ -36,7 +36,7 @@ jobs:
           flutter build appbundle
 
       - name: Upload build
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: release-apk
-          path: ./libgloss/build/app/outputs/flutter-apk/*.apk
+          path: ${{ github.workspace }}/libgloss/build/app/outputs/apk/release/*.apk
