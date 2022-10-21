@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:libgloss/screens/log_in/account.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -87,9 +88,13 @@ class _NoAccountState extends State<NoAccount> {
             text: "¡Ir a Iniciar Sesión!", 
             onPressed: () {
               LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
-              Navigator.pushNamed(
+              Navigator.pushReplacement(
                 context,
-                LibglossRoutes.ACCOUNT,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => Account(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
               );
             }
           ),
