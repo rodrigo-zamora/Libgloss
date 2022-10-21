@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -12,14 +13,14 @@ import 'parts/bunny_silhouette.dart';
 import 'parts/button_log.dart';
 import 'parts/log_text.dart';
 
-class LogInForm extends StatefulWidget {  
-  LogInForm({super.key});
+class SignUp extends StatefulWidget {  
+  SignUp({super.key});
 
   @override
-  State<LogInForm> createState() => _LogInFormState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LogInFormState extends State<LogInForm> {
+class _SignUpState extends State<SignUp> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
   final Color _tertiaryColor = ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
@@ -80,30 +81,13 @@ class _LogInFormState extends State<LogInForm> {
             tailIcon: Icons.visibility, 
             obscure: true
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          HaveAccount(
-            tertiaryColor: null, 
-            secondaryColor: _secondaryColor,
-            text1: "",
-            text2: "¿Olvidaste tu contraseña?",
-            route: () {
-              print("Forgot password");
-            }
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
           ButtonLog(
             context: context, 
             background: _secondaryColor, 
             splash: _primaryColor, 
             text_color: Colors.white,
             text: "Acceder", 
-            onPressed: () {
-              Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
-            }
+            onPressed: () {}
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.01,
@@ -111,10 +95,10 @@ class _LogInFormState extends State<LogInForm> {
           HaveAccount(
             tertiaryColor: _tertiaryColor, 
             secondaryColor: _secondaryColor,
-            text1: "¿No tienes cuenta?  ",
-            text2: "Regístrate",
+            text1: "Ya tienes cuenta?  ",
+            text2: "Inicia sesión",
             route: () {
-              Navigator.pushNamed(context, LibglossRoutes.SIGN_UP);
+              Navigator.pushNamed(context, LibglossRoutes.LOGIN);
             }
           ),
           OrLine(
@@ -133,4 +117,3 @@ class _LogInFormState extends State<LogInForm> {
     );
   }
 }
-

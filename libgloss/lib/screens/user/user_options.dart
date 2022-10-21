@@ -17,7 +17,7 @@ class UserOptions extends StatefulWidget {
 class _UserOptionsState extends State<UserOptions> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
-  final Color _tertiaryColor = ColorSelector.getTertiary(LibglossRoutes.OPTIONS);
+  final Color _tertiaryColor = ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
   final Color _iconColors = ColorSelector.getGrey();
   
   var user = User(
@@ -121,6 +121,7 @@ class _UserOptionsState extends State<UserOptions> {
                   backgroundColor: _primaryColor,
                   splashColor: _secondaryColor,
                   onPressed: () {
+                    print("Change profile picture");
                     _show();
                   },
                   child: Icon(

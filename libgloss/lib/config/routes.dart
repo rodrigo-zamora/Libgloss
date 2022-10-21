@@ -10,6 +10,9 @@ import '../screens/used_books/used_book_details.dart';
 import '../screens/used_books/used_book_search.dart';
 import '../screens/used_books/used_book_seller.dart';
 import '../screens/user/user_options.dart';
+import '../widgets/shared/account.dart';
+import '../widgets/shared/login.dart';
+import '../widgets/shared/sign_up.dart';
 
 class LibglossRoutes {
   static const HOME = "/";
@@ -22,6 +25,9 @@ class LibglossRoutes {
   static const BOOK_TRACKER = "/book_tracker";
   static const SEARCH_USED = "/search_used";
   static const SCANNER = "/scanner";
+  static const LOGIN = "/login";
+  static const SIGN_UP = "/sign_up";
+  static const ACCOUNT = "/account";
 
   static var CURRENT_ROUTE = HOME;
 
@@ -37,6 +43,9 @@ class LibglossRoutes {
       BOOK_TRACKER: (context) => BookTracker(),
       OPTIONS: (context) => UserOptions(),
       SCANNER: (context) => Scanner(),
+      LOGIN: (context) => LogInForm(),
+      SIGN_UP: (context) => SignUp(),
+      ACCOUNT: (context) => Account(),
     };
   }
 

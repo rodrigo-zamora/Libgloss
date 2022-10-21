@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shimmer/shimmer.dart';
 
-class OnlineImage extends StatefulWidget {
+class OnlineImage extends StatelessWidget {
   OnlineImage({
     Key? key,
     required String imageUrl,
@@ -11,23 +11,6 @@ class OnlineImage extends StatefulWidget {
   })  : _imageUrl = imageUrl,
         _width = width,
         super(key: key);
-
-  final String _imageUrl;
-  final double _width;
-
-  @override
-  State<OnlineImage> createState() => _OnlineImageState(
-        imageUrl: _imageUrl,
-        width: _width,
-      );
-}
-
-class _OnlineImageState extends State<OnlineImage> {
-  _OnlineImageState({
-    required String imageUrl,
-    required double width,
-  })  : _imageUrl = imageUrl,
-        _width = width;
 
   final String _imageUrl;
   final double _width;

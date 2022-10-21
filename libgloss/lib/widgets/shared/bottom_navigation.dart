@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/screens/tracker/book_tracker.dart';
 import 'package:libgloss/screens/new_books/home_new.dart';
-import 'package:libgloss/widgets/shared/login.dart';
 import 'package:libgloss/screens/user/user_options.dart';
 
 import '../../config/routes.dart';
 import '../../screens/used_books/home_used.dart';
+import 'account.dart';
 
 class BottomNavigation extends StatelessWidget {
   final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
@@ -125,7 +125,7 @@ class BottomNavigation extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) => LogInForm(),
+                  pageBuilder: (context, animation1, animation2) => Account(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
@@ -140,8 +140,7 @@ class BottomNavigation extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      UserOptions(),
+                  pageBuilder: (context, animation1, animation2) => UserOptions(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
@@ -154,8 +153,7 @@ class BottomNavigation extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      LogInForm(),
+                  pageBuilder: (context, animation1, animation2) => Account(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
