@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import 'bottom_navigation.dart';
-import 'parts/have_account.dart';
-import 'parts/or_line.dart';
-import 'parts/social_log.dart';
-import 'search_appbar.dart';
-
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
+import 'login.dart';
+import 'sign_up.dart';
 import 'parts/bunny_silhouette.dart';
 import 'parts/button_log.dart';
-import 'parts/log_text.dart';
 
-class SignUp extends StatefulWidget {  
-  SignUp({super.key});
+
+class Account extends StatefulWidget {  
+  Account({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<Account> createState() => _AccountState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _AccountState extends State<Account> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
   final Color _tertiaryColor = ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
@@ -37,7 +34,7 @@ class _SignUpState extends State<SignUp> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          showMenuButton: false,
+          showMenuButton: true,
           showCameraButton: false,
           showSearchField: true,
         ),
@@ -61,57 +58,30 @@ class _SignUpState extends State<SignUp> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.04,
           ),
-          LogText(
-            context: context, 
-            tertiaryColor: _quaternaryColor, 
-            secondaryColor: _secondaryColor, 
-            icon: Icons.person_outlined, 
-            text: "Ingresa tu e-mail", 
-            onChanged: (value) {}, 
-            tailIcon: null, 
-            obscure: false
-          ),
-          LogText(
-            context: context, 
-            tertiaryColor: _quaternaryColor, 
-            secondaryColor: _secondaryColor, 
-            icon: Icons.lock_outline, 
-            text: "Ingresa tu password", 
-            onChanged: (value) {}, 
-            tailIcon: Icons.visibility, 
-            obscure: true
-          ),
           ButtonLog(
             context: context, 
             background: _secondaryColor, 
             splash: _primaryColor, 
-            text_color: Colors.white,
-            text: "Acceder", 
+            text_color: _quaternaryColor,
+            text: "Iniciar sesión", 
             onPressed: () {
-              Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
+              Navigator.pushNamed(
+                context,
+                LibglossRoutes.LOGIN,
+              );
             }
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          HaveAccount(
-            tertiaryColor: _tertiaryColor, 
-            secondaryColor: _secondaryColor,
-            text1: "Ya tienes cuenta?  ",
-            text2: "Inicia sesión",
-            route: () {
-              Navigator.pushNamed(context, LibglossRoutes.LOGIN);
-            }
-          ),
-          OrLine(
-            tertiaryColor: _tertiaryColor, 
-            context: context
-          ),
-          SocialLog(
-            logo: _tertiaryColor,
-            splash: _primaryColor,
-            action: () {
-              print("Google");
+          ButtonLog(
+            context: context, 
+            background: _primaryColor, 
+            splash: _secondaryColor, 
+            text_color: _tertiaryColor,
+            text: "Regístrate", 
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                LibglossRoutes.SIGN_UP,
+              );
             }
           ),
         ],

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import 'bottom_navigation.dart';
+import '../../widgets/shared/bottom_navigation.dart';
 import 'parts/have_account.dart';
 import 'parts/or_line.dart';
 import 'parts/social_log.dart';
-import 'search_appbar.dart';
+import '../../widgets/shared/search_appbar.dart';
 
 import 'parts/bunny_silhouette.dart';
 import 'parts/button_log.dart';

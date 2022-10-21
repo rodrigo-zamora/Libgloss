@@ -10,9 +10,9 @@ import '../screens/used_books/used_book_details.dart';
 import '../screens/used_books/used_book_search.dart';
 import '../screens/used_books/used_book_seller.dart';
 import '../screens/user/user_options.dart';
-import '../widgets/shared/account.dart';
-import '../widgets/shared/login.dart';
-import '../widgets/shared/sign_up.dart';
+import '../screens/log_in/account.dart';
+import '../screens/log_in/login.dart';
+import '../screens/log_in/sign_up.dart';
 
 class LibglossRoutes {
   static const HOME = "/";

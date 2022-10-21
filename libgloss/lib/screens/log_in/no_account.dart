@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import 'bottom_navigation.dart';
-import 'search_appbar.dart';
+import '../../widgets/shared/bottom_navigation.dart';
+import '../../widgets/shared/search_appbar.dart';
 import 'login.dart';
 import 'sign_up.dart';
 import 'parts/bunny_silhouette.dart';
 import 'parts/button_log.dart';
 
 
-class Account extends StatefulWidget {  
-  Account({super.key});
+class NoAccount extends StatefulWidget {  
+  NoAccount({super.key});
 
   @override
-  State<Account> createState() => _AccountState();
+  State<NoAccount> createState() => _NoAccountState();
 }
 
-class _AccountState extends State<Account> {
+class _NoAccountState extends State<NoAccount> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
   final Color _tertiaryColor = ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
@@ -54,6 +54,27 @@ class _AccountState extends State<Account> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
+          Text(
+            'No estas logueado',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _secondaryColor,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            'Necesitas iniciar sesión para poder ver esta sección',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _tertiaryColor,
+              fontSize: 20,
+              fontStyle: FontStyle.italic
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
+          ),
           BunnySilhouette(context: context, logo: _logo),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.04,
@@ -63,25 +84,23 @@ class _AccountState extends State<Account> {
             background: _secondaryColor, 
             splash: _primaryColor, 
             text_color: _quaternaryColor,
-            text: "Iniciar sesión", 
+            text: "¡Ir a Iniciar Sesión!", 
             onPressed: () {
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
               Navigator.pushNamed(
                 context,
-                LibglossRoutes.LOGIN,
+                LibglossRoutes.ACCOUNT,
               );
             }
           ),
           ButtonLog(
             context: context, 
             background: _primaryColor, 
-            splash: _secondaryColor, 
+            splash: _primaryColor, 
             text_color: _tertiaryColor,
-            text: "Regístrate", 
+            text: "Acceso temporal para ver seguimientos", 
             onPressed: () {
-              Navigator.pushNamed(
-                context,
-                LibglossRoutes.SIGN_UP,
-              );
+              Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
             }
           ),
         ],
