@@ -105,32 +105,17 @@ class BottomNavigation extends StatelessWidget {
             }
             break;
           case 2:
-            if (isLoggedIn) {
-              if (kDebugMode)
-                print('\u001b[36m[BottomNavigation] Redirecting to BookTracker');
-              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
-              Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) => BookTracker(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              );
-            } else {
-              if (kDebugMode)
-                print('\u001b[36m[BottomNavigation] Redirecting to Login page');
-              // TODO: Create login page and redirect to it
-              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
-              Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) => Account(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              );
-            }
+            if (kDebugMode)
+              print('\u001b[36m[BottomNavigation] Redirecting to BookTracker');
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.BOOK_TRACKER;
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => BookTracker(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
             break;
           case 3:
             if (isLoggedIn) {

@@ -87,7 +87,9 @@ class _SignUpState extends State<SignUp> {
             splash: _primaryColor, 
             text_color: Colors.white,
             text: "Acceder", 
-            onPressed: () {}
+            onPressed: () {
+              Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
+            }
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.01,

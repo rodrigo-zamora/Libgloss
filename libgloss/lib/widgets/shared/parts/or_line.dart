@@ -25,7 +25,7 @@ class OrLine extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.width * 0.05),
             child: Text(
-              "  O  ",
+              "  o  ",
               style: TextStyle(
                 color: _tertiaryColor,
               ),
