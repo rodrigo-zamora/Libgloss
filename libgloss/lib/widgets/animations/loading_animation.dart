@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import "dart:math";
 
-class LoadingAnimation extends StatefulWidget {
+class LoadingAnimation extends StatelessWidget {
   final Color _animationColor;
 
   LoadingAnimation({
@@ -12,11 +12,6 @@ class LoadingAnimation extends StatefulWidget {
         super(key: key);
 
   @override
-  _LoadingAnimationState createState() => _LoadingAnimationState();
-}
-
-class _LoadingAnimationState extends State<LoadingAnimation> {
-  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 250.0,
@@ -25,7 +20,7 @@ class _LoadingAnimationState extends State<LoadingAnimation> {
         style: TextStyle(
           fontSize: 30.0,
           fontFamily: 'Elegant',
-          color: widget._animationColor,
+          color: _animationColor,
         ),
         child: _buildAnimatedText(),
       ),
