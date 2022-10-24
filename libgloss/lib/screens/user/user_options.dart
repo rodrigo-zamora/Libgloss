@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../config/colors.dart';
-import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../model/user.dart';
 
@@ -16,10 +15,12 @@ class UserOptions extends StatefulWidget {
 
 class _UserOptionsState extends State<UserOptions> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
-  final Color _tertiaryColor = ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
+  final Color _tertiaryColor =
+      ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
   final Color _iconColors = ColorSelector.getGrey();
-  
+
   var user = User(
     image:
         'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
@@ -77,8 +78,6 @@ class _UserOptionsState extends State<UserOptions> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.OPTIONS, iconColor: _secondaryColor),
     );
   }
 

@@ -5,8 +5,6 @@ import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import '../../widgets/shared/bottom_navigation.dart';
-import '../../widgets/animations/loading_animation.dart';
 import '../../widgets/shared/filter.dart';
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -110,8 +108,6 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
         sideMenuColor: _primaryColor,
       ),
       body: _searchBook(context),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 

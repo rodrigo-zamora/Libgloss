@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import '../../widgets/shared/bottom_navigation.dart';
 import 'parts/have_account.dart';
 import 'parts/or_line.dart';
 import 'parts/social_log.dart';
@@ -43,8 +41,6 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
       body: _inside(),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.OPTIONS, iconColor: _secondaryColor),
     );
   }
 

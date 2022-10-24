@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/main/home.dart';
 import '../screens/tracker/book_tracker.dart';
 import '../screens/features/scanner.dart';
 import '../screens/new_books/home_new.dart';
@@ -16,8 +17,9 @@ import '../screens/log_in/sign_up.dart';
 
 class LibglossRoutes {
   static const HOME = "/";
-  static const SEARCH_NEW = "/search_new";
+  static const HOME_NEW = "/home_new";
   static const HOME_USED = "/home_used";
+  static const SEARCH_NEW = "/search_new";
   static const OPTIONS = "/user_options";
   static const NEW_BOOK_DETAILS = "/new_book_details";
   static const USED_BOOK_DETAILS = "/used_book_details";
@@ -33,7 +35,8 @@ class LibglossRoutes {
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      HOME: (context) => HomeNew(),
+      HOME: (context) => Home(),
+      HOME_NEW: (context) => HomeNew(),
       SEARCH_NEW: (context) => NewBookSearch(),
       NEW_BOOK_DETAILS: (context) => NewBookDetails(),
       HOME_USED: (context) => HomeUsed(),
@@ -50,6 +53,15 @@ class LibglossRoutes {
   }
 
   static Widget getHomeRoute() {
-    return HomeNew();
+    return Home();
+  }
+
+  static List<Widget> getRoutesList() {
+    return [
+      HomeNew(),
+      HomeUsed(),
+      BookTracker(),
+      UserOptions(),
+    ];
   }
 }

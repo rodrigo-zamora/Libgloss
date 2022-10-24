@@ -3,7 +3,6 @@ import 'package:libgloss/config/routes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../config/colors.dart';
-import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
@@ -92,9 +91,6 @@ class BookTracker extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.BOOK_TRACKER,
-          iconColor: _secondaryColor),
     );
   }
 

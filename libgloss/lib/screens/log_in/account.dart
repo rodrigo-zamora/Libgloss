@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 import 'login.dart';
 import 'sign_up.dart';
@@ -40,8 +39,6 @@ class _AccountState extends State<Account> {
         ),
       ),
       body: _inside(),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.CURRENT_ROUTE, iconColor: _secondaryColor),
     );
   }
 
