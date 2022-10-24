@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {handleError} = require('../utils/hof');
+const { handleError } = require('../utils/hof');
 
 const booksController = require('../controllers/books.controller');
 
@@ -13,6 +13,11 @@ router.get('/search', handleError(async (req, res) => {
 router.get('/details', handleError(async (req, res) => {
     let details = await booksController.getDetails(req.query);
     res.json(details);
+}));
+
+router.get('/top', handleError(async (req, res) => {
+    let books = await booksController.getMostPopular();
+    res.json(books);
 }));
 
 module.exports = router;

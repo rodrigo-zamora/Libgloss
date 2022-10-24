@@ -1,6 +1,7 @@
 const googleController = require('../controllers/online/google');
 const mlController = require('../controllers/online/ml');
 const amzController = require('../controllers/online/amz');
+const Book = require('../models/book');
 
 const booksController = {
 
@@ -17,6 +18,15 @@ const booksController = {
             query.publisher ? query.publisher : null
         );
 
+        // Add all books to the database
+        for (let i = 0; i < books.length; i++) {
+            let book = books[i];
+            let bookInDb = await Book.findOne({ isbn: book.isbn });
+            if (!bookInDb) {
+                await Book.create(book);
+            }
+        }
+
         return books;
     },
 
@@ -30,7 +40,15 @@ const booksController = {
             //details.ml = mlPrice ? mlPrice : null;
         }
         return details;
-    }
+    },
+
+    // Get the most popular books
+    getMostPopular: async () => {
+        console.log('Getting most popular books...');
+        let books = await Book.find({}).sort({ rating: -1 }).limit(10);
+        return books;
+    },
+
 }
 
 module.exports = booksController;
