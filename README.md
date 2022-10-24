@@ -47,13 +47,73 @@ Libgloss is an app that allows you to search for books in different online store
 ### **Get the price of a book in different online stores.**
 `GET /api/books/details?isbn={isbn}`
 
+Returns the price of a book in different online stores. If the book is not available in a store, or the store is not available, the price will be `null`.
+
 #### Example
-`/api/books/details?isbn=9780521817141`
+`/api/books/details?isbn=9788416867349`
 
 #### Response
 ```json
 {
-    "amazon": 129,
-    "mercadolibre": 119,
+    "amazon": 265,
+    "gandhi": 334,
+    "gonvill": 314.57,
+    "el_sotano": 379
 }
+```
+-----
+### **Get the top searches.**
+`GET /api/books/top`
+
+Returns the top 10 searches, sorted by the rating of the books that match the search query.
+### Response
+```json
+[
+    {
+        "title": "It Ends With Us (versione italiana)",
+        "rating": 5,
+        "thumbnail": "http://books.google.com/books/content?id=rmdcEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        "language": "it",
+        "isbn": "9788892742444",
+        "authors": [
+            "Colleen Hoover"
+        ],
+        "publisher": "SPERLING & KUPFER",
+        "categories": [
+            "Fiction"
+        ],
+        "description": "UN CASO EDITORIALE INTERNAZIONALE NATO DAL PASSAPAROLA. UNA STORIA UNICA E COMMOVENTE, IMPOSSIBILE DA DIMENTICARE...",
+    },
+    {
+        "title": "The Gospel According to Harry Potter",
+        "subtitle": "The Spiritual Journey of the World's Greatest Seeker",
+        "rating": 5,
+        "thumbnail": "http://books.google.com/books/content?id=C5qdiQE2g9sC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+        "language": "en",
+        "isbn": "9780664236588",
+        "authors": [
+            "Connie Neal"
+        ],
+        "publisher": "Westminster John Knox Press",
+        "categories": [
+            "Religion"
+        ],
+        "description": "Tagline: Now Exploring Books One through Seven",
+    },
+    {
+        "title": "Harry Potter: A History of Magic",
+        "rating": 5,
+        "thumbnail": "http://books.google.com/books/content?id=0rOWtgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        "language": "en",
+        "isbn": "9781338311501",
+        "authors": [
+            "British Library"
+        ],
+        "publisher": "Arthur A. Levine Books",
+        "categories": [
+            "Juvenile Nonfiction"
+        ],
+        "description": "The official companion book to the special exhibition Harry Potter: A History of Magic, featuring an extraordinary treasure trove of magical artifacts...",
+    }
+]
 ```
