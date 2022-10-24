@@ -48,12 +48,16 @@ class ColorSelector {
 
   static Color getSecondary(currentRoute) {
     switch (currentRoute) {
+      case "HomeNew":
       case LibglossRoutes.HOME:
         return SECONDARY_BLUE;
+      case "HomeUsed":
       case LibglossRoutes.HOME_USED:
         return SECONDARY_GREEN;
+      case "BookTracker":
       case LibglossRoutes.BOOK_TRACKER:
         return SECONDARY_PURPLE;
+      case "UserOptions":
       case LibglossRoutes.OPTIONS:
         return SECONDARY_ORANGE;
       default:

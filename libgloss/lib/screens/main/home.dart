@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 
 class Home extends StatefulWidget {
@@ -39,6 +40,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        LibglossRoutes.getRoutesList()[_selectedIndex].runtimeType.toString());
+
+    Color _currentColor = ColorSelector.getSecondary(
+        LibglossRoutes.getRoutesList()[_selectedIndex].runtimeType.toString());
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
@@ -47,6 +54,7 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
+        selectedItemColor: _currentColor,
         items: [
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.book),
