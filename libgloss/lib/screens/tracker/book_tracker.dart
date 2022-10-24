@@ -10,8 +10,10 @@ import 'tracking_item.dart';
 import 'wish_item.dart';
 
 class BookTracker extends StatelessWidget {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
   BookTracker({super.key});
@@ -85,7 +87,9 @@ class BookTracker extends StatelessWidget {
           SizedBox(
             child: _trackingWidget(),
           ),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           SizedBox(
             child: _wishListWidget(),
           ),
@@ -116,7 +120,8 @@ class BookTracker extends StatelessWidget {
             controller: controllerT,
             itemBuilder: (_, index) {
               //return pages[index % pages.length];
-              return TrackingItem(item: _listSeguimientos[index % _listSeguimientos.length]);
+              return TrackingItem(
+                  item: _listSeguimientos[index % _listSeguimientos.length]);
             },
           ),
         ),

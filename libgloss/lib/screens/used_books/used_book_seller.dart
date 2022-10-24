@@ -14,8 +14,10 @@ class UsedBookSeller extends StatefulWidget {
 }
 
 class _UsedBookSellerState extends State<UsedBookSeller> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
 
   @override
   Widget build(BuildContext context) {

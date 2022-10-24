@@ -18,7 +18,6 @@ class HomeNew extends StatefulWidget {
 }
 
 class _HomeNewState extends State<HomeNew> {
-
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
