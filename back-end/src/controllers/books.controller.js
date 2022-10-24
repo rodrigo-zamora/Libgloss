@@ -3,6 +3,7 @@ const mlController = require('../controllers/online/ml');
 const amzController = require('../controllers/online/amz');
 const gandhiController = require('../controllers/online/gandhi');
 const gonvillController = require('../controllers/online/gonvill');
+const elSotanoController = require('../controllers/online/el_sotano');
 
 const Book = require('../models/book');
 
@@ -85,6 +86,11 @@ const booksController = {
         }
 
         let elSotanoPrice;
+        try {
+            elSotanoPrice = await elSotanoController.getPrice(query.isbn);
+        } catch (err) {
+            console.log('\t\tError getting price from El Sotano:', err);
+        }
 
         if (query.isbn) {
             details.amazon = amzPrice ? amzPrice : null;
