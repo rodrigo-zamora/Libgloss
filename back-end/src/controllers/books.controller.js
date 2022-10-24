@@ -1,6 +1,7 @@
 const googleController = require('../controllers/online/google');
 const mlController = require('../controllers/online/ml');
 const amzController = require('../controllers/online/amz');
+const gandhiController = require('../controllers/online/gandhi');
 const Book = require('../models/book');
 
 const booksController = {
@@ -33,11 +34,56 @@ const booksController = {
     // Get price and availability details for a book, given its ISBN
     getDetails: async (query) => {
         let details = {};
-        let amzPrice = await amzController.getPrice(query.isbn);
-        //let mlPrice = await mlController.getPrice(query.isbn);
+
+        // Get the title of the book
+        let books = await booksController.searchBooks({ isbn: query.isbn });
+        let title = books[0].title;
+        title = title.replace(/ /g, '-');
+
+        // Replace uppercase letters with lowercase
+        title = title.toLowerCase();
+
+        // Replace special characters with their equivalent
+        title = title.replace(/á/g, 'a');
+        title = title.replace(/é/g, 'e');
+        title = title.replace(/í/g, 'i');
+        title = title.replace(/ó/g, 'o');
+        title = title.replace(/ú/g, 'u');
+        title = title.replace(/ñ/g, 'n');
+
+        let amzPrice;
+        try {
+            amzPrice = await amzController.getPrice(query.isbn);
+        } catch (err) {
+            console.log('\t\tError getting price from Amazon:', err);
+        }
+
+        /*let mlPrice;
+        try {
+            // Mercado Libre doesn't accept ISBNs, so we need to search by title
+            mlPrice = await mlController.getPrice(title);
+        } catch (err) {
+            console.log('\t\tError getting price from Mercado Libre:', err);
+        }*/
+
+        let gandhiPrice;
+        try {
+
+            // Search using title to get the physical book
+            gandhiPrice = await gandhiController.getPrice(title);
+        } catch (err) {
+            console.log('\t\tError getting price from Gandhi:', err);
+        }
+
+        let gonvillPrice;
+        let elSotanoPrice;
+
         if (query.isbn) {
             details.amazon = amzPrice ? amzPrice : null;
-            //details.ml = mlPrice ? mlPrice : null;
+            //details.mercado_libre = mlPrice ? mlPrice : null;
+            details.gandhi = gandhiPrice ? gandhiPrice : null;
+            details.gonvill = gonvillPrice ? gonvillPrice : null;
+            details.el_sotano = elSotanoPrice ? elSotanoPrice : null;
         }
         return details;
     },

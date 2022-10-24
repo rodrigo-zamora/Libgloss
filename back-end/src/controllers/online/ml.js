@@ -1,14 +1,13 @@
 const cheerio = require('cheerio');
 const cloudscraper = require('cloudscraper');
 
-const BASE_URL = 'https://listado.mercadolibre.com.mx/libros-revistas-comics/libros-fisicos';
-
+const BASE_URL = 'https://listado.mercadolibre.com.mx';
 const mlController = {
-    getPrice: async (isbn) => {
-        let url = `${BASE_URL}/${isbn}`;
+    getPrice: async (title) => {
+        let url = `${BASE_URL}/${title}`;
         console.log('\tSearching books in Mercado Libre with url', url);
 
-        let response = await cloudscraper.get(url, {method: 'GET'});
+        let response = await cloudscraper.get(url, { method: 'GET' });
         const $ = cheerio.load(response);
         const book = $('.ui-search-layout__item');
         let price = $(book).find('.price-tag-fraction').text();
