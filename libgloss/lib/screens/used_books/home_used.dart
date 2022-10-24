@@ -4,7 +4,6 @@ import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
-import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
 
@@ -108,8 +107,6 @@ class _HomeUsedState extends State<HomeUsed> {
         sideMenuColor: _primaryColor,
       ),
       body: _found(context),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 

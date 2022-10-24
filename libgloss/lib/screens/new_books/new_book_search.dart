@@ -5,7 +5,6 @@ import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/animations/loading_animation.dart';
 import '../../widgets/shared/filter.dart';
 import '../../widgets/shared/online_image.dart';
@@ -41,8 +40,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
         sideMenuColor: _primaryColor,
       ),
       body: _searchBook(context),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME, iconColor: _secondaryColor),
     );
   }
 

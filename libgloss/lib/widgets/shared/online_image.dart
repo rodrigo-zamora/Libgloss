@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shimmer/shimmer.dart';
 
-class OnlineImage extends StatefulWidget {
+class OnlineImage extends StatelessWidget {
   OnlineImage({
     Key? key,
     required String imageUrl,
@@ -16,20 +16,15 @@ class OnlineImage extends StatefulWidget {
   final double _width;
 
   @override
-  State<OnlineImage> createState() => _OnlineImageState();
-}
-
-class _OnlineImageState extends State<OnlineImage> {
-  @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget._imageUrl,
+      imageUrl: _imageUrl,
       placeholder: (context, url) {
         return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            width: widget._width,
+            width: _width,
             color: Colors.grey[300],
           ),
         );

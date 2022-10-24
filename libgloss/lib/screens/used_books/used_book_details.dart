@@ -3,7 +3,6 @@ import 'package:libgloss/widgets/shared/online_image.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import '../../widgets/shared/bottom_navigation.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
@@ -41,8 +40,6 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
         sideMenuColor: _primaryColor,
       ),
       body: _main(context, _args),
-      bottomNavigationBar: BottomNavigation(
-          selectedItem: LibglossRoutes.HOME_USED, iconColor: _secondaryColor),
     );
   }
 
