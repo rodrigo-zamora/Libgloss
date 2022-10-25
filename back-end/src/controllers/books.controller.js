@@ -6,6 +6,7 @@ const gonvillController = require('../controllers/online/gonvill');
 const elSotanoController = require('../controllers/online/el_sotano');
 
 const Book = require('../models/book');
+const BookDetails = require('../models/book_details');
 
 const booksController = {
 
@@ -99,6 +100,7 @@ const booksController = {
             details.gonvill = gonvillPrice ? gonvillPrice : null;
             details.el_sotano = elSotanoPrice ? elSotanoPrice : null;
         }
+        
         return details;
     },
 
@@ -107,6 +109,72 @@ const booksController = {
         console.log('Getting most popular books...');
         let books = await Book.find({}).sort({ rating: -1 }).limit(10);
         return books;
+    },
+
+    // Get the history of a book, given its ISBN
+    getHistory: async (query) => {
+        let history = await BookDetails.find({ isbn: query.isbn }).sort({ date: -1 });
+        return history;
+    },
+
+    // Save the books in the database, with the current price and date
+    saveBooks: async (isbn, details) => {
+        // Check if the book is already in the database
+        let bookInDb = await BookDetails.findOne({ isbn: isbn });
+        console.log('Creating new record for book:', isbn + '...');
+
+
+        // If the book is not in the database, create a new record
+        if (!bookInDb) {
+            console.log('Book not in database, creating new record...');
+            let bookDetails = {
+                isbn: isbn,
+                stores: {}
+            };
+            bookInDb = await BookDetails.create(bookDetails);
+        }
+
+
+        for (let store in details) {
+            let price = details[store];
+            
+            if (price) {
+                let storeData = {
+                    price: price,
+                    date: new Date()
+                };
+                console.log('\tAdding price from', store, ':', price);
+               
+                // Check if the store is already in the database
+                if (bookInDb.stores[store]) {
+                    console.log('\tStore already in database, checking last price...');
+                    let lastPrice = bookInDb.stores[store].data[bookInDb.stores[store].data.length - 1].price;
+
+                    if (lastPrice != price) {
+                        console.log('\tPrice changed, adding new record...');
+                        bookInDb.stores[store].push(storeData);
+                    } else {
+                        console.log('\tPrice did not change, not adding new record...');
+                    }
+
+                    
+                } else {
+                    console.log('\tStore not in database, creating new record...');
+                    
+                    bookInDb.stores[store] = {
+                        data: [storeData]
+                    };
+                }
+
+            }
+        }
+        
+        // Save the book in the database
+        bookInDb.markModified('stores');
+        await bookInDb.save();
+
+        console.log(bookInDb);
+        console.log('Book saved successfully!');
     },
 
 }

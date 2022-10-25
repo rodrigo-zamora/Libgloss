@@ -66,7 +66,7 @@ Returns the price of a book in different online stores. If the book is not avail
 `GET /api/books/top`
 
 Returns the top 10 searches, sorted by the rating of the books that match the search query.
-### Response
+#### Response
 ```json
 [
     {
@@ -114,6 +114,55 @@ Returns the top 10 searches, sorted by the rating of the books that match the se
             "Juvenile Nonfiction"
         ],
         "description": "The official companion book to the special exhibition Harry Potter: A History of Magic, featuring an extraordinary treasure trove of magical artifacts...",
+    }
+]
+```
+-----
+### **Get the price history of a book.**
+`GET /api/books/history?isbn={isbn}`
+
+Returns the price history of a book. The price history is stored in a database, so it will only be available for books that have been added to the wishlist, or books that have been searched by a user.
+#### Example
+`/api/books/history?isbn=9788416867349`
+#### Response
+```json
+[
+    {
+        "isbn": "9788416867349",
+        "stores": {
+            "amazon": {
+                "data": [
+                    {
+                        "price": 265,
+                        "date": "2022-10-25T02:09:30.158Z"
+                    }
+                ]
+            },
+            "gandhi": {
+                "data": [
+                    {
+                        "price": 334,
+                        "date": "2022-10-25T02:09:30.158Z"
+                    }
+                ]
+            },
+            "gonvill": {
+                "data": [
+                    {
+                        "price": 314.57,
+                        "date": "2022-10-25T02:09:30.158Z"
+                    }
+                ]
+            },
+            "el_sotano": {
+                "data": [
+                    {
+                        "price": 379,
+                        "date": "2022-10-25T02:09:30.159Z"
+                    }
+                ]
+            }
+        }
     }
 ]
 ```
