@@ -7,6 +7,7 @@ const elSotanoController = require('../controllers/online/el_sotano');
 
 const Book = require('../models/book');
 const BookDetails = require('../models/book_details');
+const { NotFoundError } = require('../utils/errors');
 
 const booksController = {
 
@@ -114,7 +115,11 @@ const booksController = {
     // Get the history of a book, given its ISBN
     getHistory: async (query) => {
         let history = await BookDetails.find({ isbn: query.isbn }).sort({ date: -1 });
-        return history;
+        if (!history) {
+            throw new NotFoundError('No history found for this book');
+        } else {
+            return history;
+        }
     },
 
     // Save the books in the database, with the current price and date
