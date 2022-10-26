@@ -81,7 +81,7 @@ class _HomeNewState extends State<HomeNew> {
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: OnlineImage(
                             imageUrl: books[index]["thumbnail"]!,
-                            width: 100,
+                            width: MediaQuery.of(context).size.width / 2.5, //100
                           ),
                         ),
                       ),
