@@ -4,6 +4,7 @@ import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -173,6 +174,38 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               ],
             );
           case BookPriceLoading:
+            Widget _loadingShimmer = Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                color: Colors.white,
+                height: 100,
+                width: 100,
+              ),
+            );
+            return Table(
+              border: TableBorder.all(
+                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
+              children: [
+                for (var i = 0; i < 5; i++)
+                  TableRow(children: [
+                    TableCell(
+                      child: Container(
+                        height: 25,
+                        padding: EdgeInsets.all(5.0),
+                        child: _loadingShimmer,
+                      ),
+                    ),
+                    TableCell(
+                      child: Container(
+                        height: 25,
+                        padding: EdgeInsets.all(5.0),
+                        child: _loadingShimmer,
+                      ),
+                    ),
+                  ]),
+              ],
+            );
           default:
             return Center(child: CircularProgressIndicator());
         }
