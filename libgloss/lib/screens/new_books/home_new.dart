@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
@@ -22,71 +24,6 @@ class _HomeNewState extends State<HomeNew> {
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
-  // TODO: Get list of books from database
-  final List<Map<String, dynamic>> _listElements = [
-    {
-      "title": "And Then There Were None",
-      "author": "Agatha Christie",
-      "thumbnail": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
-      "isbn": "978-0062073488",
-      "amazon": 100,
-      "gonvill": 101,
-      "gandhi": 102,
-      "sotano": 103,
-    },
-    {
-      "title": "Gone Girl",
-      "author": "Gillian Flynn",
-      "thumbnail": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
-      "isbn": "978-0307588371",
-      "amazon": 201,
-      "gonvill": 202,
-      "gandhi": 203,
-      "sotano": 204,
-    },
-    {
-      "title": "Harry Potter and the Deahtly Hallows",
-      "author": "J.K. Rowling",
-      "thumbnail": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
-      "isbn": "978-0545139700",
-      "amazon": 301,
-      "gonvill": 302,
-      "gandhi": 303,
-      "sotano": 304,
-    },
-    {
-      "title": "Cien años de soledad",
-      "author": "Gabriel García Márquez",
-      "thumbnail": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
-      "isbn": "978-1644734728",
-      "amazon": 401,
-      "gonvill": 402,
-      "gandhi": 403,
-      "sotano": 404,
-    },
-    {
-      "title": "The Hunger Games",
-      "author": "Suzanne Collins",
-      "thumbnail": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
-      "isbn": "978-0439023481",
-      "amazon": 501,
-      "gonvill": 502,
-      "gandhi": 503,
-      "sotano": 504,
-    },
-    {
-      "title": "The Lord of the Rings",
-      "author": "J.R.R. Tolkien",
-      "thumbnail":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
-      "isbn": "978-0544003415",
-      "amazon": 601,
-      "gonvill": 602,
-      "gandhi": 603,
-      "sotano": 604,
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,11 +40,11 @@ class _HomeNewState extends State<HomeNew> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _found(context),
+      body: _getBooks(context),
     );
   }
 
-  Column _found(BuildContext context) {
+  Column _found(BuildContext context, List<dynamic> books) {
     return Column(
       children: [
         Expanded(
@@ -123,7 +60,7 @@ class _HomeNewState extends State<HomeNew> {
                 childAspectRatio: MediaQuery.of(context).size.width /
                     (MediaQuery.of(context).size.height / 1.5),
               ),
-              itemCount: _listElements.length,
+              itemCount: books.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   //color: Colors.teal[100],
@@ -133,17 +70,17 @@ class _HomeNewState extends State<HomeNew> {
                         onTap: () {
                           if (kDebugMode)
                             print(
-                                "[HomeNew] Moving to details of ${_listElements[index]["title"]}");
+                                "[HomeNew] Moving to details of ${books[index]["title"]}");
                           Navigator.pushNamed(
                             context,
                             LibglossRoutes.NEW_BOOK_DETAILS,
-                            arguments: _listElements[index],
+                            arguments: books[index],
                           );
                         },
                         child: Container(
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: OnlineImage(
-                            imageUrl: _listElements[index]["thumbnail"]!,
+                            imageUrl: books[index]["thumbnail"]!,
                             width: 100,
                           ),
                         ),
@@ -152,7 +89,7 @@ class _HomeNewState extends State<HomeNew> {
                         height: 8,
                       ),
                       Text(
-                        "${_listElements[index]["title"]}",
+                        "${books[index]["title"]}",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -164,7 +101,7 @@ class _HomeNewState extends State<HomeNew> {
                         height: 5,
                       ),
                       Text(
-                        "${_listElements[index]["author"]}",
+                        "${books[index]["authors"]}",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -180,6 +117,33 @@ class _HomeNewState extends State<HomeNew> {
           ),
         ),
       ],
+    );
+  }
+
+  BlocConsumer<BooksBloc, BooksState> _getBooks(BuildContext context) {
+    return BlocConsumer<BooksBloc, BooksState>(
+      listener: (context, state) {
+        if (state is BooksError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is BooksLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is BooksLoaded) {
+          return _found(context, state.books);
+        } else {
+          return Center(
+            child: Text("No books found"),
+          );
+        }
+      },
     );
   }
 }
