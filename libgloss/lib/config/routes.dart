@@ -35,6 +35,8 @@ class LibglossRoutes {
 
   static var CURRENT_ROUTE = HOME;
 
+  static const API = "https://libgloss.herokuapp.com/api/";
+
   static Map<String, WidgetBuilder> getRoutes() {
     return {
       HOME: (context) => Home(),

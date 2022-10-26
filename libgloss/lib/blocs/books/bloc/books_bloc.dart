@@ -6,6 +6,8 @@ import 'package:meta/meta.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../../../config/routes.dart';
+
 part 'books_event.dart';
 part 'books_state.dart';
 
@@ -14,13 +16,11 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     on<GetTopBooksEvent>(_getTopBooks);
   }
 
-  final BOOK_API = 'https://libgloss.herokuapp.com/api/';
-
   FutureOr<void> _getTopBooks(event, emit) async {
     if (kDebugMode) print('\u001b[33m[BooksBloc] ${event}');
     emit(BooksLoading());
 
-    final uri = Uri.parse(BOOK_API + 'books/top');
+    final uri = Uri.parse(LibglossRoutes.API + 'books/top');
 
     try {
       if (kDebugMode) print('\u001b[33m[BooksBloc] uri: $uri');
