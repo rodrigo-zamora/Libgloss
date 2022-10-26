@@ -110,9 +110,22 @@ const booksController = {
         console.log('\tGetting books from the database...');
         if (!page_size) page_size = 10;
         if (!page) page = 1;
+
         console.log('\t\tPage size:', page_size);
         console.log('\t\tPage:', page);
-        let books = await Book.find().skip(page_size * (page - 1)).limit(page_size);
+
+        let books = await Book.find().skip(parseInt(page_size) * (parseInt(page) - 1)).limit(parseInt(page_size));
+        return books;
+    },
+
+    // Get a list of random books in the database
+    getRandomBooks: async (page_size) => {
+        console.log('\tGetting random books from the database...');
+        if (!page_size) page_size = 10;
+
+        console.log('\t\tPage size:', page_size);
+
+        let books = await Book.aggregate([{ $sample: { size: parseInt(page_size) } }]);
         return books;
     },
 

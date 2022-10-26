@@ -10,6 +10,11 @@ router.get('/', handleError(async (req, res) => {
     res.json(books);
 }));
 
+router.get('/random', handleError(async (req, res) => {
+    const book = await booksController.getRandomBooks(req.query.page_size);
+    res.json(book);
+}));
+
 router.get('/search', handleError(async (req, res) => {
     let books = await booksController.searchBooks(req.query);
     res.json(books);

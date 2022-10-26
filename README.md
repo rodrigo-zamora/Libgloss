@@ -34,7 +34,7 @@ Returns a list of books. Since the books are stored in a database, the list is p
         "categories": [
             "Fiction"
         ],
-        "description": "«Adoro esta novela, no pude parar de leer. Me hizo pensar acerca de los propósitos de la vida. Al final, lloré y reí.» The New York Times «Una mezcla perfecta entre Marley y yo y Martes con mi viejo profesor.» Kirkus Reviews",
+        "description": "«Adoro esta novela, no pude parar de leer. Me hizo pensar acerca de los propósitos de la vida...",
         "__v": 0
     },
     {
@@ -47,14 +47,54 @@ Returns a list of books. Since the books are stored in a database, the list is p
             "W. BRUCE. CAMERON"
         ],
         "categories": [],
-        "description": "Ellie is a very special dog with a very important purpose. From puppyhood, Ellie has been trained as a search-and-rescue dog. She can track down a lost child in a forest or an injured victim under a fallen building. She finds people. She saves them. It's what she was meant to do. But Ellie must do more.",
+        "description": "Ellie is a very special dog with a very important purpose. From puppyhood...",
         "__v": 0
     }
 ]
 ```
 -----
+### **Get a list of random books from the database**
+`GET /api/books/random`
 ### **Get a list of books that match the search query.**
-`GET /api/books/search?{query}`
+`GET /api/books/search`
+#### Possible query parameters
+* `page_size` - The page size. Default: 10
+#### Example
+`/api/books/random?page_size=2`
+#### Response
+```json
+[
+    {
+        "_id": "63580a693cfecdc44527cdce",
+        "title": "The Antics of Ekunyuk, the Squirrel",
+        "subtitle": "Folktales From The Iteso Of Kenya.",
+        "thumbnail": "http://books.google.com/books/content?id=6Hx6zQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        "language": "en",
+        "isbn": "9798646856211",
+        "authors": [
+            "Eumot Bon"
+        ],
+        "categories": [],
+        "description": "The story of Okunyuk, the Squirrel, was loved by the preteens in the land...",
+        "__v": 0
+    },
+    {
+        "_id": "6356e62508be94e557098749",
+        "title": "And Then There Were None",
+        "subtitle": "LitPlan Teacher Pack",
+        "thumbnail": "http://books.google.com/books/content?id=iowYNQAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        "language": "en",
+        "isbn": "9781602490307",
+        "authors": [
+            "Susan R Woodward",
+            "Teacher's Pet Publications"
+        ],
+        "categories": [],
+        "description": "Essentially a complete teacher's manual for the novel, this LitPlan Teacher Pack includes...",
+        "__v": 0
+    }
+]
+```
 
 #### Possible query parameters:
 * `title` - the title of the book
