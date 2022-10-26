@@ -63,7 +63,7 @@ class _HomeNewState extends State<HomeNew> {
               itemCount: books.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  //color: Colors.teal[100],
+                  color: Colors.teal[100],
                   child: Column(
                     children: [
                       GestureDetector(
