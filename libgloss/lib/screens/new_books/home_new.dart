@@ -6,6 +6,7 @@ import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../blocs/bookPrice/bloc/book_price_bloc.dart';
 import '../../config/colors.dart';
@@ -64,7 +65,6 @@ class _HomeNewState extends State<HomeNew> {
     _refreshController.loadComplete();
   }
 
-  // TODO: Update books list on scroll up
   Column _found(BuildContext context, List<dynamic> books) {
     return Column(
       children: [
@@ -191,9 +191,34 @@ class _HomeNewState extends State<HomeNew> {
       builder: (context, state) {
         if (state is BooksLoading) {
           // TODO: Add shimmer effect
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: GridView(
+                padding: EdgeInsets.all(20),
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 18,
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.5),
+                ),
+                children: List.generate(
+                  10,
+                  (index) => Container(
+                    color: Colors.teal[100],
+                    child: Column(
+                      children: [
+                        Container(
+                          height: (MediaQuery.of(context).size.height / 4.7),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ));
         } else if (state is BooksLoaded) {
           return _found(context, state.books);
         } else {
