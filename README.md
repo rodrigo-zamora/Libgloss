@@ -65,7 +65,7 @@ Returns the price of a book in different online stores. If the book is not avail
 ### **Get the top searches.**
 `GET /api/books/top`
 
-Returns the top 10 searches, sorted by the rating of the books that match the search query.
+Returns the top 15 searches.
 #### Response
 ```json
 [

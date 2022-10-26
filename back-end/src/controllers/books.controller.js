@@ -108,7 +108,9 @@ const booksController = {
     // Get the most popular books
     getMostPopular: async () => {
         console.log('Getting most popular books...');
-        let books = await Book.find({}).sort({ rating: -1 }).limit(10);
+        let books = await Book.aggregate([
+            { $sample: { size: 15 } }
+        ]);
         return books;
     },
 
