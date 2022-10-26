@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
@@ -141,27 +142,37 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     ]);
   }
 
-  BlocConsumer<SearchBloc, SearchState> _getPrices() {
-    return BlocConsumer<SearchBloc, SearchState>(
-      listener: (context, state) {},
+  BlocConsumer<BooksBloc, BooksState> _getPrices() {
+    return BlocConsumer<BooksBloc, BooksState>(
+      listener: (context, state) {
+        if (state is BookPriceError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         switch (state.runtimeType) {
-          case BookLoaded:
-            // TODO: Add price containers
-            /*Table(
-                border: TableBorder.all(
-                    color: Colors.black, style: BorderStyle.solid, width: 0.5),
-                children: [
-                  _row("Amazon", _blueColor, "\$${_args["amazon"]}"),
-                  _row("Gonvill", _blueColor, "\$${_args["gonvill"]}"),
-                  _row("Gandhi", _redColor, "\$${_args["gandhi"]}"),
-                  _row("El Sótano", _redColor, "\$${_args["sotano"]}"),
-                ],
-              ), */
-            return Container();
-          case BookLoading:
+          case BookPriceLoaded:
+            final Map<String, dynamic> books = state.props[0];
+            return Table(
+              border: TableBorder.all(
+                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
+              children: [
+                for (var book in books.entries)
+                  _row(
+                      book.key,
+                      book.value == null ? _redColor : _blueColor,
+                      book.value == null
+                          ? "No Disponible"
+                          : book.value.toString()),
+              ],
+            );
+          case BookPriceLoading:
           default:
-            // TODO: Add shimmer effect
             return Center(child: CircularProgressIndicator());
         }
       },

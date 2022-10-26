@@ -34,3 +34,29 @@ class BooksError extends BooksState {
   @override
   String toString() => 'BooksError { message: $message }';
 }
+
+class BookPriceLoading extends BooksState {}
+
+class BookPriceLoaded extends BooksState {
+  final Map<String, dynamic> bookPrice;
+
+  const BookPriceLoaded({required this.bookPrice});
+
+  @override
+  List<dynamic> get props => [bookPrice];
+
+  @override
+  String toString() => 'BookPriceLoaded { bookPrice: $bookPrice }';
+}
+
+class BookPriceError extends BooksState {
+  final String message;
+
+  const BookPriceError({required this.message});
+
+  @override
+  List<dynamic> get props => [message];
+
+  @override
+  String toString() => 'BookPriceError { message: $message }';
+}

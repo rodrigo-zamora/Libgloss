@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/colors.dart';
@@ -133,7 +134,11 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      print(books[index]["title"]);
+                      BlocProvider.of<BooksBloc>(context).add(
+                        GetBookPriceEvent(
+                          bookId: books[index]["isbn"],
+                        ),
+                      );
                       Navigator.pushNamed(
                         context,
                         LibglossRoutes.NEW_BOOK_DETAILS,

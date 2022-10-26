@@ -68,9 +68,11 @@ class _HomeNewState extends State<HomeNew> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          if (kDebugMode)
-                            print(
-                                "[HomeNew] Moving to details of ${books[index]["title"]}");
+                          BlocProvider.of<BooksBloc>(context).add(
+                            GetBookPriceEvent(
+                              bookId: books[index]["isbn"],
+                            ),
+                          );
                           Navigator.pushNamed(
                             context,
                             LibglossRoutes.NEW_BOOK_DETAILS,
