@@ -33,7 +33,9 @@ class _HomeState extends State<Home> {
     // ignore_for_file: avoid_print
 
     // Get the books for the home page
-    BlocProvider.of<BooksBloc>(context).add(GetTopBooksEvent());
+    BlocProvider.of<BooksBloc>(context).add(GetRandomBooksEvent(
+      page_size: 16,
+    ));
 
     FlutterNativeSplash.remove();
   }
