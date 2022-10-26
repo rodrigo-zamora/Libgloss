@@ -7,6 +7,52 @@ Libgloss is an app that allows you to search for books in different online store
 * See the price history of the books you have already bought or are interested in
 ## **Screenshots**
 ## **Endpoints**
+### **Get books.**
+`GET /api/books`
+
+Returns a list of books. Since the books are stored in a database, the list is paginated. The default page size is 10. You can change the page size by adding the `page_size` query parameter. You can also change the page by adding the `page` query parameter.
+* `page_size` - The page size. Default: 10
+* `page` - The page number. Default: 1
+#### Example
+`/api/books?page_size=2`
+
+#### Response
+```json
+[
+    {
+        "_id": "6356e3f208be94e557098623",
+        "title": "La razón de estar contigo",
+        "subtitle": "Una novela para humanos",
+        "rating": 4.5,
+        "thumbnail": "http://books.google.com/books/content?id=1USRDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+        "language": "es",
+        "isbn": "9788416867295",
+        "authors": [
+            "W. Bruce Cameron"
+        ],
+        "publisher": "Roca editorial",
+        "categories": [
+            "Fiction"
+        ],
+        "description": "«Adoro esta novela, no pude parar de leer. Me hizo pensar acerca de los propósitos de la vida. Al final, lloré y reí.» The New York Times «Una mezcla perfecta entre Marley y yo y Martes con mi viejo profesor.» Kirkus Reviews",
+        "__v": 0
+    },
+    {
+        "_id": "6356e3f208be94e557098626",
+        "title": "Razon de Estar Contigo, La. La Historia de Ellie",
+        "thumbnail": "http://books.google.com/books/content?id=z7rywQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        "language": "es",
+        "isbn": "9788417167066",
+        "authors": [
+            "W. BRUCE. CAMERON"
+        ],
+        "categories": [],
+        "description": "Ellie is a very special dog with a very important purpose. From puppyhood, Ellie has been trained as a search-and-rescue dog. She can track down a lost child in a forest or an injured victim under a fallen building. She finds people. She saves them. It's what she was meant to do. But Ellie must do more.",
+        "__v": 0
+    }
+]
+```
+-----
 ### **Get a list of books that match the search query.**
 `GET /api/books/search?{query}`
 
@@ -60,62 +106,6 @@ Returns the price of a book in different online stores. If the book is not avail
     "gonvill": 314.57,
     "el_sotano": 379
 }
-```
------
-### **Get the top searches.**
-`GET /api/books/top`
-
-Returns the top 15 searches.
-#### Response
-```json
-[
-    {
-        "title": "It Ends With Us (versione italiana)",
-        "rating": 5,
-        "thumbnail": "http://books.google.com/books/content?id=rmdcEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-        "language": "it",
-        "isbn": "9788892742444",
-        "authors": [
-            "Colleen Hoover"
-        ],
-        "publisher": "SPERLING & KUPFER",
-        "categories": [
-            "Fiction"
-        ],
-        "description": "UN CASO EDITORIALE INTERNAZIONALE NATO DAL PASSAPAROLA. UNA STORIA UNICA E COMMOVENTE, IMPOSSIBILE DA DIMENTICARE...",
-    },
-    {
-        "title": "The Gospel According to Harry Potter",
-        "subtitle": "The Spiritual Journey of the World's Greatest Seeker",
-        "rating": 5,
-        "thumbnail": "http://books.google.com/books/content?id=C5qdiQE2g9sC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-        "language": "en",
-        "isbn": "9780664236588",
-        "authors": [
-            "Connie Neal"
-        ],
-        "publisher": "Westminster John Knox Press",
-        "categories": [
-            "Religion"
-        ],
-        "description": "Tagline: Now Exploring Books One through Seven",
-    },
-    {
-        "title": "Harry Potter: A History of Magic",
-        "rating": 5,
-        "thumbnail": "http://books.google.com/books/content?id=0rOWtgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-        "language": "en",
-        "isbn": "9781338311501",
-        "authors": [
-            "British Library"
-        ],
-        "publisher": "Arthur A. Levine Books",
-        "categories": [
-            "Juvenile Nonfiction"
-        ],
-        "description": "The official companion book to the special exhibition Harry Potter: A History of Magic, featuring an extraordinary treasure trove of magical artifacts...",
-    }
-]
 ```
 -----
 ### **Get the price history of a book.**

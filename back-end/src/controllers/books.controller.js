@@ -105,12 +105,14 @@ const booksController = {
         return details;
     },
 
-    // Get the most popular books
-    getMostPopular: async () => {
-        console.log('Getting most popular books...');
-        let books = await Book.aggregate([
-            { $sample: { size: 15 } }
-        ]);
+    // Get a list of all books in the database
+    getBooks: async (page_size, page) => {
+        console.log('\tGetting books from the database...');
+        if (!page_size) page_size = 10;
+        if (!page) page = 1;
+        console.log('\t\tPage size:', page_size);
+        console.log('\t\tPage:', page);
+        let books = await Book.find().skip(page_size * (page - 1)).limit(page_size);
         return books;
     },
 
