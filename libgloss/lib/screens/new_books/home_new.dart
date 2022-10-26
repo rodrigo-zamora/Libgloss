@@ -70,105 +70,112 @@ class _HomeNewState extends State<HomeNew> {
       children: [
         Expanded(
           child: SizedBox(
-            child: SmartRefresher(
-              enablePullUp: false,
-              enablePullDown: true,
-              header: WaterDropMaterialHeader(
-                backgroundColor: _secondaryColor,
-                color: Colors.white,
-              ),
-              footer: CustomFooter(
-                builder: (BuildContext context, LoadStatus? mode) {
-                  Widget body;
-                  if (mode == LoadStatus.idle) {
-                    body = Text("pull up load");
-                  } else if (mode == LoadStatus.loading) {
-                    body = CircularProgressIndicator();
-                  } else if (mode == LoadStatus.failed) {
-                    body = Text("Load Failed!Click retry!");
-                  } else if (mode == LoadStatus.canLoading) {
-                    body = Text("release to load more");
-                  } else {
-                    body = Text("No more Data");
-                  }
-                  return Container(
-                    height: 55.0,
-                    child: Center(child: body),
-                  );
-                },
-              ),
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              child: GridView.builder(
-                padding: EdgeInsets.all(20),
-                scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 18,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height / 1.5),
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
+              child: SmartRefresher(
+                enablePullUp: false,
+                enablePullDown: true,
+                header: WaterDropMaterialHeader(
+                  backgroundColor: _secondaryColor,
+                  color: Colors.white,
                 ),
-                itemCount: books.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    color: Colors.teal[100],
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<BookPriceBloc>(context).add(
-                              GetBookPriceEvent(
-                                bookId: books[index]["isbn"],
+                footer: CustomFooter(
+                  builder: (BuildContext context, LoadStatus? mode) {
+                    Widget body;
+                    if (mode == LoadStatus.idle) {
+                      body = Text("pull up load");
+                    } else if (mode == LoadStatus.loading) {
+                      body = CircularProgressIndicator();
+                    } else if (mode == LoadStatus.failed) {
+                      body = Text("Load Failed!Click retry!");
+                    } else if (mode == LoadStatus.canLoading) {
+                      body = Text("release to load more");
+                    } else {
+                      body = Text("No more Data");
+                    }
+                    return Container(
+                      height: 55.0,
+                      child: Center(child: body),
+                    );
+                  },
+                ),
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: GridView.builder(
+                  padding: EdgeInsets.all(20),
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 18,
+                    childAspectRatio: MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height / 1.5),
+                  ),
+                  itemCount: books.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      color: Colors.teal[100],
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              BlocProvider.of<BookPriceBloc>(context).add(
+                                GetBookPriceEvent(
+                                  bookId: books[index]["isbn"],
+                                ),
+                              );
+                              Navigator.pushNamed(
+                                context,
+                                LibglossRoutes.NEW_BOOK_DETAILS,
+                                arguments: books[index],
+                              );
+                            },
+                            child: Container(
+                              color: Colors.pink[100],
+                              height:
+                                  (MediaQuery.of(context).size.height / 4.7),
+                              child: OnlineImage(
+                                imageUrl: books[index]["thumbnail"] ??
+                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
+                                width: MediaQuery.of(context).size.width /
+                                    2.5, //100
                               ),
-                            );
-                            Navigator.pushNamed(
-                              context,
-                              LibglossRoutes.NEW_BOOK_DETAILS,
-                              arguments: books[index],
-                            );
-                          },
-                          child: Container(
-                            color: Colors.pink[100],
-                            height: (MediaQuery.of(context).size.height / 4.7),
-                            child: OnlineImage(
-                              imageUrl: books[index]["thumbnail"] ??
-                                  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
-                              width:
-                                  MediaQuery.of(context).size.width / 2.5, //100
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "${books[index]["title"]}",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 14,
+                          SizedBox(
+                            height: 8,
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "${books[index]["authors"]}",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: _blueColor,
-                            fontSize: 12,
+                          Text(
+                            "${books[index]["title"]}",
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "${books[index]["authors"]}",
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: _blueColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
