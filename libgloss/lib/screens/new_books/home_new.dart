@@ -78,6 +78,7 @@ class _HomeNewState extends State<HomeNew> {
                           );
                         },
                         child: Container(
+                          color: Colors.pink[100],
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: OnlineImage(
                             imageUrl: books[index]["thumbnail"]!,
