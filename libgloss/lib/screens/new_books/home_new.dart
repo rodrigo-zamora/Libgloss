@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
+import '../../blocs/bookPrice/bloc/book_price_bloc.dart';
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';
 
@@ -68,7 +68,7 @@ class _HomeNewState extends State<HomeNew> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          BlocProvider.of<BooksBloc>(context).add(
+                          BlocProvider.of<BookPriceBloc>(context).add(
                             GetBookPriceEvent(
                               bookId: books[index]["isbn"],
                             ),
@@ -84,7 +84,8 @@ class _HomeNewState extends State<HomeNew> {
                           height: (MediaQuery.of(context).size.height / 4.7),
                           child: OnlineImage(
                             imageUrl: books[index]["thumbnail"]!,
-                            width: MediaQuery.of(context).size.width / 2.5, //100
+                            width:
+                                MediaQuery.of(context).size.width / 2.5, //100
                           ),
                         ),
                       ),

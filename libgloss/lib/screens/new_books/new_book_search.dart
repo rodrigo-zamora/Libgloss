@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
@@ -134,7 +135,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      BlocProvider.of<BooksBloc>(context).add(
+                      BlocProvider.of<BookPriceBloc>(context).add(
                         GetBookPriceEvent(
                           bookId: books[index]["isbn"],
                         ),

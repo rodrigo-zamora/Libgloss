@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
@@ -142,8 +143,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     ]);
   }
 
-  BlocConsumer<BooksBloc, BooksState> _getPrices() {
-    return BlocConsumer<BooksBloc, BooksState>(
+  BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
+    return BlocConsumer<BookPriceBloc, BookPriceState>(
       listener: (context, state) {
         if (state is BookPriceError) {
           ScaffoldMessenger.of(context).showSnackBar(

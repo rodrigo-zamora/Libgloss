@@ -12,7 +12,6 @@ part 'books_state.dart';
 class BooksBloc extends Bloc<BooksEvent, BooksState> {
   BooksBloc() : super(BooksInitial()) {
     on<GetTopBooksEvent>(_getTopBooks);
-    on<GetBookPriceEvent>(_getBookPrice);
   }
 
   final BOOK_API = 'https://libgloss.herokuapp.com/api/';
@@ -31,25 +30,6 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     } catch (e) {
       if (kDebugMode) print('\u001b[33m[BooksBloc] An error occured: $e');
       emit(BooksError(message: e.toString()));
-    }
-  }
-
-  FutureOr<void> _getBookPrice(event, emit) async {
-    if (kDebugMode) print('\u001b[33m[BooksBloc] ${event}');
-    emit(BookPriceLoading());
-
-    String bookId = (event as GetBookPriceEvent).bookId;
-
-    final uri = Uri.parse(BOOK_API + 'books/details?isbn=$bookId');
-
-    try {
-      if (kDebugMode) print('\u001b[33m[BooksBloc] uri: $uri');
-      var response = await http.get(uri);
-      emit(BookPriceLoaded(
-          bookPrice: response.body == '[]' ? [] : jsonDecode(response.body)));
-    } catch (e) {
-      if (kDebugMode) print('\u001b[33m[BooksBloc] An error occured: $e');
-      emit(BookPriceError(message: e.toString()));
     }
   }
 }
