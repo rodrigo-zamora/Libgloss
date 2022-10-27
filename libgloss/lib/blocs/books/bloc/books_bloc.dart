@@ -51,6 +51,7 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     try {
       if (kDebugMode) print('\u001b[33m[BooksBloc] uri: $uri');
       var response = await http.get(uri);
+      //print(response.body);
       emit(BooksLoaded(
           books: response.body == '[]' ? [] : jsonDecode(response.body)));
     } catch (e) {
