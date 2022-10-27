@@ -47,11 +47,11 @@ class _UsedBookAddState extends State<UsedBookAdd> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _main(context, _args),
+      body: Text("EMPTY"),//_main(context, _args),
     );
   }
 
-  SingleChildScrollView _main(
+  /* SingleChildScrollView _main(
       BuildContext context, Map<String, dynamic> _args) {
     return SingleChildScrollView(
       child: Container(
@@ -210,6 +210,6 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         }
       },
     );
-  }
+  } */
 }
 
