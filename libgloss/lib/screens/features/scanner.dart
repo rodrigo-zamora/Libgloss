@@ -63,7 +63,7 @@ class Scanner extends StatelessWidget {
               case LibglossRoutes.HOME_USED:
                 Navigator.pushNamed(
                   context,
-                  LibglossRoutes.SEARCH_USED,
+                  LibglossRoutes.USED_BOOK_ADD,
                 );
                 break;
             }
