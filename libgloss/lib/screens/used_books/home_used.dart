@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
@@ -106,7 +107,41 @@ class _HomeUsedState extends State<HomeUsed> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _found(context),
+      body: _add(context),
+    );
+  }
+
+  SizedBox _add(context) {
+    return SizedBox(
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            _found(context),
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.03,
+              right: MediaQuery.of(context).size.height * 0.03,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.07,
+                width: MediaQuery.of(context).size.height * 0.07,
+                child: FloatingActionButton(
+                  backgroundColor: _primaryColor,
+                  splashColor: _secondaryColor,
+                  onPressed: () {
+                    print("Add book");
+                    _openCamera();
+                  },
+                  child: FaIcon(
+                    //Icons.photo_camera_outlined,
+                    FontAwesomeIcons.plus,
+                    color: _greenColor,
+                    size: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                ),
+              ),
+            )
+          ]
+        )
     );
   }
 
@@ -147,7 +182,7 @@ class _HomeUsedState extends State<HomeUsed> {
                           height: (MediaQuery.of(context).size.height / 5.2),
                           child: OnlineImage(
                             imageUrl: "${_listElements[index]["thumbnail"]}",
-                            width: 100,
+                            height: 100,
                           ),
                         ),
                       ),
@@ -203,6 +238,72 @@ class _HomeUsedState extends State<HomeUsed> {
           ),
         ),
       ],
+    );
+  }
+
+  void _openCamera() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0))
+          ),
+          contentPadding: EdgeInsets.all(22.0),
+          title: Text("Abrir cámara"),
+          content: //Text("Para subir un libro se necesita escanear el código de barras del mismo\nSerá redirigido al scan de cámara ¿Quieres continuar?"),
+          RichText(
+            text: TextSpan(
+              // Note: Styles for TextSpans must be explicitly defined.
+              // Child text spans will inherit styles from parent
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: 'Para subir un libro se necesita escanear el '
+                ),
+                TextSpan(
+                  text: 'código de barras', 
+                  style: TextStyle(fontWeight: FontWeight.bold)
+                ),
+                TextSpan(
+                  text: ' del mismo\nSerá redirigido al scan de cámara '
+                ),
+                TextSpan(
+                  text: '¿Desea continuar?', 
+                  style: TextStyle(fontStyle: FontStyle.italic)
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () { 
+                Navigator.pop(context, 'Cancel');
+              },
+              child: Text(
+                "Cancelar",
+                style: TextStyle(color: _greenColor)
+              ),
+            ),
+            TextButton(
+              onPressed: () { 
+                Navigator.pop(context, 'Cancel');
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.SCANNER,
+                );
+              },
+              child: Text(
+                "Continuar",
+                style: TextStyle(color: _greenColor)
+              ),
+            ),
+          ],
+        );
+      }
     );
   }
 }
