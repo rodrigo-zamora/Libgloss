@@ -31,7 +31,11 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    print(_args);
+    BlocProvider.of<BookPriceBloc>(context).add(
+      GetBookPriceEvent(
+        bookId: _args["isbn"],
+      ),
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

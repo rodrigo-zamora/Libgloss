@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -10,7 +8,6 @@ import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../blocs/bookPrice/bloc/book_price_bloc.dart';
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';
 
@@ -114,7 +111,6 @@ class _HomeNewState extends State<HomeNew> {
     );
   }
 
-
   Column _found(BuildContext context, List<dynamic> books) {
     return Column(
       children: [
@@ -174,11 +170,6 @@ class _HomeNewState extends State<HomeNew> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<BookPriceBloc>(context).add(
-                                GetBookPriceEvent(
-                                  bookId: books[index]["isbn"],
-                                ),
-                              );
                               Navigator.pushNamed(
                                 context,
                                 LibglossRoutes.NEW_BOOK_DETAILS,
