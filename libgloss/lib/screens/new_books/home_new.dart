@@ -61,6 +61,60 @@ class _HomeNewState extends State<HomeNew> {
     _refreshController.refreshCompleted();
   }
 
+  BlocConsumer<BooksBloc, BooksState> _getBooks(BuildContext context) {
+    return BlocConsumer<BooksBloc, BooksState>(
+      listener: (context, state) {
+        if (state is BooksError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is BooksLoading) {
+          // TODO: Add shimmer effect
+          return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: GridView(
+                padding: EdgeInsets.all(20),
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 18,
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.5),
+                ),
+                children: List.generate(
+                  10,
+                  (index) => Container(
+                    color: Colors.teal[100],
+                    child: Column(
+                      children: [
+                        Container(
+                          height: (MediaQuery.of(context).size.height / 4.7),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ));
+        } else if (state is BooksLoaded) {
+          return _found(context, state.books);
+        } else {
+          return Center(
+            child: Text("No books found"),
+          );
+        }
+      },
+    );
+  }
+
+
   Column _found(BuildContext context, List<dynamic> books) {
     return Column(
       children: [
@@ -113,6 +167,7 @@ class _HomeNewState extends State<HomeNew> {
                   ),
                   itemCount: books.length,
                   itemBuilder: (BuildContext context, int index) {
+                    print("$index = ${books[index]["categories"]}");
                     return Container(
                       color: Colors.teal[100],
                       child: Column(
@@ -137,7 +192,7 @@ class _HomeNewState extends State<HomeNew> {
                               child: OnlineImage(
                                 imageUrl: books[index]["thumbnail"] ??
                                     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
-                                width: MediaQuery.of(context).size.width /
+                                height: MediaQuery.of(context).size.height /
                                     2.5, //100
                               ),
                             ),
@@ -158,7 +213,7 @@ class _HomeNewState extends State<HomeNew> {
                             height: 5,
                           ),
                           Text(
-                            "${books[index]["authors"]}",
+                            "${books[index]["authors"].join(', ')}",
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -176,59 +231,6 @@ class _HomeNewState extends State<HomeNew> {
           ),
         ),
       ],
-    );
-  }
-
-  BlocConsumer<BooksBloc, BooksState> _getBooks(BuildContext context) {
-    return BlocConsumer<BooksBloc, BooksState>(
-      listener: (context, state) {
-        if (state is BooksError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        if (state is BooksLoading) {
-          // TODO: Add shimmer effect
-          return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: GridView(
-                padding: EdgeInsets.all(20),
-                scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 18,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height / 1.5),
-                ),
-                children: List.generate(
-                  10,
-                  (index) => Container(
-                    color: Colors.teal[100],
-                    child: Column(
-                      children: [
-                        Container(
-                          height: (MediaQuery.of(context).size.height / 4.7),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ));
-        } else if (state is BooksLoaded) {
-          return _found(context, state.books);
-        } else {
-          return Center(
-            child: Text("No books found"),
-          );
-        }
-      },
     );
   }
 }

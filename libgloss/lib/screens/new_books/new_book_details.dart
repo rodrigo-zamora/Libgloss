@@ -65,7 +65,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["authors"]}", _blueColor, 15.0, FontWeight.normal,
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 5),
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
@@ -122,7 +122,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         height: (MediaQuery.of(context).size.height / 2.5),
         child: OnlineImage(
           imageUrl: image,
-          width: 100,
+          height: 100,
         ));
   }
 
