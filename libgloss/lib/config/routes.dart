@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/features/upload_book_scanner..dart';
 import '../screens/main/home.dart';
 import '../screens/tracker/book_tracker.dart';
 import '../screens/features/scanner.dart';
@@ -30,6 +31,7 @@ class LibglossRoutes {
   static const BOOK_TRACKER = "/book_tracker";
   static const SEARCH_USED = "/search_used";
   static const SCANNER = "/scanner";
+  static const USED_BOOK_SCANNER = "/used_book_scanner";
   static const LOGIN = "/login";
   static const SIGN_UP = "/sign_up";
   static const ACCOUNT = "/account";
@@ -50,6 +52,7 @@ class LibglossRoutes {
       USED_BOOK_DETAILS: (context) => UsedBookDetails(),
       USED_BOOK_ADD: (context) => UsedBookAdd(),
       USED_BOOK_SELLER: (context) => UsedBookSeller(),
+      USED_BOOK_SCANNER: (context) => UploadBookScanner(),
       BOOK_TRACKER: (context) => BookTracker(),
       OPTIONS: (context) => UserOptions(),
       SCANNER: (context) => Scanner(),
