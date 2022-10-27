@@ -125,6 +125,7 @@ class _HomeUsedState extends State<HomeUsed> {
                 height: MediaQuery.of(context).size.height * 0.07,
                 width: MediaQuery.of(context).size.height * 0.07,
                 child: FloatingActionButton(
+                  heroTag: "btn2",
                   backgroundColor: _primaryColor,
                   splashColor: _secondaryColor,
                   onPressed: () {

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../blocs/bookPrice/bloc/book_price_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';

@@ -123,6 +123,7 @@ class _UserOptionsState extends State<UserOptions> {
                 height: 40,
                 width: 40,
                 child: FloatingActionButton(
+                  heroTag: "btn1",
                   backgroundColor: _primaryColor,
                   splashColor: _secondaryColor,
                   onPressed: () {
