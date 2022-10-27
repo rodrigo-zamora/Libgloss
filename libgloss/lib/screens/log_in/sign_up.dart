@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import 'parts/have_account.dart';
-import 'parts/or_line.dart';
-import 'parts/social_log.dart';
+import '../parts/have_account.dart';
+import '../parts/or_line.dart';
+import '../parts/social_log.dart';
 import '../../widgets/shared/search_appbar.dart';
 
-import 'parts/bunny_silhouette.dart';
-import 'parts/button_log.dart';
-import 'parts/log_text.dart';
+import '../parts/bunny_silhouette.dart';
+import '../parts/button_log.dart';
+import '../parts/log_text.dart';
 
 class SignUp extends StatefulWidget {  
   SignUp({super.key});
