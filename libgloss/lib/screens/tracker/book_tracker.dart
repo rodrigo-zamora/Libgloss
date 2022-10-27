@@ -69,6 +69,7 @@ class BookTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
@@ -82,18 +83,25 @@ class BookTracker extends StatelessWidget {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            child: _trackingWidget(),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
           ),
-          SizedBox(
-            height: 20,
+          child: Column(
+            children: [
+              SizedBox(
+                child: _trackingWidget(),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                child: _wishListWidget(),
+              ),
+            ],
           ),
-          SizedBox(
-            child: _wishListWidget(),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -43,41 +43,47 @@ class _UserOptionsState extends State<UserOptions> {
           showSearchField: true,
         ),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20),
-            Text(
-              user.name,
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: _iconColors,
-              ),
+      body: //Container(
+        //width: MediaQuery.of(context).size.width,
+        SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
             ),
-            Text(
-              user.email,
-              style: TextStyle(
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-                color: _iconColors,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              Text(
+                user.name,
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: _iconColors,
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            _profilePicture(),
-            _sellerButton(),
-            _followers(user.isSeller),
-            SizedBox(height: 10),
-            _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
-            _lowButton(Icons.notifications_outlined,
-                "Notificaciones y mensajes", () {}),
-            _lowButton(Icons.help_outline, "Configuración", () {}),
-            _lowButton(Icons.logout_outlined, "Salir", () {}),
-          ],
-        ),
+              Text(
+                user.email,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                  color: _iconColors,
+                ),
+              ),
+              SizedBox(height: 20),
+              _profilePicture(),
+              _sellerButton(),
+              _followers(user.isSeller),
+              SizedBox(height: 10),
+              _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
+              _lowButton(Icons.notifications_outlined,
+                  "Notificaciones y mensajes", () {}),
+              _lowButton(Icons.help_outline, "Configuración", () {}),
+              _lowButton(Icons.logout_outlined, "Salir", () {}),
+            ],
+          ),
       ),
+        ),
     );
   }
 
