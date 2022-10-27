@@ -4,7 +4,7 @@ import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';
-import '../../model/user.dart';
+import '../../models/user.dart';
 
 class UserOptions extends StatefulWidget {
   UserOptions({super.key});
@@ -44,12 +44,12 @@ class _UserOptionsState extends State<UserOptions> {
         ),
       ),
       body: //Container(
-        //width: MediaQuery.of(context).size.width,
-        SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
+          //width: MediaQuery.of(context).size.width,
+          SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -82,8 +82,8 @@ class _UserOptionsState extends State<UserOptions> {
               _lowButton(Icons.logout_outlined, "Salir", () {}),
             ],
           ),
-      ),
         ),
+      ),
     );
   }
 
