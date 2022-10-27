@@ -118,7 +118,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
         height: (MediaQuery.of(context).size.height / 2.5),
         child: OnlineImage(
           imageUrl: image,
-          width: 100,
+          height: 100,
         ));
   }
 

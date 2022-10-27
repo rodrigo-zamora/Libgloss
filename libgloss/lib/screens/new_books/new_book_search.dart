@@ -149,8 +149,8 @@ class _NewBookSearchState extends State<NewBookSearch> {
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 4.7),
                       child: OnlineImage(
-                        imageUrl: books[index]["thumbnail"]!,
-                        width: 100,
+                        imageUrl: books[index]["thumbnail"],
+                        height: 100,
                       ),
                     ),
                   ),
@@ -171,7 +171,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                   ),
                   // TODO: Fix authors list
                   Text(
-                    "${books[index]["authors"]}",
+                    "${books[index]["authors"].join(', ')}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(

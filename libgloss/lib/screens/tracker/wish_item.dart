@@ -38,7 +38,7 @@ class WishItem extends StatelessWidget {
                     height: 150,
                     child: OnlineImage(
                       imageUrl: item["image"]!,
-                      width: 100,
+                      height: 100,
                     ),
                   ),
                 ],

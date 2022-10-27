@@ -201,7 +201,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                       height: (MediaQuery.of(context).size.height / 5.2),
                       child: OnlineImage(
                         imageUrl: "${_listElements[index]["image"]}",
-                        width: 100,
+                        height: 100,
                       ),
                     ),
                   ),
