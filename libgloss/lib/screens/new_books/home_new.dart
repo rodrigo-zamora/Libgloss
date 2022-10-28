@@ -71,6 +71,7 @@ class _HomeNewState extends State<HomeNew> {
       },
       builder: (context, state) {
         if (state is BooksLoading) {
+          // TODO: Add shimmer effect
           return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -88,28 +89,11 @@ class _HomeNewState extends State<HomeNew> {
                 children: List.generate(
                   10,
                   (index) => Container(
+                    color: Colors.teal[100],
                     child: Column(
                       children: [
                         Container(
-                          height: 200,
-                          width: 150,
-                          color: Colors.teal[100],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 20,
-                          width: 150,
-                          color: Colors.teal[100],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 20,
-                          width: 150,
-                          color: Colors.teal[100],
+                          height: (MediaQuery.of(context).size.height / 4.7),
                         ),
                       ],
                     ),
