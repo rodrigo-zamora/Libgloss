@@ -55,23 +55,17 @@ class Scanner extends StatelessWidget {
                   content: Text('Códiog ISBN detectado: $code'),
                 ),
               );
-            switch (LibglossRoutes.CURRENT_ROUTE) {
-              case LibglossRoutes.HOME:
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.SEARCH_NEW,
-                );
-                break;
-              case LibglossRoutes.HOME_USED:
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.USED_BOOK_ADD,
-                );
-                break;
-            }
+            Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_NEW,
+            );
+            Map<String, dynamic> filters = {
+              'isbn': code,
+            };
             BlocProvider.of<SearchBloc>(context).add(SearchBoookEvent(
-              query: code,
-              filters: {},
+              query: '',
+              filters: filters,
             ));
           }
         });
