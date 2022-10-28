@@ -71,7 +71,6 @@ class _HomeNewState extends State<HomeNew> {
       },
       builder: (context, state) {
         if (state is BooksLoading) {
-          // TODO: Add shimmer effect
           return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,

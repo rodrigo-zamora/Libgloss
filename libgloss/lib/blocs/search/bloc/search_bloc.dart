@@ -35,12 +35,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     if (query == '') {
       uri = Uri.parse(LibglossRoutes.API + 'books/search?$filterQuery');
     } else {
-      uri = Uri.parse(LibglossRoutes.API + 'books/search?title=$query' + filterQuery);
+      uri = Uri.parse(
+          LibglossRoutes.API + 'books/search?title=$query' + filterQuery);
     }
 
     try {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
+      print(response.body);
       emit(SearchLoaded(
           books: response.body == '[]' ? [] : jsonDecode(response.body)));
     } catch (e) {
@@ -60,6 +62,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     try {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
+      print(response.body);
       emit(BookLoaded(
           bookDetails: response.body == '[]' ? [] : jsonDecode(response.body)));
     } catch (e) {
