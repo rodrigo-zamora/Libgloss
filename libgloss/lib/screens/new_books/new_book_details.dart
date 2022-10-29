@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
-import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
-import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
@@ -130,7 +131,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ));
   }
 
-  TableRow _row(String title, Color color, String value) {
+  TableRow _row(String title, Color color, String value, String url) {
     switch (title) {
       case "amazon":
         title = "Amazon";
@@ -150,9 +151,24 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     }
     return TableRow(children: [
       TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+        child: GestureDetector(
+          onTap: () {
+            if (url != "") {
+              _launchURL(url);
+            } else {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text("No se encontró el libro en $title"),
+                  ),
+                );
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+          ),
         ),
       ),
       TableCell(
@@ -163,6 +179,20 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ),
       ),
     ]);
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('No se pudo abrir el enlace'),
+          ),
+        );
+    }
   }
 
   BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
@@ -191,7 +221,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                       book.value == null ? _redColor : _blueColor,
                       book.value == null
                           ? "No Disponible"
-                          : "\$${book.value["price"]}"),
+                          : "\$${book.value["price"]}",
+                      book.value == null ? "" : book.value["url"]),
               ],
             );
           case BookPriceLoading:
