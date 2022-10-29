@@ -19,9 +19,13 @@ const elSotanoController = {
         // Get the last element of the array
         price = price[price.length - 1];
 
+        price = Math.round(parseFloat(price) * 100) / 100;
+
+        // This is the default price if the book is not found
+        if (price == 679) return null;
+
         console.log('\t\tFound book with price', price);
 
-        price = Math.round(parseFloat(price) * 100) / 100;
 
         return price;
     }

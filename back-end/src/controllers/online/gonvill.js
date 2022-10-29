@@ -19,10 +19,9 @@ const gonvillController = {
         // Get the last element of the array
         price = price[price.length - 1];
 
+        price = Math.round(parseFloat(price) * 100) / 100;
 
         console.log('\t\tFound book with price', price);
-
-        price = Math.round(parseFloat(price) * 100) / 100;
 
         return price;
     }

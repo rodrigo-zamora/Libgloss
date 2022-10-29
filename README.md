@@ -20,7 +20,6 @@ Returns a list of books. Since the books are stored in a database, the list is p
 ```json
 [
     {
-        "_id": "6356e3f208be94e557098623",
         "title": "La razón de estar contigo",
         "subtitle": "Una novela para humanos",
         "rating": 4.5,
@@ -35,10 +34,8 @@ Returns a list of books. Since the books are stored in a database, the list is p
             "Fiction"
         ],
         "description": "«Adoro esta novela, no pude parar de leer. Me hizo pensar acerca de los propósitos de la vida...",
-        "__v": 0
     },
     {
-        "_id": "6356e3f208be94e557098626",
         "title": "Razon de Estar Contigo, La. La Historia de Ellie",
         "thumbnail": "http://books.google.com/books/content?id=z7rywQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
         "language": "es",
@@ -48,7 +45,6 @@ Returns a list of books. Since the books are stored in a database, the list is p
         ],
         "categories": [],
         "description": "Ellie is a very special dog with a very important purpose. From puppyhood...",
-        "__v": 0
     }
 ]
 ```
@@ -63,7 +59,6 @@ Returns a list of books. Since the books are stored in a database, the list is p
 ```json
 [
     {
-        "_id": "63580a693cfecdc44527cdce",
         "title": "The Antics of Ekunyuk, the Squirrel",
         "subtitle": "Folktales From The Iteso Of Kenya.",
         "thumbnail": "http://books.google.com/books/content?id=6Hx6zQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
@@ -74,10 +69,8 @@ Returns a list of books. Since the books are stored in a database, the list is p
         ],
         "categories": [],
         "description": "The story of Okunyuk, the Squirrel, was loved by the preteens in the land...",
-        "__v": 0
     },
     {
-        "_id": "6356e62508be94e557098749",
         "title": "And Then There Were None",
         "subtitle": "LitPlan Teacher Pack",
         "thumbnail": "http://books.google.com/books/content?id=iowYNQAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
@@ -89,7 +82,6 @@ Returns a list of books. Since the books are stored in a database, the list is p
         ],
         "categories": [],
         "description": "Essentially a complete teacher's manual for the novel, this LitPlan Teacher Pack includes...",
-        "__v": 0
     }
 ]
 ```
@@ -131,9 +123,14 @@ Returns a list of books. Since the books are stored in a database, the list is p
 ```
 -----
 ### **Get the price of a book in different online stores.**
-`GET /api/books/details?isbn={isbn}`
+`GET /api/books/details`
 
 Returns the price of a book in different online stores. If the book is not available in a store, or the store is not available, the price will be `null`.
+
+Possible query parameters:
+* `isbn` - the ISBN of the book
+* `store` - get the price of a book only in that store.
+    * List of possible stores: `amazon`, `mercado_libre`, `gandhi`, `gonvill`, `el_sotano`
 
 #### Example
 `/api/books/details?isbn=9788416867349`
@@ -149,9 +146,12 @@ Returns the price of a book in different online stores. If the book is not avail
 ```
 -----
 ### **Get the price history of a book.**
-`GET /api/books/history?isbn={isbn}`
+`GET /api/books/history`
 
 Returns the price history of a book. The price history is stored in a database, so it will only be available for books that have been added to the wishlist, or books that have been searched by a user.
+
+Possible query parameters:
+* `isbn` - the ISBN of the book
 #### Example
 `/api/books/history?isbn=9788416867349`
 #### Response

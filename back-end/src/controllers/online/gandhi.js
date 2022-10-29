@@ -12,9 +12,9 @@ const gandhiController = {
         const $ = cheerio.load(response);
 
         let price = $("meta[itemprop='price']").attr('content');
-        console.log('\t\tFound book with price', price);
-
         price = Math.round(parseFloat(price) * 100) / 100;
+
+        console.log('\t\tFound book with price', price);
 
         return price;
     }

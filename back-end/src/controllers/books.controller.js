@@ -7,7 +7,7 @@ const elSotanoController = require('../controllers/online/el_sotano');
 
 const Book = require('../models/book');
 const BookDetails = require('../models/book_details');
-const { NotFoundError } = require('../utils/errors');
+const { NotFoundError, BadRequestError } = require('../utils/errors');
 
 const booksController = {
 
@@ -56,6 +56,29 @@ const booksController = {
         title = title.replace(/ú/g, 'u');
         title = title.replace(/ñ/g, 'n');
 
+        store = query.store;
+        if (store) {
+            switch (store) {
+                case 'mercado_libre':
+                    details = await mlController.getPrice(title);
+                    return { store: details ? details : null };
+                case 'amazon':
+                    details = await amzController.getPrice(query.isbn);
+                    return { store: details ? details : null };
+                case 'gandhi':
+                    details = await gandhiController.getPrice(title);
+                    return { store: details ? details : null };
+                case 'gonvill':
+                    details = await gonvillController.getPrice(query.isbn);
+                    return { store: details ? details : null };
+                case 'el_sotano':
+                    details = await elSotanoController.getPrice(query.isbn);
+                    return { store: details ? details : null };
+                default:
+                    throw new BadRequestError('Store not found. Possible stores: mercado_libre, amazon, gandhi, gonvill, el_sotano');
+            }
+        }
+
         let amzPrice;
         try {
             amzPrice = await amzController.getPrice(query.isbn);
@@ -63,6 +86,7 @@ const booksController = {
             console.log('\t\tError getting price from Amazon:', err);
         }
 
+        // TODO: Fix mercado libre price
         /*let mlPrice;
         try {
             // Mercado Libre doesn't accept ISBNs, so we need to search by title
@@ -126,16 +150,20 @@ const booksController = {
         console.log('\t\tPage size:', page_size);
 
         let books = await Book.aggregate([{ $sample: { size: parseInt(page_size) } }]);
+
         return books;
     },
 
     // Get the history of a book, given its ISBN
     getHistory: async (query) => {
-        let history = await BookDetails.find({ isbn: query.isbn }).sort({ date: -1 });
+        let history = await BookDetails.findOne({ isbn: query.isbn });
         if (!history) {
             throw new NotFoundError('No history found for this book');
         } else {
-            return history;
+            return {
+                isbn: history.isbn,
+                stores: history.stores
+            }
         }
     },
 
@@ -174,7 +202,7 @@ const booksController = {
 
                     if (lastPrice != price) {
                         console.log('\tPrice changed, adding new record...');
-                        bookInDb.stores[store].push(storeData);
+                        bookInDb.stores[store].data.push(storeData);
                     } else {
                         console.log('\tPrice did not change, not adding new record...');
                     }
