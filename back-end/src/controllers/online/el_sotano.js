@@ -13,6 +13,8 @@ const elSotanoController = {
 
         let price = $('.so-bookprice').text();
 
+        let href = $('.item').find('a').attr('href'); // Get the href of the first element with class item
+
         // Split price to get only the number
         price = price.split('$');
 
@@ -27,7 +29,10 @@ const elSotanoController = {
         console.log('\t\tFound book with price', price);
 
 
-        return price;
+        return {
+            price: price,
+            url: 'https://www.elsotano.com' + href
+        };
     }
 }
 

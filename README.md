@@ -138,10 +138,22 @@ Possible query parameters:
 #### Response
 ```json
 {
-    "amazon": 265,
-    "gandhi": 334,
-    "gonvill": 314.57,
-    "el_sotano": 379
+    "amazon": {
+        "price": 314,
+        "url": "https://www.amazon.com.mx/raz%C3%B3n-estar-contigo-Bruce-Cameron/dp/8416867348/ref=sr_1_1?keywords=9788416867349&qid=1667062120&qu=eyJxc2MiOiIwLjAwIiwicXNhIjoiMC4wMCIsInFzcCI6IjAuMDAifQ%3D%3D&s=books&sr=1-1"
+    },
+    "gandhi": {
+        "price": 334,
+        "url": "https://www.gandhi.com.mx/la-razon-de-estar-contigo"
+    },
+    "gonvill": {
+        "price": 314.57,
+        "url": "https://www.gonvill.com.mx/libro/la-razon-de-estar-contigo_16350398"
+    },
+    "el_sotano": {
+        "price": 379,
+        "url": "https://www.elsotano.com/libro/la-razon-de-estar-contigo_10500797"
+    }
 }
 ```
 -----

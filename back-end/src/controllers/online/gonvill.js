@@ -13,6 +13,8 @@ const gonvillController = {
 
         let price = $('.precio').text();
 
+        href = $('.portada').find('a').attr('href'); // Get the href of the first element with class portada
+
         // Split price to get only the number
         price = price.split('$');
 
@@ -23,7 +25,10 @@ const gonvillController = {
 
         console.log('\t\tFound book with price', price);
 
-        return price;
+        return {
+            price: price,
+            url: 'https://www.gonvill.com.mx' + href
+        }
     }
 }
 

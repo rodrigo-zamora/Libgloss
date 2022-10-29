@@ -61,25 +61,24 @@ const booksController = {
             switch (store) {
                 case 'mercado_libre':
                     details = await mlController.getPrice(title);
-                    return { store: details ? details : null };
+                    return { mercado_libre: details ? details : null };
                 case 'amazon':
                     details = await amzController.getPrice(query.isbn);
-                    return { store: details ? details : null };
+                    return { amazon: details};
                 case 'gandhi':
                     details = await gandhiController.getPrice(title);
-                    return { store: details ? details : null };
+                    return { gandhi: details};
                 case 'gonvill':
                     details = await gonvillController.getPrice(query.isbn);
-                    return { store: details ? details : null };
+                    return { gonvill: details};
                 case 'el_sotano':
                     details = await elSotanoController.getPrice(query.isbn);
-                    return { store: details ? details : null };
+                    return { el_sotano: details};
                 default:
                     throw new BadRequestError('Store not found. Possible stores: mercado_libre, amazon, gandhi, gonvill, el_sotano');
             }
-        }
-
-        let amzPrice;
+        } else {
+            let amzPrice;
         try {
             amzPrice = await amzController.getPrice(query.isbn);
         } catch (err) {
@@ -127,6 +126,7 @@ const booksController = {
         }
         
         return details;
+        }
     },
 
     // Get a list of all books in the database
@@ -169,62 +169,65 @@ const booksController = {
 
     // Save the books in the database, with the current price and date
     saveBooks: async (isbn, details) => {
-        // Check if the book is already in the database
-        let bookInDb = await BookDetails.findOne({ isbn: isbn });
-        console.log('Creating new record for book:', isbn + '...');
+
+        if (details) {
+            // Check if the book is already in the database
+            let bookInDb = await BookDetails.findOne({ isbn: isbn });
+            console.log('Creating new record for book:', isbn + '...');
 
 
-        // If the book is not in the database, create a new record
-        if (!bookInDb) {
-            console.log('Book not in database, creating new record...');
-            let bookDetails = {
-                isbn: isbn,
-                stores: {}
-            };
-            bookInDb = await BookDetails.create(bookDetails);
-        }
-
-
-        for (let store in details) {
-            let price = details[store];
-            
-            if (price) {
-                let storeData = {
-                    price: price,
-                    date: new Date()
+            // If the book is not in the database, create a new record
+            if (!bookInDb) {
+                console.log('Book not in database, creating new record...');
+                let bookDetails = {
+                    isbn: isbn,
+                    stores: {}
                 };
-                console.log('\tAdding price from', store, ':', price);
-               
-                // Check if the store is already in the database
-                if (bookInDb.stores[store]) {
-                    console.log('\tStore already in database, checking last price...');
-                    let lastPrice = bookInDb.stores[store].data[bookInDb.stores[store].data.length - 1].price;
+                bookInDb = await BookDetails.create(bookDetails);
+            }
 
-                    if (lastPrice != price) {
-                        console.log('\tPrice changed, adding new record...');
-                        bookInDb.stores[store].data.push(storeData);
+
+            for (let store in details) {
+                let price = details[store].price;
+                
+                if (price) {
+                    let storeData = {
+                        price: price,
+                        date: new Date()
+                    };
+                    console.log('\tAdding price from', store, ':', price);
+                
+                    // Check if the store is already in the database
+                    if (bookInDb.stores[store]) {
+                        console.log('\tStore already in database, checking last price...');
+                        let lastPrice = bookInDb.stores[store].data[bookInDb.stores[store].data.length - 1].price;
+
+                        if (lastPrice != price) {
+                            console.log('\tPrice changed, adding new record...');
+                            bookInDb.stores[store].data.push(storeData);
+                        } else {
+                            console.log('\tPrice did not change, not adding new record...');
+                        }
+
+                        
                     } else {
-                        console.log('\tPrice did not change, not adding new record...');
+                        console.log('\tStore not in database, creating new record...');
+                        
+                        bookInDb.stores[store] = {
+                            data: [storeData]
+                        };
                     }
 
-                    
-                } else {
-                    console.log('\tStore not in database, creating new record...');
-                    
-                    bookInDb.stores[store] = {
-                        data: [storeData]
-                    };
                 }
-
             }
-        }
-        
-        // Save the book in the database
-        bookInDb.markModified('stores');
-        await bookInDb.save();
+            
+            // Save the book in the database
+            bookInDb.markModified('stores');
+            await bookInDb.save();
 
-        console.log(bookInDb);
-        console.log('Book saved successfully!');
+            console.log(bookInDb);
+            console.log('Book saved successfully!');
+            }
     },
 
 }

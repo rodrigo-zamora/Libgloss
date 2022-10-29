@@ -16,7 +16,10 @@ const gandhiController = {
 
         console.log('\t\tFound book with price', price);
 
-        return price;
+        return {
+            price: price,
+            url: url
+        };
     }
 }
 
