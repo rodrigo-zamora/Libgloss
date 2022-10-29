@@ -20,7 +20,7 @@ const gandhiController = {
 
         return {
             price: price,
-            url: 'https://www.elsotano.com' + href
+            url: href
         };
     }
 }
