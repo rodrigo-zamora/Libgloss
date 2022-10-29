@@ -55,8 +55,6 @@ Returns a list of books. Since the books are stored in a database, the list is p
 -----
 ### **Get a list of random books from the database**
 `GET /api/books/random`
-### **Get a list of books that match the search query.**
-`GET /api/books/search`
 #### Possible query parameters
 * `page_size` - The page size. Default: 10
 #### Example
@@ -95,7 +93,9 @@ Returns a list of books. Since the books are stored in a database, the list is p
     }
 ]
 ```
-
+-----
+### **Get a list of books that match the search query.**
+`GET /api/books/search`
 #### Possible query parameters:
 * `title` - the title of the book
 * `category` - the category of the book.
