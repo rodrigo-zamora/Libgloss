@@ -69,8 +69,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
-                TextAlign.center),
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
+                FontWeight.normal, TextAlign.center),
             SizedBox(height: 5),
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
@@ -131,6 +131,23 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   }
 
   TableRow _row(String title, Color color, String value) {
+    switch (title) {
+      case "amazon":
+        title = "Amazon";
+        break;
+      case "gandhi":
+        title = "Gandhi";
+        break;
+      case "gonvill":
+        title = "Gonvill";
+        break;
+      case "el_sotano":
+        title = "El Sótano";
+        break;
+      case "mercado_libre":
+        title = "Mercado Libre";
+        break;
+    }
     return TableRow(children: [
       TableCell(
         child: Container(
@@ -174,7 +191,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                       book.value == null ? _redColor : _blueColor,
                       book.value == null
                           ? "No Disponible"
-                          : book.value.toString()),
+                          : "\$${book.value["price"]}"),
               ],
             );
           case BookPriceLoading:
