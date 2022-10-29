@@ -25,6 +25,8 @@ const gonvillController = {
 
         console.log('\t\tFound book with price', price);
 
+        if (!price) return null;
+
         return {
             price: price,
             url: 'https://www.gonvill.com.mx' + href

@@ -16,9 +16,11 @@ const gandhiController = {
 
         console.log('\t\tFound book with price', price);
 
+        if (!price) return null;
+
         return {
             price: price,
-            url: url
+            url: 'https://www.elsotano.com' + href
         };
     }
 }

@@ -28,6 +28,7 @@ const elSotanoController = {
 
         console.log('\t\tFound book with price', price);
 
+        if (!price) return null;
 
         return {
             price: price,

@@ -33,6 +33,8 @@ const amzController = {
         price = Math.round(parseFloat(price) * 100) / 100;
         console.log('\t\tFound book with price', price);
 
+        if (!price) return null;
+
         return {
             price: price,
             url: 'https://www.amazon.com.mx' + href
