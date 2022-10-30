@@ -6,8 +6,8 @@ import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
 import 'login.dart';
 import 'sign_up.dart';
-import 'parts/bunny_silhouette.dart';
-import 'parts/button_log.dart';
+import '../parts/bunny_silhouette.dart';
+import '../parts/button_log.dart';
 
 class NoAccount extends StatefulWidget {
   NoAccount({super.key});

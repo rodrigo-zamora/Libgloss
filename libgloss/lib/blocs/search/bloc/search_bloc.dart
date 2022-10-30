@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../../../config/routes.dart';
+
 part 'search_event.dart';
 part 'search_state.dart';
 
@@ -13,8 +15,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchEvent>(_searchBook);
     on<BookDetailsEvent>(_bookDetails);
   }
-
-  final BOOK_API = 'https://libgloss.herokuapp.com/api/';
 
   FutureOr<void> _searchBook(SearchEvent event, Emitter emit) async {
     if (kDebugMode) print('\x1B[32m[SearchBloc] ${event}');
@@ -33,14 +33,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     var uri;
 
     if (query == '') {
-      uri = Uri.parse(BOOK_API + 'books/search?$filterQuery');
+      uri = Uri.parse(LibglossRoutes.API + 'books/search?$filterQuery');
     } else {
-      uri = Uri.parse(BOOK_API + 'books/search?title=$query' + filterQuery);
+      uri = Uri.parse(
+          LibglossRoutes.API + 'books/search?title=$query' + filterQuery);
     }
 
     try {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
+      print(response.body);
       emit(SearchLoaded(
           books: response.body == '[]' ? [] : jsonDecode(response.body)));
     } catch (e) {
@@ -55,11 +57,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     String bookId = (event as BookDetailsEvent).bookId;
 
-    final uri = Uri.parse(BOOK_API + 'books/$bookId');
+    final uri = Uri.parse(LibglossRoutes.API + 'books/$bookId');
 
     try {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
+      print(response.body);
       emit(BookLoaded(
           bookDetails: response.body == '[]' ? [] : jsonDecode(response.body)));
     } catch (e) {

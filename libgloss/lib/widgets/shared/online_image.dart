@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OnlineImage extends StatelessWidget {
+
   OnlineImage({
     Key? key,
     required String imageUrl,
-    required double width,
+    required double height,
   })  : _imageUrl = imageUrl,
-        _width = width,
+        _height = height,
         super(key: key);
 
   final String _imageUrl;
-  final double _width;
+  final double _height;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +25,19 @@ class OnlineImage extends StatelessWidget {
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            width: _width,
+            height: _height,
             color: Colors.grey[300],
           ),
         );
       },
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.fitHeight,
+          ),
+        ),
+      ),
       errorWidget: (context, url, error) {
         return Icon(Icons.error);
       },

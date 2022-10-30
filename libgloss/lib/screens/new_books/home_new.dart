@@ -1,9 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -22,71 +25,6 @@ class _HomeNewState extends State<HomeNew> {
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
-  // TODO: Get list of books from database
-  final List<Map<String, dynamic>> _listElements = [
-    {
-      "title": "And Then There Were None",
-      "author": "Agatha Christie",
-      "thumbnail": "https://m.media-amazon.com/images/I/81B9LhCS2AL.jpg",
-      "isbn": "978-0062073488",
-      "amazon": 100,
-      "gonvill": 101,
-      "gandhi": 102,
-      "sotano": 103,
-    },
-    {
-      "title": "Gone Girl",
-      "author": "Gillian Flynn",
-      "thumbnail": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
-      "isbn": "978-0307588371",
-      "amazon": 201,
-      "gonvill": 202,
-      "gandhi": 203,
-      "sotano": 204,
-    },
-    {
-      "title": "Harry Potter and the Deahtly Hallows",
-      "author": "J.K. Rowling",
-      "thumbnail": "https://m.media-amazon.com/images/I/71sH3vxziLL.jpg",
-      "isbn": "978-0545139700",
-      "amazon": 301,
-      "gonvill": 302,
-      "gandhi": 303,
-      "sotano": 304,
-    },
-    {
-      "title": "Cien años de soledad",
-      "author": "Gabriel García Márquez",
-      "thumbnail": "https://m.media-amazon.com/images/I/81rEWmLXliL.jpg",
-      "isbn": "978-1644734728",
-      "amazon": 401,
-      "gonvill": 402,
-      "gandhi": 403,
-      "sotano": 404,
-    },
-    {
-      "title": "The Hunger Games",
-      "author": "Suzanne Collins",
-      "thumbnail": "https://m.media-amazon.com/images/I/61+t8dh4BEL.jpg",
-      "isbn": "978-0439023481",
-      "amazon": 501,
-      "gonvill": 502,
-      "gandhi": 503,
-      "sotano": 504,
-    },
-    {
-      "title": "The Lord of the Rings",
-      "author": "J.R.R. Tolkien",
-      "thumbnail":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
-      "isbn": "978-0544003415",
-      "amazon": 601,
-      "gonvill": 602,
-      "gandhi": 603,
-      "sotano": 604,
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,79 +41,182 @@ class _HomeNewState extends State<HomeNew> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _found(context),
+      body: _getBooks(context),
     );
   }
 
-  Column _found(BuildContext context) {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+
+    BlocProvider.of<BooksBloc>(context).add(GetRandomBooksEvent(
+      page_size: 16,
+    ));
+
+    _refreshController.refreshCompleted();
+  }
+
+  BlocConsumer<BooksBloc, BooksState> _getBooks(BuildContext context) {
+    return BlocConsumer<BooksBloc, BooksState>(
+      listener: (context, state) {
+        if (state is BooksError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is BooksLoading) {
+          return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: GridView(
+                padding: EdgeInsets.all(20),
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 18,
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.5),
+                ),
+                children: List.generate(
+                  10,
+                  (index) => Container(
+                    color: Colors.teal[100],
+                    child: Column(
+                      children: [
+                        Container(
+                          height: (MediaQuery.of(context).size.height / 4.7),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ));
+        } else if (state is BooksLoaded) {
+          return _found(context, state.books);
+        } else {
+          return Center(
+            child: Text("No books found"),
+          );
+        }
+      },
+    );
+  }
+
+  Column _found(BuildContext context, List<dynamic> books) {
     return Column(
       children: [
         Expanded(
           child: SizedBox(
-            child: GridView.builder(
-              padding: EdgeInsets.all(20),
-              scrollDirection: Axis.vertical,
-              physics: ScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 18,
-                childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 1.5),
-              ),
-              itemCount: _listElements.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  //color: Colors.teal[100],
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (kDebugMode)
-                            print(
-                                "[HomeNew] Moving to details of ${_listElements[index]["title"]}");
-                          Navigator.pushNamed(
-                            context,
-                            LibglossRoutes.NEW_BOOK_DETAILS,
-                            arguments: _listElements[index],
-                          );
-                        },
-                        child: Container(
-                          height: (MediaQuery.of(context).size.height / 4.7),
-                          child: OnlineImage(
-                            imageUrl: _listElements[index]["thumbnail"]!,
-                            width: 100,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "${_listElements[index]["title"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "${_listElements[index]["author"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: _blueColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
               },
+              child: SmartRefresher(
+                enablePullUp: false,
+                enablePullDown: true,
+                header: WaterDropMaterialHeader(
+                  backgroundColor: _secondaryColor,
+                  color: Colors.white,
+                ),
+                footer: CustomFooter(
+                  builder: (BuildContext context, LoadStatus? mode) {
+                    Widget body;
+                    if (mode == LoadStatus.idle) {
+                      body = Text("pull up load");
+                    } else if (mode == LoadStatus.loading) {
+                      body = CircularProgressIndicator();
+                    } else if (mode == LoadStatus.failed) {
+                      body = Text("Load Failed!Click retry!");
+                    } else if (mode == LoadStatus.canLoading) {
+                      body = Text("release to load more");
+                    } else {
+                      body = Text("No more Data");
+                    }
+                    return Container(
+                      height: 55.0,
+                      child: Center(child: body),
+                    );
+                  },
+                ),
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                child: GridView.builder(
+                  padding: EdgeInsets.all(20),
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 18,
+                    childAspectRatio: MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height / 1.5),
+                  ),
+                  itemCount: books.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    print("$index = ${books[index]["categories"]}");
+                    return Container(
+                      color: Colors.teal[100],
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                LibglossRoutes.NEW_BOOK_DETAILS,
+                                arguments: books[index],
+                              );
+                            },
+                            child: Container(
+                              color: Colors.pink[100],
+                              height:
+                                  (MediaQuery.of(context).size.height / 4.7),
+                              child: OnlineImage(
+                                imageUrl: books[index]["thumbnail"] ??
+                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
+                                height: MediaQuery.of(context).size.height /
+                                    2.5, //100
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "${books[index]["title"]}",
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "${books[index]["authors"].join(', ')}",
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: _blueColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),

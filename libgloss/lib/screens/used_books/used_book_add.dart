@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
-
-import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
@@ -12,19 +8,20 @@ import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
-class NewBookDetails extends StatefulWidget {
-  NewBookDetails({
+class UsedBookAdd extends StatefulWidget {
+  UsedBookAdd({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<NewBookDetails> createState() => _NewBookDetailsState();
+  State<UsedBookAdd> createState() => _UsedBookAddState();
 }
 
-class _NewBookDetailsState extends State<NewBookDetails> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+class _UsedBookAddState extends State<UsedBookAdd> {
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
   final Color _redColor = ColorSelector.getRed();
   final Color _defaultColor = ColorSelector.getBlack();
 
@@ -32,11 +29,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    BlocProvider.of<BookPriceBloc>(context).add(
-      GetBookPriceEvent(
-        bookId: _args["isbn"],
-      ),
-    );
+    print(_args);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -53,11 +46,11 @@ class _NewBookDetailsState extends State<NewBookDetails> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _main(context, _args),
+      body: Text("EMPTY"),//_main(context, _args),
     );
   }
 
-  SingleChildScrollView _main(
+  /* SingleChildScrollView _main(
       BuildContext context, Map<String, dynamic> _args) {
     return SingleChildScrollView(
       child: Container(
@@ -70,8 +63,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
-                FontWeight.normal, TextAlign.center),
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
+                TextAlign.center),
             SizedBox(height: 5),
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
@@ -131,44 +124,12 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ));
   }
 
-  TableRow _row(String title, Color color, String value, String url) {
-    switch (title) {
-      case "amazon":
-        title = "Amazon";
-        break;
-      case "gandhi":
-        title = "Gandhi";
-        break;
-      case "gonvill":
-        title = "Gonvill";
-        break;
-      case "el_sotano":
-        title = "El Sótano";
-        break;
-      case "mercado_libre":
-        title = "Mercado Libre";
-        break;
-    }
+  TableRow _row(String title, Color color, String value) {
     return TableRow(children: [
       TableCell(
-        child: GestureDetector(
-          onTap: () {
-            if (url != "") {
-              _launchURL(url);
-            } else {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content: Text("No se encontró el libro en $title"),
-                  ),
-                );
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
-          ),
+        child: Container(
+          padding: EdgeInsets.all(5.0),
+          child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
         ),
       ),
       TableCell(
@@ -179,20 +140,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ),
       ),
     ]);
-  }
-
-  void _launchURL(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: Text('No se pudo abrir el enlace'),
-          ),
-        );
-    }
   }
 
   BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
@@ -221,8 +168,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                       book.value == null ? _redColor : _blueColor,
                       book.value == null
                           ? "No Disponible"
-                          : "\$${book.value["price"]}",
-                      book.value == null ? "" : book.value["url"]),
+                          : book.value.toString()),
               ],
             );
           case BookPriceLoading:
@@ -263,5 +209,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         }
       },
     );
-  }
+  } */
 }
+

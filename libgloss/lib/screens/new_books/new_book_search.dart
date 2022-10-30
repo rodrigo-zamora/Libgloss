@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/colors.dart';
@@ -133,7 +135,11 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      print(books[index]["title"]);
+                      BlocProvider.of<BookPriceBloc>(context).add(
+                        GetBookPriceEvent(
+                          bookId: books[index]["isbn"],
+                        ),
+                      );
                       Navigator.pushNamed(
                         context,
                         LibglossRoutes.NEW_BOOK_DETAILS,
@@ -143,8 +149,8 @@ class _NewBookSearchState extends State<NewBookSearch> {
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 4.7),
                       child: OnlineImage(
-                        imageUrl: books[index]["thumbnail"]!,
-                        width: 100,
+                        imageUrl: books[index]["thumbnail"],
+                        height: 100,
                       ),
                     ),
                   ),
@@ -165,7 +171,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                   ),
                   // TODO: Fix authors list
                   Text(
-                    "${books[index]["authors"]}",
+                    "${books[index]["authors"].join(', ')}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(

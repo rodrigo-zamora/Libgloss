@@ -4,7 +4,7 @@ import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';
-import '../../model/user.dart';
+import '../../models/user.dart';
 
 class UserOptions extends StatefulWidget {
   UserOptions({super.key});
@@ -43,39 +43,45 @@ class _UserOptionsState extends State<UserOptions> {
           showSearchField: true,
         ),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20),
-            Text(
-              user.name,
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: _iconColors,
+      body: //Container(
+          //width: MediaQuery.of(context).size.width,
+          SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              Text(
+                user.name,
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: _iconColors,
+                ),
               ),
-            ),
-            Text(
-              user.email,
-              style: TextStyle(
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-                color: _iconColors,
+              Text(
+                user.email,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                  color: _iconColors,
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            _profilePicture(),
-            _sellerButton(),
-            _followers(user.isSeller),
-            SizedBox(height: 10),
-            _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
-            _lowButton(Icons.notifications_outlined,
-                "Notificaciones y mensajes", () {}),
-            _lowButton(Icons.help_outline, "Configuración", () {}),
-            _lowButton(Icons.logout_outlined, "Salir", () {}),
-          ],
+              SizedBox(height: 20),
+              _profilePicture(),
+              _sellerButton(),
+              _followers(user.isSeller),
+              SizedBox(height: 10),
+              _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
+              _lowButton(Icons.notifications_outlined,
+                  "Notificaciones y mensajes", () {}),
+              _lowButton(Icons.help_outline, "Configuración", () {}),
+              _lowButton(Icons.logout_outlined, "Salir", () {}),
+            ],
+          ),
         ),
       ),
     );
@@ -117,6 +123,7 @@ class _UserOptionsState extends State<UserOptions> {
                 height: 40,
                 width: 40,
                 child: FloatingActionButton(
+                  heroTag: "btn1",
                   backgroundColor: _primaryColor,
                   splashColor: _secondaryColor,
                   onPressed: () {

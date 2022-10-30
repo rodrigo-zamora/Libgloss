@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -11,8 +12,9 @@ class Scanner extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final Color _primaryColor = Color.fromRGBO(199, 246, 255, 1);
-  final Color _secondaryColor = Color.fromRGBO(54, 179, 201, 1);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_NEW);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.HOME_NEW);
   final MobileScannerController cameraController = MobileScannerController();
 
   @override
@@ -53,23 +55,17 @@ class Scanner extends StatelessWidget {
                   content: Text('Códiog ISBN detectado: $code'),
                 ),
               );
-            switch (LibglossRoutes.CURRENT_ROUTE) {
-              case LibglossRoutes.HOME:
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.SEARCH_NEW,
-                );
-                break;
-              case LibglossRoutes.HOME_USED:
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.SEARCH_USED,
-                );
-                break;
-            }
+            Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              LibglossRoutes.SEARCH_NEW,
+            );
+            Map<String, dynamic> filters = {
+              'isbn': code,
+            };
             BlocProvider.of<SearchBloc>(context).add(SearchBoookEvent(
-              query: code,
-              filters: {},
+              query: '',
+              filters: filters,
             ));
           }
         });

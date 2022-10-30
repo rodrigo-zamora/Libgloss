@@ -47,10 +47,17 @@ dependencies:
   animated_text_kit: ^4.2.2
   auto_animated: ^3.1.0
   flutter_native_splash: ^2.2.11
+  pull_to_refresh: ^2.0.0
 
   # Firebase
-  firebase_core: ^2.0.0
-  firebase_auth: ^4.0.1
+  firebase_core: ^2.1.0
+  firebase_auth: ^4.0.2
+  cloud_firestore: ^4.0.2
+  firebase_ui_firestore: ^1.0.2
+
+  # Google
+  google_sign_in: ^5.4.2
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:

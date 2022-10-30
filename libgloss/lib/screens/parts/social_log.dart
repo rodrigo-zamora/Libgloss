@@ -40,6 +40,7 @@ class SocialLog extends StatelessWidget {
           ),
         ), */
         FloatingActionButton(
+          heroTag: "btn3",
           backgroundColor: Colors.grey[50],
           splashColor: _splash,
           shape: RoundedRectangleBorder(

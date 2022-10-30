@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
+
+import '../../blocs/books/bloc/books_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,13 +31,12 @@ class _HomeState extends State<Home> {
     // the splash screen is displayed.  Remove the following example because
     // delaying the user experience is a bad design practice!
     // ignore_for_file: avoid_print
-    print('ready in 3...');
-    await Future.delayed(const Duration(seconds: 1));
-    print('ready in 2...');
-    await Future.delayed(const Duration(seconds: 1));
-    print('ready in 1...');
-    await Future.delayed(const Duration(seconds: 1));
-    print('go!');
+
+    // Get the books for the home page
+    BlocProvider.of<BooksBloc>(context).add(GetRandomBooksEvent(
+      page_size: 16,
+    ));
+
     FlutterNativeSplash.remove();
   }
 
