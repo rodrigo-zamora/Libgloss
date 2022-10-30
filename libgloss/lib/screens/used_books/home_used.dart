@@ -122,8 +122,8 @@ class _HomeUsedState extends State<HomeUsed> {
         bottom: MediaQuery.of(context).size.height * 0.03,
         right: MediaQuery.of(context).size.height * 0.03,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.07,
-          width: MediaQuery.of(context).size.height * 0.07,
+          height: MediaQuery.of(context).size.height * 0.06,
+          width: MediaQuery.of(context).size.height * 0.06,
           child: FloatingActionButton(
             heroTag: "btn2",
             backgroundColor: _primaryColor,
@@ -136,7 +136,7 @@ class _HomeUsedState extends State<HomeUsed> {
               //Icons.photo_camera_outlined,
               FontAwesomeIcons.plus,
               color: _greenColor,
-              size: MediaQuery.of(context).size.height * 0.04,
+              size: MediaQuery.of(context).size.height * 0.03,
             ),
           ),
         ),
