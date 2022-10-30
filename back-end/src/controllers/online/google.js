@@ -1,4 +1,5 @@
 const bent = require('bent');
+const { NotFoundError } = require('../../utils/errors');
 
 const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=40&q=';
 
@@ -15,7 +16,11 @@ const categories = {
 
 async function makeRequest(url, randomize) {
     let books = [];
+
     let response = await bent('json')(url);
+
+    if (response.items == undefined) throw new NotFoundError('No books found');
+
     response.items.forEach(book => {
         try {
 
