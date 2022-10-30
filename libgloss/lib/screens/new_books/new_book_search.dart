@@ -2,10 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
-import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
-import '../../blocs/bookPrice/stores.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/animations/loading_animation.dart';
@@ -139,7 +137,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       BlocProvider.of<BookPriceBloc>(context).add(
                         GetBookPriceEvent(
                           bookId: books[index]["isbn"],
-                          store: Store.amazon,
                         ),
                       );
                       Navigator.pushNamed(
@@ -171,7 +168,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
                   SizedBox(
                     height: 5,
                   ),
-                  // TODO: Fix authors list
                   Text(
                     "${books[index]["authors"].join(', ')}",
                     overflow: TextOverflow.ellipsis,

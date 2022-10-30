@@ -6,7 +6,6 @@ import 'package:libgloss/widgets/shared/online_image.dart';
 
 import 'package:shimmer/shimmer.dart';
 
-import '../../blocs/bookPrice/stores.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -33,14 +32,11 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     _args as Map<String, dynamic>;
 
     // For each store in the enum Store
-    for (var store in Store.values) {
-      BlocProvider.of<BookPriceBloc>(context).add(
-        GetBookPriceEvent(
-          bookId: _args["isbn"],
-          store: store,
-        ),
-      );
-    }
+    BlocProvider.of<BookPriceBloc>(context).add(
+      GetBookPriceEvent(
+        bookId: _args["isbn"],
+      ),
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -193,7 +189,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         arguments: _arguments);
   }
 
-  // TODO: Fix bloc to dynamically add rows to table instead of creating a new table for each store
   BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
     return BlocConsumer<BookPriceBloc, BookPriceState>(
       listener: (context, state) {
@@ -259,7 +254,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
 
   _buildRow(String key, value) {
     if (value == null) {
-      return _row(key, _redColor, "No Disponible", "");
+      return _row(key, _redColor, "No disponible", "");
     } else {
       return _row(key, _blueColor, value["price"].toString(), value["url"]);
     }
