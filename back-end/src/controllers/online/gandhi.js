@@ -20,7 +20,7 @@ const gandhiController = {
 
         return {
             price: price,
-            url: href
+            url: url
         };
     }
 }
