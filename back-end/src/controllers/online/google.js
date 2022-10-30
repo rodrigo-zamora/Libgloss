@@ -1,7 +1,7 @@
 const bent = require('bent');
 const { NotFoundError } = require('../../utils/errors');
 
-const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=40&q=';
+const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=20&q=';
 
 const categories = {
     "Acción": "action",
