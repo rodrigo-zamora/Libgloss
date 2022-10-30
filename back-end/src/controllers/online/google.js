@@ -1,6 +1,7 @@
 const bent = require('bent');
+const { NotFoundError } = require('../../utils/errors');
 
-const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=40&q=';
+const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=20&q=';
 
 const categories = {
     "Acción": "action",
@@ -15,14 +16,21 @@ const categories = {
 
 async function makeRequest(url, randomize) {
     let books = [];
+
     let response = await bent('json')(url);
+
+    if (response.items == undefined) throw new NotFoundError('No books found');
+
     response.items.forEach(book => {
         try {
+
+            let thumbnail = book.volumeInfo.imageLinks;
+
             books.push({
                 title: book.volumeInfo.title,
                 subtitle: book.volumeInfo.subtitle,
                 rating: book.volumeInfo.averageRating,
-                thumbnail: book.volumeInfo.imageLinks.thumbnail,
+                thumbnail: thumbnail === undefined ? null : thumbnail.thumbnail,
                 language: book.volumeInfo.language,
                 isbn: book.volumeInfo.industryIdentifiers.find(id => id.type == 'ISBN_13').identifier,
                 authors: book.volumeInfo.authors,
@@ -31,7 +39,7 @@ async function makeRequest(url, randomize) {
                 description: book.volumeInfo.description,
             });
         } catch (error) {
-            console.log('\x1b[33mBook with title:', book.volumeInfo.title, 'has no ISBN_13\x1b[0m');
+            console.log('\x1b[33mBook with title:', book.volumeInfo.title, 'has an error:' + error + '\x1b[0m');
         }
     });
 
@@ -85,7 +93,7 @@ const googleController = {
 
         // Remove last '+' if present
         if (query.charAt(query.length - 1) == '+') query = query.slice(0, -1);
-        
+
         let url = `${BASE_URL}${query}`;
 
         console.log('\tURL:', url);
