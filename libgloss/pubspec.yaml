@@ -57,7 +57,8 @@ dependencies:
 
   # Google
   google_sign_in: ^5.4.2
-  url_launcher: ^6.1.6
+  webview_flutter: ^3.0.4
+  share_plus: ^6.1.0
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
+import '../../blocs/bookPrice/stores.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/animations/loading_animation.dart';
@@ -138,6 +139,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       BlocProvider.of<BookPriceBloc>(context).add(
                         GetBookPriceEvent(
                           bookId: books[index]["isbn"],
+                          store: Store.amazon,
                         ),
                       );
                       Navigator.pushNamed(

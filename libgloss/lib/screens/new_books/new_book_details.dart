@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
-import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../blocs/bookPrice/stores.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -32,11 +32,15 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    BlocProvider.of<BookPriceBloc>(context).add(
-      GetBookPriceEvent(
-        bookId: _args["isbn"],
-      ),
-    );
+    // For each store in the enum Store
+    for (var store in Store.values) {
+      BlocProvider.of<BookPriceBloc>(context).add(
+        GetBookPriceEvent(
+          bookId: _args["isbn"],
+          store: store,
+        ),
+      );
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -181,20 +185,15 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     ]);
   }
 
-  void _launchURL(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: Text('No se pudo abrir el enlace'),
-          ),
-        );
-    }
+  void _launchURL(String _url) async {
+    var _arguments = {
+      "url": _url,
+    };
+    Navigator.pushNamed(context, LibglossRoutes.WEB_VIEW,
+        arguments: _arguments);
   }
 
+  // TODO: Fix bloc to dynamically add rows to table instead of creating a new table for each store
   BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
     return BlocConsumer<BookPriceBloc, BookPriceState>(
       listener: (context, state) {
@@ -215,14 +214,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               border: TableBorder.all(
                   color: Colors.black, style: BorderStyle.solid, width: 0.5),
               children: [
-                for (var book in books.entries)
-                  _row(
-                      book.key,
-                      book.value == null ? _redColor : _blueColor,
-                      book.value == null
-                          ? "No Disponible"
-                          : "\$${book.value["price"]}",
-                      book.value == null ? "" : book.value["url"]),
+                for (var book in books.entries) _buildRow(book.key, book.value),
               ],
             );
           case BookPriceLoading:
@@ -263,5 +255,13 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         }
       },
     );
+  }
+
+  _buildRow(String key, value) {
+    if (value == null) {
+      return _row(key, _redColor, "No Disponible", "");
+    } else {
+      return _row(key, _blueColor, value["price"].toString(), value["url"]);
+    }
   }
 }

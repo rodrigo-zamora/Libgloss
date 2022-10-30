@@ -9,9 +9,11 @@ abstract class BookPriceEvent {
 
 class GetBookPriceEvent extends BookPriceEvent {
   final String bookId;
+  final Store store;
 
   const GetBookPriceEvent({
     required String this.bookId,
+    required Store this.store,
   });
 
   @override
@@ -20,5 +22,5 @@ class GetBookPriceEvent extends BookPriceEvent {
       ];
 
   @override
-  String toString() => 'GetBookPriceEvent { bookId: $bookId }';
+  String toString() => 'GetBookPriceEvent { bookId: $bookId, store: $store }';
 }

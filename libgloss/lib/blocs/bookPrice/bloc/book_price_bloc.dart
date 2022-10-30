@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../config/routes.dart';
+import '../stores.dart';
 
 part 'book_price_event.dart';
 part 'book_price_state.dart';
@@ -21,8 +22,12 @@ class BookPriceBloc extends Bloc<BookPriceEvent, BookPriceState> {
     emit(BookPriceLoading());
 
     String bookId = (event as GetBookPriceEvent).bookId;
+    String store = (event).store.name;
 
-    final uri = Uri.parse(LibglossRoutes.API + 'books/details?isbn=$bookId');
+    print('\u001b[33m[BookPriceBloc] bookId: $bookId, store: $store');
+
+    final uri = Uri.parse(LibglossRoutes.API +
+        'books/details?isbn=$bookId&store=${store.toString()}');
 
     try {
       if (kDebugMode) print('\u001b[33m[BookPriceBloc] uri: $uri');

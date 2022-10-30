@@ -16,6 +16,7 @@ import '../screens/user/user_options.dart';
 import '../screens/log_in/account.dart';
 import '../screens/log_in/login.dart';
 import '../screens/log_in/sign_up.dart';
+import '../screens/features/web_view.dart';
 import '../widgets/animations/splash.dart';
 
 class LibglossRoutes {
@@ -36,6 +37,7 @@ class LibglossRoutes {
   static const SIGN_UP = "/sign_up";
   static const ACCOUNT = "/account";
   static const SPLASH = "/splash";
+  static const WEB_VIEW = "/web_view";
 
   static var CURRENT_ROUTE = HOME;
 
@@ -60,6 +62,7 @@ class LibglossRoutes {
       SIGN_UP: (context) => SignUp(),
       ACCOUNT: (context) => Account(),
       SPLASH: (context) => SplashScreen(),
+      WEB_VIEW: (context) => WebViewPage(),
     };
   }
 
