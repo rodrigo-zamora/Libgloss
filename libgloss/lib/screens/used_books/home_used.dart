@@ -7,6 +7,7 @@ import 'package:libgloss/widgets/shared/side_menu.dart';
 
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
+import 'pop_up.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -241,55 +242,56 @@ class _HomeUsedState extends State<HomeUsed> {
 
   void _openCamera() async {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0))),
-            contentPadding: EdgeInsets.all(22.0),
-            title: Text("Abrir cámara"),
-            content: //Text("Para subir un libro se necesita escanear el código de barras del mismo\nSerá redirigido al scan de cámara ¿Quieres continuar?"),
-                RichText(
-              text: TextSpan(
-                // Note: Styles for TextSpans must be explicitly defined.
-                // Child text spans will inherit styles from parent
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: 'Para subir un libro se necesita escanear el '),
-                  TextSpan(
-                      text: 'código de barras',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(
-                      text: ' del mismo\nSerá redirigido al scan de cámara '),
-                  TextSpan(
-                      text: '¿Desea continuar?',
-                      style: TextStyle(fontStyle: FontStyle.italic)),
-                ],
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          contentPadding: EdgeInsets.all(22.0),
+          title: Text("Abrir cámara"),
+          content: //Text("Para subir un libro se necesita escanear el código de barras del mismo\nSerá redirigido al scan de cámara ¿Quieres continuar?"),
+              RichText(
+            text: TextSpan(
+              // Note: Styles for TextSpans must be explicitly defined.
+              // Child text spans will inherit styles from parent
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black,
               ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: 'Para subir un libro se necesita escanear el '),
+                TextSpan(
+                    text: 'código de barras',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                    text: ' del mismo\nSerá redirigido al scan de cámara '),
+                TextSpan(
+                    text: '¿Desea continuar?',
+                    style: TextStyle(fontStyle: FontStyle.italic)),
+              ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'Cancel');
-                },
-                child: Text("Cancelar", style: TextStyle(color: _greenColor)),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'Cancel');
-                  Navigator.pushNamed(
-                    context,
-                    LibglossRoutes.USED_BOOK_SCANNER,
-                  );
-                },
-                child: Text("Continuar", style: TextStyle(color: _greenColor)),
-              ),
-            ],
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, 'Cancel');
+              },
+              child: Text("Cancelar", style: TextStyle(color: _greenColor)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, 'Cancel');
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.USED_BOOK_SCANNER,
+                );
+              },
+              child: Text("Continuar", style: TextStyle(color: _greenColor)),
+            ),
+          ],
+        );
+      }
+    );
   }
 }
