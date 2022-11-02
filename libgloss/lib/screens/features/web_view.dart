@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,6 +21,9 @@ class _WebViewPageState extends State<WebViewPage> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
   late Map<String, dynamic> _arguments;
+
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
 
   @override
   void initState() {
@@ -51,6 +55,17 @@ class _WebViewPageState extends State<WebViewPage> {
       body: WebView(
         initialUrl: _args["url"],
         javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: _secondaryColor,
+        onPressed: () async {
+          final String url = _args["url"];
+          Share.share(url);
+        },
+        child: const Icon(Icons.share),
       ),
     );
   }
@@ -79,11 +94,11 @@ class _WebViewPageState extends State<WebViewPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.12,
                   child: IconButton(
-                    icon: Icon(Icons.share),
+                    icon: Icon(Icons.settings),
                     onPressed: () {
-                      Share.share(
-                          "Check out this awesome book on Libgloss: ${_arguments["url"]}");
+                      Navigator.pop(context);
                     },
+                    // TODO: Add to favorites
                   ),
                 ),
               ],
