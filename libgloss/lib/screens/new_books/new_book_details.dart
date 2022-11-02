@@ -23,9 +23,11 @@ class NewBookDetails extends StatefulWidget {
 class _NewBookDetailsState extends State<NewBookDetails> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _quaternaryColor = ColorSelector.getQuaternary(LibglossRoutes.HOME);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _redColor = ColorSelector.getRed();
   final Color _defaultColor = ColorSelector.getBlack();
+  final Color _greyColor = ColorSelector.getGrey();
 
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
@@ -131,56 +133,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ));
   }
 
-  TableRow _row(String title, Color color, String value, String url) {
-    switch (title) {
-      case "amazon":
-        title = "Amazon";
-        break;
-      case "gandhi":
-        title = "Gandhi";
-        break;
-      case "gonvill":
-        title = "Gonvill";
-        break;
-      case "el_sotano":
-        title = "El Sótano";
-        break;
-      case "mercado_libre":
-        title = "Mercado Libre";
-        break;
-    }
-    return TableRow(children: [
-      TableCell(
-        child: GestureDetector(
-          onTap: () {
-            if (url != "") {
-              _launchURL(url);
-            } else {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content: Text("No se encontró el libro en $title"),
-                  ),
-                );
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
-          ),
-        ),
-      ),
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
-        ),
-      ),
-    ]);
-  }
-
   void _launchURL(String _url) async {
     var _arguments = {
       "url": _url,
@@ -205,6 +157,117 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         switch (state.runtimeType) {
           case BookPriceLoaded:
             final Map<String, dynamic> books = state.props[0];
+            return GridView.count(
+              primary: false,
+              childAspectRatio: MediaQuery.of(context).size.height / MediaQuery.of(context).size.width,
+              //padding: EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: <Widget> [
+                for (var book in books.entries) _buildCard(book.key, book.value),
+              ],
+            );
+          case BookPriceLoading:
+            return Center(child: CircularProgressIndicator());
+          default:
+            return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  _buildCard(String key, value) {
+    if (value == null) {
+      return _storeCard(key, _redColor, "No disponible", "");
+    } else {
+      return _storeCard(key, _blueColor, value["price"].toString(), value["url"]);
+    }
+  }
+
+  Widget _storeCard(String title, Color color, String value, String url) {
+    switch (title) {
+      case "amazon":
+        title = "Amazon";
+        break;
+      case "gandhi":
+        title = "Gandhi";
+        break;
+      case "gonvill":
+        title = "Gonvill";
+        break;
+      case "el_sotano":
+        title = "El Sótano";
+        break;
+      case "mercado_libre":
+        title = "Mercado Libre";
+        break;
+    }
+    return Container(
+      child: Card(
+        elevation: 4, // the size of the shadow
+        shadowColor: _greyColor, // shadow color
+        color: _quaternaryColor, // the color of the card
+        shape: RoundedRectangleBorder( // the shape of the card
+          borderRadius: BorderRadius.all(Radius.circular(15)), // the radius of the border, made to be circular
+          side: BorderSide(
+            color: _secondaryColor,
+            width: 0.5
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  if (url != "") {
+                    _launchURL(url);
+                  } else {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text("No se encontró el libro en $title"),
+                        ),
+                      );
+                  }
+                },
+                child: Container(
+                  child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+                ),
+              ),
+              SizedBox(height: 5),
+              _text(
+                value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /* BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
+    return BlocConsumer<BookPriceBloc, BookPriceState>(
+      listener: (context, state) {
+        if (state is BookPriceError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        switch (state.runtimeType) {
+          case BookPriceLoaded:
+            final Map<String, dynamic> books = state.props[0];
+            for (var book in books.entries)
+              print(book.key + " " + book.value.toString());
             return Table(
               border: TableBorder.all(
                   color: Colors.black, style: BorderStyle.solid, width: 0.5),
@@ -259,4 +322,54 @@ class _NewBookDetailsState extends State<NewBookDetails> {
       return _row(key, _blueColor, value["price"].toString(), value["url"]);
     }
   }
+
+  TableRow _row(String title, Color color, String value, String url) {
+    switch (title) {
+      case "amazon":
+        title = "Amazon";
+        break;
+      case "gandhi":
+        title = "Gandhi";
+        break;
+      case "gonvill":
+        title = "Gonvill";
+        break;
+      case "el_sotano":
+        title = "El Sótano";
+        break;
+      case "mercado_libre":
+        title = "Mercado Libre";
+        break;
+    }
+    return TableRow(children: [
+      TableCell(
+        child: GestureDetector(
+          onTap: () {
+            if (url != "") {
+              _launchURL(url);
+            } else {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text("No se encontró el libro en $title"),
+                  ),
+                );
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+          ),
+        ),
+      ),
+      TableCell(
+        child: Container(
+          padding: EdgeInsets.all(5.0),
+          child: _text(
+              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
+        ),
+      ),
+    ]);
+  } */
 }
