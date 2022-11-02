@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
-import 'package:shimmer/shimmer.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -154,12 +154,13 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         }
       },
       builder: (context, state) {
+        double size = MediaQuery.of(context).size.height / MediaQuery.of(context).size.width;
         switch (state.runtimeType) {
           case BookPriceLoaded:
             final Map<String, dynamic> books = state.props[0];
             return GridView.count(
               primary: false,
-              childAspectRatio: MediaQuery.of(context).size.height / MediaQuery.of(context).size.width,
+              childAspectRatio: size,
               //padding: EdgeInsets.all(20),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
@@ -170,7 +171,31 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               ],
             );
           case BookPriceLoading:
-            return Center(child: CircularProgressIndicator());
+            return GridView.count(
+              primary: false,
+              childAspectRatio: size,
+              //padding: EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: <Widget> [
+                for (var i = 0; i < 4; i++) Container(
+                  child: Card(
+                    elevation: 4, // the size of the shadow
+                    shadowColor: _greyColor, // shadow color
+                    color: _quaternaryColor, // the color of the card
+                    shape: RoundedRectangleBorder( // the shape of the card
+                      borderRadius: BorderRadius.all(Radius.circular(15)), // the radius of the border, made to be circular
+                    ),
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                      color: _secondaryColor,
+                      size: size * 20,
+                    ),
+                  ),
+                ),
+              ],
+            );
           default:
             return Center(child: CircularProgressIndicator());
         }

@@ -48,6 +48,7 @@ dependencies:
   auto_animated: ^3.1.0
   flutter_native_splash: ^2.2.11
   pull_to_refresh: ^2.0.0
+  loading_animation_widget: ^1.2.0+3
 
   # Firebase
   firebase_core: ^2.1.0
