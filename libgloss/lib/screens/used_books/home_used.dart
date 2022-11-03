@@ -31,7 +31,7 @@ class _HomeUsedState extends State<HomeUsed> {
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "Maze Runner",
-      "author": "James Dashner",
+      "authors": "James Dashner",
       "thumbnail": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
       "vendedor": "Ernesto Contreras",
       "isbn": "978-6077547327",
@@ -41,7 +41,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "Bajo la Misma Estrella",
-      "author": "John Green",
+      "authors": "John Green",
       "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
       "vendedor": "Lupita Gómez",
@@ -52,7 +52,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El niño de la pijama de rayas",
-      "author": "John Boyne",
+      "authors": "John Boyne",
       "thumbnail":
           "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
       "vendedor": "Julian Vico",
@@ -63,7 +63,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El Principito",
-      "author": "Antoine de Saint-Exupéry",
+      "authors": "Antoine de Saint-Exupéry",
       "thumbnail":
           "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
       "vendedor": "Maria Lucia Perera",
@@ -74,7 +74,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "1984",
-      "author": "George Orwell",
+      "authors": "George Orwell",
       "thumbnail":
           "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
       "vendedor": "Roman Dominguez",
@@ -85,7 +85,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El señor de las moscas",
-      "author": "William Golding",
+      "authors": "William Golding",
       "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
       "vendedor": "Maria Asuncion Perez",
@@ -377,6 +377,20 @@ class _HomeUsedState extends State<HomeUsed> {
                   '${books[0]["title"]}',
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'por: ',
+                      style: TextStyle(fontSize: 16.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      '${books[0]["authors"].join(', ')}',
+                      style: TextStyle(fontSize: 16.0, color: _blueColor,),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height / 4,
