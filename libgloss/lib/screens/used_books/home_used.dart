@@ -343,6 +343,20 @@ class _HomeUsedState extends State<HomeUsed> {
   }
 
   void _foundBook(List<dynamic> books) async {
+  var image = books[0]["thumbnail"];
+  var imageHolder; 
+  if (image == null) {
+    imageHolder = Image.asset(
+      'assets/images/not_found.png',
+    );
+  }
+  else {
+    imageHolder = OnlineImage(
+      imageUrl: books[0]["thumbnail"] ??
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
+      height: MediaQuery.of(context).size.height / 4,
+    );
+  }
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -366,10 +380,7 @@ class _HomeUsedState extends State<HomeUsed> {
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height / 4,
-                  child: OnlineImage(
-                    imageUrl: books[0]["thumbnail"],
-                    height: MediaQuery.of(context).size.height / 4,
-                  ),
+                  child: imageHolder,
                 ),
                 Text(
                   '\n¿Es este su libro?',
@@ -391,6 +402,11 @@ class _HomeUsedState extends State<HomeUsed> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, 'Cancel');
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.USED_BOOK_DETAILS,
+                  arguments: books[0],
+                );
               },
               child: Text("Sí lo es", style: TextStyle(color: _greenColor)),
             ),

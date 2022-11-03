@@ -99,6 +99,7 @@ flutter:
       - assets/images/silhouette.png
       - assets/images/background_o.png
       - assets/images/background_p.png
+      - assets/images/not_found.png
 
       - assets/images/random.png
       #- assets/images/onlybunny_50.png
