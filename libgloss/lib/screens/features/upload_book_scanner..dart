@@ -16,6 +16,7 @@ class UploadBookScanner extends StatelessWidget {
   final Color _secondaryColor =
       ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final MobileScannerController cameraController = MobileScannerController();
+  final bool isScanning = true;
 
   @override
   Widget build(BuildContext context) {
@@ -47,22 +48,16 @@ class UploadBookScanner extends StatelessWidget {
                 ),
               );
           } else {
-            final String code = barcode.rawValue!;
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text('Códiog ISBN detectado: $code'),
-                ),
-              );
-            BlocProvider.of<SearchBloc>(context).add(SearchBoookEvent(
-              query: '',
-              filters: {
-                'isbn': code,
-              },
-            ));
-            _getBookDetails(context);
-            Navigator.pop(context);
+            if (isScanning) {
+              final String code = barcode.rawValue!;
+              BlocProvider.of<SearchBloc>(context).add(SearchBoookEvent(
+                query: '',
+                filters: {
+                  'isbn': code,
+                },
+              ));
+              _getBookDetails(context);
+            }
           }
         });
   }
@@ -93,7 +88,7 @@ class UploadBookScanner extends StatelessWidget {
     );
   }
 
-  void _onSearch(BuildContext context){
+  void _onSearch(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -114,20 +109,16 @@ class UploadBookScanner extends StatelessWidget {
                       ),
                       // TODO: Modify the text to show the ISBN code and book details
                       children: <TextSpan>[
-                        TextSpan(
-                            text:
-                                'El libro'),
+                        TextSpan(text: 'El libro'),
                         TextSpan(
                             text: 'código de barras',
-                            style:
-                                TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(
                             text:
                                 ' del mismo\nSerá redirigido al scan de cámara '),
                         TextSpan(
                             text: '¿Desea continuar?',
-                            style:
-                                TextStyle(fontStyle: FontStyle.italic)),
+                            style: TextStyle(fontStyle: FontStyle.italic)),
                       ],
                     ),
                   ),
