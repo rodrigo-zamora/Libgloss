@@ -379,6 +379,7 @@ class _HomeUsedState extends State<HomeUsed> {
                   textAlign: TextAlign.center,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'por: ',
