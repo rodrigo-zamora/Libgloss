@@ -7,7 +7,7 @@ Libgloss is an app that allows you to search for books in different online store
 * See the price history of the books you have already bought or are interested in
 ## **Screenshots**
 ## **Endpoints**
-### **Get books.**
+### **Get books**
 `GET /api/books`
 
 Returns a list of books. Since the books are stored in a database, the list is paginated. The default page size is 10. You can change the page size by adding the `page_size` query parameter. You can also change the page by adding the `page` query parameter.
