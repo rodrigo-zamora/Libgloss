@@ -23,7 +23,8 @@ class NewBookDetails extends StatefulWidget {
 class _NewBookDetailsState extends State<NewBookDetails> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
-  final Color _quaternaryColor = ColorSelector.getQuaternary(LibglossRoutes.HOME);
+  final Color _quaternaryColor =
+      ColorSelector.getQuaternary(LibglossRoutes.HOME);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _redColor = ColorSelector.getRed();
   final Color _defaultColor = ColorSelector.getBlack();
@@ -33,7 +34,6 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    // For each store in the enum Store
     BlocProvider.of<BookPriceBloc>(context).add(
       GetBookPriceEvent(
         bookId: _args["isbn"],
@@ -86,7 +86,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, LibglossRoutes.BOOK_TRACKER);
+                // TODO: Add to wishlist
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -97,7 +97,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, LibglossRoutes.BOOK_TRACKER);
+                // TODO: Add to tracking list
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -154,7 +154,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         }
       },
       builder: (context, state) {
-        double size = MediaQuery.of(context).size.height / MediaQuery.of(context).size.width;
+        double size = MediaQuery.of(context).size.height /
+            MediaQuery.of(context).size.width;
         switch (state.runtimeType) {
           case BookPriceLoaded:
             final Map<String, dynamic> books = state.props[0];
@@ -166,8 +167,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               mainAxisSpacing: 10,
               crossAxisCount: 2,
               shrinkWrap: true,
-              children: <Widget> [
-                for (var book in books.entries) _buildCard(book.key, book.value),
+              children: <Widget>[
+                for (var book in books.entries)
+                  _buildCard(book.key, book.value),
               ],
             );
           case BookPriceLoading:
@@ -179,21 +181,24 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               mainAxisSpacing: 10,
               crossAxisCount: 2,
               shrinkWrap: true,
-              children: <Widget> [
-                for (var i = 0; i < 4; i++) Container(
-                  child: Card(
-                    elevation: 4, // the size of the shadow
-                    shadowColor: _greyColor, // shadow color
-                    color: _quaternaryColor, // the color of the card
-                    shape: RoundedRectangleBorder( // the shape of the card
-                      borderRadius: BorderRadius.all(Radius.circular(15)), // the radius of the border, made to be circular
-                    ),
-                    child: LoadingAnimationWidget.fourRotatingDots(
-                      color: _secondaryColor,
-                      size: size * 20,
+              children: <Widget>[
+                for (var i = 0; i < 4; i++)
+                  Container(
+                    child: Card(
+                      elevation: 4, // the size of the shadow
+                      shadowColor: _greyColor, // shadow color
+                      color: _quaternaryColor, // the color of the card
+                      shape: RoundedRectangleBorder(
+                        // the shape of the card
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            15)), // the radius of the border, made to be circular
+                      ),
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: _secondaryColor,
+                        size: size * 20,
+                      ),
                     ),
                   ),
-                ),
               ],
             );
           default:
@@ -207,7 +212,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     if (value == null) {
       return _storeCard(key, _redColor, "No disponible", "");
     } else {
-      return _storeCard(key, _blueColor, value["price"].toString(), value["url"]);
+      return _storeCard(
+          key, _blueColor, value["price"].toString(), value["url"]);
     }
   }
 
@@ -234,12 +240,11 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         elevation: 4, // the size of the shadow
         shadowColor: _greyColor, // shadow color
         color: _quaternaryColor, // the color of the card
-        shape: RoundedRectangleBorder( // the shape of the card
-          borderRadius: BorderRadius.all(Radius.circular(15)), // the radius of the border, made to be circular
-          side: BorderSide(
-            color: _secondaryColor,
-            width: 0.5
-          ),
+        shape: RoundedRectangleBorder(
+          // the shape of the card
+          borderRadius: BorderRadius.all(Radius.circular(
+              15)), // the radius of the border, made to be circular
+          side: BorderSide(color: _secondaryColor, width: 0.5),
         ),
         child: Center(
           child: Column(
@@ -261,13 +266,13 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                   }
                 },
                 child: Container(
-                  child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+                  child: _text(
+                      title, color, 15.0, FontWeight.bold, TextAlign.center),
                 ),
               ),
               SizedBox(height: 5),
-              _text(
-                value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center
-              ),
+              _text(value, _defaultColor, 15.0, FontWeight.normal,
+                  TextAlign.center),
             ],
           ),
         ),
