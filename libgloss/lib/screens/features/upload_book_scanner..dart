@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
-import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
+import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
 import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../config/routes.dart';
@@ -15,28 +15,30 @@ class UploadBookScanner extends StatelessWidget {
       ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
   final Color _secondaryColor =
       ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final MobileScannerController cameraController = MobileScannerController();
-  final bool isScanning = true;
+  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
+  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  MobileScannerController cameraController = MobileScannerController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80),
-          child: SearchAppBar(
-            primaryColor: _primaryColor,
-            secondaryColor: _secondaryColor,
-            showMenuButton: false,
-            showCameraButton: false,
-            showSearchField: false,
-          ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SearchAppBar(
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: false,
+          showCameraButton: false,
+          showSearchField: false,
         ),
-        body: _buildScanner(context));
+      ),
+      body: _getBookDetails(context),
+    );
   }
 
   MobileScanner _buildScanner(BuildContext context) {
     return MobileScanner(
-        allowDuplicates: false,
+        allowDuplicates: true,
         controller: cameraController,
         onDetect: (barcode, args) {
           if (barcode.rawValue == null) {
@@ -48,105 +50,109 @@ class UploadBookScanner extends StatelessWidget {
                 ),
               );
           } else {
-            if (isScanning) {
-              final String code = barcode.rawValue!;
-              BlocProvider.of<SearchBloc>(context).add(SearchBoookEvent(
-                query: '',
-                filters: {
-                  'isbn': code,
-                },
-              ));
-              _getBookDetails(context);
-            }
+            cameraController.dispose();
+            final String code = barcode.rawValue!;
+            BlocProvider.of<BookIsbnBloc>(context).add(ClearBookDetailsEvent());
+            BlocProvider.of<BookIsbnBloc>(context).add(GetBookDetailsEvent(
+              isbn: code,
+            ));
           }
         });
   }
 
-  BlocConsumer<SearchBloc, SearchState> _getBookDetails(BuildContext context) {
-    print('getBookDetails');
-    return BlocConsumer<SearchBloc, SearchState>(
+  BlocConsumer<BookIsbnBloc, BookIsbnState> _getBookDetails(
+      BuildContext context) {
+    return BlocConsumer<BookIsbnBloc, BookIsbnState>(
       listener: (context, state) {
-        print('listener');
-        if (state is SearchError) {
+        if (state is BookIsbnError) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                content: Text('No se ha podido leer el código'),
+                content: Text(state.message),
               ),
             );
-        } else if (state is BookLoaded) {
-          print("HEREE");
-          print(state.toString());
-          _onSearch(context);
-        }
-      },
-      builder: (context, state) {
-        print('builder');
-        return Container();
-      },
-    );
-  }
-
-  void _onSearch(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          contentPadding: EdgeInsets.all(22.0),
-          title: Text('Código ISBN detectado'),
-          content: Row(
-            children: [
-              Column(
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                      // TODO: Modify the text to show the ISBN code and book details
-                      children: <TextSpan>[
-                        TextSpan(text: 'El libro'),
-                        TextSpan(
-                            text: 'código de barras',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(
-                            text:
-                                ' del mismo\nSerá redirigido al scan de cámara '),
-                        TextSpan(
-                            text: '¿Desea continuar?',
-                            style: TextStyle(fontStyle: FontStyle.italic)),
+        } else if (state is BookIsbnLoaded) {
+          var books = state.bookDetails;
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                  //contentPadding: EdgeInsets.all(22.0),
+                  title: Text("Libro encontrado"),
+                  content: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Se encontró el libro con el nombre \n',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        Text(
+                          '${books[0]["title"]}',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'por: ',
+                              style: TextStyle(fontSize: 16.0),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              '${books[0]["authors"].join(', ')}',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: _blueColor,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height / 4,
+                          child: OnlineImage(
+                            imageUrl: books[0]["thumbnail"],
+                            height: MediaQuery.of(context).size.height / 4,
+                          ),
+                        ),
+                        Text('\n¿Es este su libro?',
+                            style: TextStyle(
+                                fontSize: 16.0, fontStyle: FontStyle.italic)),
                       ],
                     ),
                   ),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // TODO: Agregar imagen del libro
-                ],
-              )
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Aceptar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'Cancel');
+                        cameraController = new MobileScannerController();
+                        BlocProvider.of<BookIsbnBloc>(context)
+                            .add(ClearBookDetailsEvent());
+                      },
+                      child: Text("No lo es",
+                          style: TextStyle(color: _greenColor)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'Cancel');
+                        // TODO: Add book to user's books
+                      },
+                      child: Text("Sí lo es",
+                          style: TextStyle(color: _greenColor)),
+                    ),
+                  ],
+                );
+              });
+        }
+      },
+      builder: (context, state) {
+        return _buildScanner(context);
       },
     );
   }

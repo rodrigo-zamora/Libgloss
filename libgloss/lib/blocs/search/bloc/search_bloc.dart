@@ -43,8 +43,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');
       var response = await http.get(uri);
       print(response.body);
-      emit(SearchLoaded(
-          books: response.body == '[]' ? [] : jsonDecode(response.body)));
+
+      if (response.statusCode == 404) {
+        emit(SearchError(message: 'No se han encontrado resultados'));
+      } else {
+        emit(SearchLoaded(
+            books: response.body == '[]' ? [] : jsonDecode(response.body)));
+      }
     } catch (e) {
       if (kDebugMode) print('\x1B[31m[SearchBloc] An error occured: $e');
       emit(SearchError(message: e.toString()));

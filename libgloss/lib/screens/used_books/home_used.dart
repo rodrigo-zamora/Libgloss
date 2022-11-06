@@ -1,12 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
-import '../../blocs/search/bloc/search_bloc.dart';
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
 //import 'pop_up.dart';
@@ -143,7 +141,6 @@ class _HomeUsedState extends State<HomeUsed> {
           ),
         ),
       ),
-      _getBookDetails(context),
     ]));
   }
 
@@ -244,190 +241,64 @@ class _HomeUsedState extends State<HomeUsed> {
   }
 
   void _openCamera() async {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          contentPadding: EdgeInsets.all(22.0),
-          title: Text("Abrir cámara"),
-          content: //Text("Para subir un libro se necesita escanear el código de barras del mismo\nSerá redirigido al scan de cámara ¿Quieres continuar?"),
-              RichText(
-            text: TextSpan(
-              // Note: Styles for TextSpans must be explicitly defined.
-              // Child text spans will inherit styles from parent
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black,
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            contentPadding: EdgeInsets.all(22.0),
+            title: Text("Abrir cámara"),
+            content: //Text("Para subir un libro se necesita escanear el código de barras del mismo\nSerá redirigido al scan de cámara ¿Quieres continuar?"),
+                RichText(
+              text: TextSpan(
+                // Note: Styles for TextSpans must be explicitly defined.
+                // Child text spans will inherit styles from parent
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'Para subir un libro se necesita escanear el '),
+                  TextSpan(
+                      text: 'código de barras',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: ' del mismo\nSerá redirigido al scan de cámara '),
+                  TextSpan(
+                      text: '¿Desea continuar?',
+                      style: TextStyle(fontStyle: FontStyle.italic)),
+                ],
               ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: 'Para subir un libro se necesita escanear el '),
-                TextSpan(
-                    text: 'código de barras',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(
-                    text: ' del mismo\nSerá redirigido al scan de cámara '),
-                TextSpan(
-                    text: '¿Desea continuar?',
-                    style: TextStyle(fontStyle: FontStyle.italic)),
-              ],
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-              child: Text("Cancelar", style: TextStyle(color: _greenColor)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-              child: Text("No tiene código", style: TextStyle(color: _greenColor)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.USED_BOOK_SCANNER,
-                );
-              },
-              child: Text("Continuar", style: TextStyle(color: _greenColor)),
-            ),
-          ],
-        );
-      }
-    );
-  }
-
-  BlocConsumer<SearchBloc, SearchState> _getBookDetails(BuildContext context) {
-    print('getBookDetails');
-    return BlocConsumer<SearchBloc, SearchState>(
-      listener: (context, state) {
-        print('listen');
-        if (state is SearchError) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text('Leer desde home'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+                child: Text("Cancelar", style: TextStyle(color: _greenColor)),
               ),
-            );
-        } else if (state is BookLoaded) {
-          print("HEREE");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text('Leer desde home 2'),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  // TODO: Add window to enter the barcode manually
+                },
+                child: Text("Ingresar código manualmente",
+                    style: TextStyle(color: _greenColor)),
               ),
-            );
-        }
-        else if (state is SearchLoaded){
-          print("HEREEeee");
-          print(state.toString());
-          print(state.props[0]);
-          _foundBook(state.props[0]);
-          //_openCamera();
-        }
-      },
-      builder: (context, state) {
-        print('build');
-        return Container();
-      },
-    );
-  }
-
-  void _foundBook(List<dynamic> books) async {
-  var image = books[0]["thumbnail"];
-  var imageHolder; 
-  if (image == null) {
-    imageHolder = Image.asset(
-      'assets/images/not_found.png',
-    );
-  }
-  else {
-    imageHolder = OnlineImage(
-      imageUrl: books[0]["thumbnail"] ??
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
-      height: MediaQuery.of(context).size.height / 4,
-    );
-  }
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          //contentPadding: EdgeInsets.all(22.0),
-          title: Text("Libro encontrado"),
-          content: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Se encontró el libro con el nombre \n',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                Text(
-                  '${books[0]["title"]}',
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'por: ',
-                      style: TextStyle(fontSize: 16.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      '${books[0]["authors"].join(', ')}',
-                      style: TextStyle(fontSize: 16.0, color: _blueColor,),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: imageHolder,
-                ),
-                Text(
-                  '\n¿Es este su libro?',
-                  style: TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic)),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.USED_BOOK_SCANNER,
-                );
-              },
-              child: Text("No lo es", style: TextStyle(color: _greenColor)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-                Navigator.pushNamed(
-                  context,
-                  LibglossRoutes.USED_BOOK_DETAILS,
-                  arguments: books[0],
-                );
-              },
-              child: Text("Sí lo es", style: TextStyle(color: _greenColor)),
-            ),
-          ],
-        );
-      }
-    );
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                  Navigator.pushNamed(
+                    context,
+                    LibglossRoutes.USED_BOOK_SCANNER,
+                  );
+                },
+                child: Text("Continuar", style: TextStyle(color: _greenColor)),
+              ),
+            ],
+          );
+        });
   }
 }
