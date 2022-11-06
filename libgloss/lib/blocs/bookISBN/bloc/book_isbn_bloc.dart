@@ -34,9 +34,12 @@ class BookIsbnBloc extends Bloc<BookIsbnEvent, BookIsbnState> {
       if (response.statusCode == 404) {
         emit(BookIsbnError(message: 'No se han encontrado resultados'));
       } else {
-        emit(BookIsbnLoaded(
-            bookDetails:
-                response.body == '[]' ? [] : jsonDecode(response.body)));
+        if (response.body == '[]') {
+          emit(BookIsbnError(message: 'No se han encontrado resultados'));
+        } else {
+          var bookDetails = jsonDecode(response.body);
+          emit(BookIsbnLoaded(bookDetails: bookDetails));
+        }
       }
     } catch (e) {
       if (kDebugMode) print('\x1B[31m[BookISBNBloc] An error occured: $e');
