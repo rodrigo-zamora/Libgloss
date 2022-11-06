@@ -29,7 +29,7 @@ class _HomeUsedState extends State<HomeUsed> {
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "Maze Runner",
-      "authors": "James Dashner",
+      "authors": ["James Dashner"],
       "thumbnail": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
       "vendedor": "Ernesto Contreras",
       "isbn": "978-6077547327",
@@ -39,7 +39,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "Bajo la Misma Estrella",
-      "authors": "John Green",
+      "authors": ["John Green"],
       "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
       "vendedor": "Lupita Gómez",
@@ -50,7 +50,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El niño de la pijama de rayas",
-      "authors": "John Boyne",
+      "authors": ["John Boyne"],
       "thumbnail":
           "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
       "vendedor": "Julian Vico",
@@ -61,7 +61,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El Principito",
-      "authors": "Antoine de Saint-Exupéry",
+      "authors": ["Antoine de Saint-Exupéry"],
       "thumbnail":
           "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
       "vendedor": "Maria Lucia Perera",
@@ -72,7 +72,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "1984",
-      "authors": "George Orwell",
+      "authors": ["George Orwell"],
       "thumbnail":
           "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
       "vendedor": "Roman Dominguez",
@@ -83,7 +83,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El señor de las moscas",
-      "authors": "William Golding",
+      "authors": ["William Golding"],
       "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
       "vendedor": "Maria Asuncion Perez",
@@ -155,88 +155,109 @@ class _HomeUsedState extends State<HomeUsed> {
               physics: ScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 10,
+                crossAxisSpacing: 15,
                 mainAxisSpacing: 18,
                 childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 1.5),
+                    (MediaQuery.of(context).size.height / 1.22),
               ),
               itemCount: _listElements.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  //color: Colors.teal[100],
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (kDebugMode)
-                            print(
-                                "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
-                          Navigator.pushNamed(
-                            context,
-                            LibglossRoutes.USED_BOOK_DETAILS,
-                            arguments: _listElements[index],
-                          );
-                        },
-                        child: Container(
-                          height: (MediaQuery.of(context).size.height / 5.2),
-                          child: OnlineImage(
-                            imageUrl: "${_listElements[index]["thumbnail"]}",
-                            height: 100,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "${_listElements[index]["title"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        //maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "${_listElements[index]["author"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: _blueColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "Vendido por",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        "${_listElements[index]["vendedor"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: _greenColor,
-                          fontSize: 12,
-                        ),
-                      )
-                    ],
-                  ),
-                );
+                return _card(index, context);
               },
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Container _card(int index, BuildContext context) {
+    return Container(
+      //color: Colors.teal[100],
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey[200]!),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 3,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(15),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (kDebugMode)
+                print(
+                    "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
+              Navigator.pushNamed(
+                context,
+                LibglossRoutes.USED_BOOK_DETAILS,
+                arguments: _listElements[index],
+              );
+            },
+            child: Container(
+              height: (MediaQuery.of(context).size.height / 5.2),
+              child: OnlineImage(
+                imageUrl: "${_listElements[index]["thumbnail"]}",
+                height: 100,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Divider(
+            color: Colors.grey[300],
+            thickness: 1,
+          ),
+          Text(
+            "${_listElements[index]["title"]}",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            //maxLines: 2,
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "${_listElements[index]["author"]}",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _blueColor,
+              fontSize: 12,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "Vendido por",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
+          Text(
+            "${_listElements[index]["vendedor"]}",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _greenColor,
+              fontSize: 12,
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -282,7 +303,7 @@ class _HomeUsedState extends State<HomeUsed> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, 'OK');
-                  // TODO: Add window to enter the barcode manually
+                  // TODO: Add window to enter the book manually
                 },
                 child: Text("Ingresar código manualmente",
                     style: TextStyle(color: _greenColor)),
