@@ -86,34 +86,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Agregar a la lista de deseos"),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0))),
-                        contentPadding: EdgeInsets.all(22.0),
-                        content: Text(
-                            "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("Cancelar"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              // TODO: Add to wishlist using bloc
-                            },
-                            child: Text("Agregar"),
-                          ),
-                        ],
-                      );
-                    });
+                _wish_list(context);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -124,98 +97,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text("Seguimiento del libro"),
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(25.0))),
-                      contentPadding: EdgeInsets.all(22.0),
-                      content: Column(
-                        children: [
-                          Text("Agrega los siguientes datos para poder "
-                              "seguir el libro"),
-                          Form(
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    labelText: "Precio",
-                                  ),
-                                ),
-                                DropdownButtonFormField(
-                                  items: [
-                                    DropdownMenuItem(
-                                      child: Text("Todas las tiendas"),
-                                      value: "all",
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("Amazon"),
-                                      value: "amazon",
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("Gandhi"),
-                                      value: "gandhi",
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("Gonvill"),
-                                      value: "gonvill",
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("El Sótano"),
-                                      value: "el_sotano",
-                                    ),
-                                  ],
-                                  onChanged: (value) {},
-                                  decoration: InputDecoration(
-                                    labelText: "Tienda",
-                                  ),
-                                ),
-                                DropdownButtonFormField(
-                                  items: [
-                                    DropdownMenuItem(
-                                      child: Text("1 mes"),
-                                      value: 1,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("3 meses"),
-                                      value: 3,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("6 meses"),
-                                      value: 6,
-                                    ),
-                                  ],
-                                  onChanged: (value) {},
-                                  decoration: InputDecoration(
-                                    labelText: "Tiempo",
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Cancelar"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Agregar"),
-                        )
-                      ],
-                    );
-                  },
-                );
+                _tracking(context);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -398,126 +280,134 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  /* BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
-    return BlocConsumer<BookPriceBloc, BookPriceState>(
-      listener: (context, state) {
-        if (state is BookPriceError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        switch (state.runtimeType) {
-          case BookPriceLoaded:
-            final Map<String, dynamic> books = state.props[0];
-            for (var book in books.entries)
-              print(book.key + " " + book.value.toString());
-            return Table(
-              border: TableBorder.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              children: [
-                for (var book in books.entries) _buildRow(book.key, book.value),
-              ],
-            );
-          case BookPriceLoading:
-            Widget _loadingShimmer = Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                color: Colors.white,
-                height: 100,
-                width: 100,
+  Future<dynamic> _tracking(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Seguimiento del libro"),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(25.0))),
+          contentPadding: EdgeInsets.all(22.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Agrega los siguientes datos para poder "
+                  "seguir el libro"),
+              Form(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Precio",
+                      ),
+                    ),
+                    DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("Todas las tiendas"),
+                          value: "all",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Amazon"),
+                          value: "amazon",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Gandhi"),
+                          value: "gandhi",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Gonvill"),
+                          value: "gonvill",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("El Sótano"),
+                          value: "el_sotano",
+                        ),
+                      ],
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        labelText: "Tienda",
+                      ),
+                    ),
+                    DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("1 mes"),
+                          value: 1,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("3 meses"),
+                          value: 3,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("6 meses"),
+                          value: 6,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("1 año"),
+                          value: 12,
+                        ),
+                      ],
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        labelText: "Tiempo",
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            );
-            return Table(
-              border: TableBorder.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              children: [
-                for (var i = 0; i < 5; i++)
-                  TableRow(children: [
-                    TableCell(
-                      child: Container(
-                        height: 25,
-                        padding: EdgeInsets.all(5.0),
-                        child: _loadingShimmer,
-                      ),
-                    ),
-                    TableCell(
-                      child: Container(
-                        height: 25,
-                        padding: EdgeInsets.all(5.0),
-                        child: _loadingShimmer,
-                      ),
-                    ),
-                  ]),
-              ],
-            );
-          default:
-            return Center(child: CircularProgressIndicator());
-        }
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Agregar"),
+            )
+          ],
+        );
       },
     );
   }
 
-  _buildRow(String key, value) {
-    if (value == null) {
-      return _row(key, _redColor, "No disponible", "");
-    } else {
-      return _row(key, _blueColor, value["price"].toString(), value["url"]);
-    }
+  Future<dynamic> _wish_list(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Agregar a la lista de deseos"),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(25.0))),
+          contentPadding: EdgeInsets.all(22.0),
+          content: Text(
+              "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // TODO: Add to wishlist using bloc
+              },
+              child: Text("Agregar"),
+            ),
+          ],
+        );
+      });
   }
-
-  TableRow _row(String title, Color color, String value, String url) {
-    switch (title) {
-      case "amazon":
-        title = "Amazon";
-        break;
-      case "gandhi":
-        title = "Gandhi";
-        break;
-      case "gonvill":
-        title = "Gonvill";
-        break;
-      case "el_sotano":
-        title = "El Sótano";
-        break;
-      case "mercado_libre":
-        title = "Mercado Libre";
-        break;
-    }
-    return TableRow(children: [
-      TableCell(
-        child: GestureDetector(
-          onTap: () {
-            if (url != "") {
-              _launchURL(url);
-            } else {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content: Text("No se encontró el libro en $title"),
-                  ),
-                );
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
-          ),
-        ),
-      ),
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
-        ),
-      ),
-    ]);
-  } */
 }
