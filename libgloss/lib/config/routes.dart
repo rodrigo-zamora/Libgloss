@@ -89,7 +89,7 @@ class LibglossRoutes {
       HomeNew(),
       HomeUsed(),
       BookTracker(),
-      UserOptions(),//Account()
+      UserOptions(),//Account(), UserOptions()
     ];
   }
 }
