@@ -65,6 +65,8 @@ class UploadBookScanner extends StatelessWidget {
     return BlocConsumer<BookIsbnBloc, BookIsbnState>(
       listener: (context, state) {
         if (state is BookIsbnError) {
+          cameraController = new MobileScannerController();
+          BlocProvider.of<BookIsbnBloc>(context).add(ClearBookDetailsEvent());
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -152,7 +154,13 @@ class UploadBookScanner extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return _buildScanner(context);
+        if (state is BookIsbnInitial || state is BookIsbnLoaded) {
+          return _buildScanner(context);
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }
