@@ -76,6 +76,20 @@ class UploadBookScanner extends StatelessWidget {
             );
         } else if (state is BookIsbnLoaded) {
           var books = state.bookDetails;
+          var image = books[0]["thumbnail"];
+          var imageHolder; 
+          if (image == null) {
+            imageHolder = Image.asset(
+              'assets/images/not_found.png',
+            );
+          }
+          else {
+            imageHolder = OnlineImage(
+              imageUrl: books[0]["thumbnail"] ??
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
+              height: MediaQuery.of(context).size.height / 4,
+            );
+          }
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -118,10 +132,7 @@ class UploadBookScanner extends StatelessWidget {
                         ),
                         Container(
                           height: MediaQuery.of(context).size.height / 4,
-                          child: OnlineImage(
-                            imageUrl: books[0]["thumbnail"],
-                            height: MediaQuery.of(context).size.height / 4,
-                          ),
+                          child: imageHolder,
                         ),
                         Text('\n¿Es este su libro?',
                             style: TextStyle(
@@ -143,7 +154,21 @@ class UploadBookScanner extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context, 'Cancel');
-                        // TODO: Add book to user's books
+                        // TODO: Go to book details to edit
+                        Navigator.pushNamed(
+                          context,
+                          LibglossRoutes.USED_BOOK_DETAILS,
+                          arguments: {
+                            "title": books[0]["title"],
+                            "authors": books[0]["authors"],
+                            "thumbnail": books[0]["thumbnail"],
+                            "vendedor": "NAME",
+                            "isbn": books[0]["isbn"],
+                            "precio": 0,
+                            "localizacion": "LOCATION",
+                            "contacto": "CONTACT",
+                          },
+                        );
                       },
                       child: Text("Sí lo es",
                           style: TextStyle(color: _greenColor)),
