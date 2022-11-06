@@ -86,7 +86,34 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                // TODO: Add to wishlist
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Agregar a la lista de deseos"),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0))),
+                        contentPadding: EdgeInsets.all(22.0),
+                        content: Text(
+                            "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Cancelar"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              // TODO: Add to wishlist using bloc
+                            },
+                            child: Text("Agregar"),
+                          ),
+                        ],
+                      );
+                    });
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -97,7 +124,98 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                // TODO: Add to tracking list
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Seguimiento del libro"),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.0))),
+                      contentPadding: EdgeInsets.all(22.0),
+                      content: Column(
+                        children: [
+                          Text("Agrega los siguientes datos para poder "
+                              "seguir el libro"),
+                          Form(
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: "Precio",
+                                  ),
+                                ),
+                                DropdownButtonFormField(
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("Todas las tiendas"),
+                                      value: "all",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("Amazon"),
+                                      value: "amazon",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("Gandhi"),
+                                      value: "gandhi",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("Gonvill"),
+                                      value: "gonvill",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("El Sótano"),
+                                      value: "el_sotano",
+                                    ),
+                                  ],
+                                  onChanged: (value) {},
+                                  decoration: InputDecoration(
+                                    labelText: "Tienda",
+                                  ),
+                                ),
+                                DropdownButtonFormField(
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("1 mes"),
+                                      value: 1,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("3 meses"),
+                                      value: 3,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("6 meses"),
+                                      value: 6,
+                                    ),
+                                  ],
+                                  onChanged: (value) {},
+                                  decoration: InputDecoration(
+                                    labelText: "Tiempo",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Cancelar"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Agregar"),
+                        )
+                      ],
+                    );
+                  },
+                );
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
