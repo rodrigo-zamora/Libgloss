@@ -118,7 +118,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     if (image == null) {
       return Container(
         child: Image.asset(
-          'assets/images/special/not_found.png',
+          'assets/images/special/not_found_e.png',
         ),
       );
     }
@@ -164,12 +164,8 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       ),
       onPressed: () {
-        Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER,
-            arguments: {
-              "vendedor": _args["vendedor"],
-              "localizacion": _args["localizacion"],
-              "contacto": _args["contacto"],
-            });
+        // TODO: add book to firebase and go to home
+        print("Guardar libro");
       },
       child: _text("Guardar libro", _defaultColor, 15.0, FontWeight.normal,
           TextAlign.center),
