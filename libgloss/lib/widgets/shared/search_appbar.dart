@@ -102,7 +102,7 @@ class SearchAppBar extends StatelessWidget {
                   child: Container(
                     margin: EdgeInsets.only(left: 12),
                     child: Image.asset(
-                      'assets/images/onlybunny.png',
+                      'assets/images/icon/onlybunny.png',
                     ),
                   ),
                 ),

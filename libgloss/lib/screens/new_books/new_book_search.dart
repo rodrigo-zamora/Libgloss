@@ -71,7 +71,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   LoadingAnimation(animationColor: _secondaryColor),
                   Image.asset(
-                    'assets/images/loading_bunny_blue.gif',
+                    'assets/images/loading/loading_bunny_blue.gif',
                   ),
                 ],
               ),

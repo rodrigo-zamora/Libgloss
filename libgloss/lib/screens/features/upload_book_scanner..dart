@@ -80,7 +80,7 @@ class UploadBookScanner extends StatelessWidget {
           var imageHolder; 
           if (image == null) {
             imageHolder = Image.asset(
-              'assets/images/not_found.png',
+              'assets/images/special/not_found.png',
             );
           }
           else {

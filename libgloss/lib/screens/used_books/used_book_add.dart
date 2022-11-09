@@ -118,7 +118,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     if (image == null) {
       return Container(
         child: Image.asset(
-          'assets/images/not_found.png',
+          'assets/images/special/not_found.png',
         ),
       );
     }

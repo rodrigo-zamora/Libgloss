@@ -114,9 +114,9 @@ class ColorSelector {
 
   static AssetImage getBackground(currentRoute) {
     if (currentRoute == LibglossRoutes.OPTIONS) {
-      return AssetImage('assets/images/background_o.png');
+      return AssetImage('assets/images/login/background_o.png');
     } else {
-      return AssetImage('assets/images/background_p.png');
+      return AssetImage('assets/images/login/background_p.png');
     }
   }
 }

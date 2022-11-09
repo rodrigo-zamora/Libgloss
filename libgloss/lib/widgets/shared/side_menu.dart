@@ -216,7 +216,7 @@ class _SideMenuState extends State<SideMenu> {
           Row(
             children: [
               Image.asset(
-                'assets/images/onlybunny.png',
+                'assets/images/icon/onlybunny.png',
                 width: 48,
                 height: 48,
               ),

@@ -126,7 +126,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 children: [
                   //LoadingAnimation(animationColor: _secondaryColor),
                   Image.asset(
-                    'assets/images/loading_bunny_green.gif',
+                    'assets/images/loading/loading_bunny_green.gif',
                   ),
                 ],
               ),
