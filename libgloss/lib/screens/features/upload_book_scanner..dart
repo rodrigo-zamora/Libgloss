@@ -157,7 +157,7 @@ class UploadBookScanner extends StatelessWidget {
                         // TODO: Go to book details to edit
                         Navigator.pushNamed(
                           context,
-                          LibglossRoutes.USED_BOOK_DETAILS,
+                          LibglossRoutes.USED_BOOK_ADD,
                           arguments: {
                             "title": books[0]["title"],
                             "authors": books[0]["authors"],
