@@ -50,46 +50,39 @@ class LibglossRoutes {
 
   static const API = "https://libgloss.herokuapp.com/api/";
 
+  static final _routes = {
+    HOME: (context) => Home(),
+    // New Books
+    HOME_NEW: (context) => HomeNew(),
+    SEARCH_NEW: (context) => NewBookSearch(),
+    NEW_BOOK_DETAILS: (context) => NewBookDetails(),
+    // Used Books
+    HOME_USED: (context) => HomeUsed(),
+    SEARCH_USED: (context) => UsedBookSearch(),
+    USED_BOOK_DETAILS: (context) => UsedBookDetails(),
+    USED_BOOK_ADD: (context) => UsedBookAdd(), // this is a maybe
+    USED_BOOK_SELLER: (context) => UsedBookSeller(),
+    // Tracker
+    BOOK_TRACKER: (context) => BookTracker(),
+    // User
+    OPTIONS: (context) => UserOptions(),
+    // Scanner
+    SCANNER: (context) => Scanner(),
+    USED_BOOK_SCANNER: (context) => UploadBookScanner(),
+    // Log In
+    LOGIN: (context) => LogInForm(),
+    SIGN_UP: (context) => SignUp(),
+    ACCOUNT: (context) => Account(),
+    // Extras
+    SPLASH: (context) => SplashScreen(),
+    WEB_VIEW: (context) => WebViewPage(),
+  };
+
   static Map<String, WidgetBuilder> getRoutes() {
-    return {
-      HOME: (context) => Home(),
-      // New Books
-      HOME_NEW: (context) => HomeNew(),
-      SEARCH_NEW: (context) => NewBookSearch(),
-      NEW_BOOK_DETAILS: (context) => NewBookDetails(),
-      // Used Books
-      HOME_USED: (context) => HomeUsed(),
-      SEARCH_USED: (context) => UsedBookSearch(),
-      USED_BOOK_DETAILS: (context) => UsedBookDetails(),
-      USED_BOOK_ADD: (context) => UsedBookAdd(), // this is a maybe
-      USED_BOOK_SELLER: (context) => UsedBookSeller(),
-      // Tracker 
-      BOOK_TRACKER: (context) => BookTracker(),
-      // User
-      OPTIONS: (context) => UserOptions(),
-      // Scanner
-      SCANNER: (context) => Scanner(),
-      USED_BOOK_SCANNER: (context) => UploadBookScanner(),
-      // Log In
-      LOGIN: (context) => LogInForm(),
-      SIGN_UP: (context) => SignUp(),
-      ACCOUNT: (context) => Account(),
-      // Extras
-      SPLASH: (context) => SplashScreen(),
-      WEB_VIEW: (context) => WebViewPage(),
-    };
+    return _routes;
   }
 
-  static Widget getHomeRoute() {
-    return Home();
-  }
-
-  static List<Widget> getRoutesList() {
-    return [
-      HomeNew(),
-      HomeUsed(),
-      BookTracker(),
-      UserOptions(),//Account(), UserOptions()
-    ];
+  static Widget getRoute(String routeName) {
+    return _routes[routeName]!(null);
   }
 }

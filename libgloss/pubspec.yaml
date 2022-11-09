@@ -60,6 +60,7 @@ dependencies:
   google_sign_in: ^5.4.2
   webview_flutter: ^3.0.4
   share_plus: ^6.1.0
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

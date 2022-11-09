@@ -10,9 +10,12 @@ class UserAuthRepository {
     return _auth.currentUser != null;
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
+  Future<void> signOutGoogleUser() async {
     await _googleSignIn.signOut();
+  }
+
+  Future<void> signOutFirebaseUser() async {
+    await _auth.signOut();
   }
 
   Future<void> signInWithGoogle() async {
