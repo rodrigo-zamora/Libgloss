@@ -50,14 +50,18 @@ class WishItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          item["title"]!,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              item["title"]!,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           item["author"]!,
