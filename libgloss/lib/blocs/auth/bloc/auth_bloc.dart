@@ -46,6 +46,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
 
+      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+
       Navigator.pushAndRemoveUntil(
           event.buildcontext,
           PageRouteBuilder(pageBuilder: (BuildContext context,
@@ -83,6 +85,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             content: Text('Has iniciado sesión'),
           ),
         );
+
+      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
 
       Navigator.pushAndRemoveUntil(
           event.buildcontext,

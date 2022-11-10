@@ -253,6 +253,7 @@ class _UserOptionsState extends State<UserOptions> {
                 ),
               ),
             );
+          LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
         },
         child: Row(
           children: [
