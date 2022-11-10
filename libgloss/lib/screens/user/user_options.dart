@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';
-import '../../models/user.dart';
 
 class UserOptions extends StatefulWidget {
   UserOptions({super.key});
@@ -21,16 +24,49 @@ class _UserOptionsState extends State<UserOptions> {
       ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
   final Color _iconColors = ColorSelector.getGrey();
 
-  var user = User(
-    image:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80',
-    name: "Agnes Betancourt",
-    email: "agnes.betancourt@gmail.com",
-    isSeller: true,
-  );
-
   @override
   Widget build(BuildContext context) {
+    CollectionReference user = FirebaseFirestore.instance.collection('users');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: user.doc(UserAuthRepository().getuid()).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            Map<String, dynamic>? data =
+                snapshot.data!.data() as Map<String, dynamic>?;
+            return _buildUserOptions(data);
+          }
+        }
+
+        // TODO: implement loading screen
+        return Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Shimmer.fromColors(
+                  baseColor: _tertiaryColor,
+                  highlightColor: _secondaryColor,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    color: _tertiaryColor,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildUserOptions(Map<String, dynamic>? data) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
@@ -55,7 +91,7 @@ class _UserOptionsState extends State<UserOptions> {
             children: [
               SizedBox(height: 20),
               Text(
-                user.name,
+                data!['username'],
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -63,7 +99,7 @@ class _UserOptionsState extends State<UserOptions> {
                 ),
               ),
               Text(
-                user.email,
+                data['email'],
                 style: TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
@@ -71,15 +107,21 @@ class _UserOptionsState extends State<UserOptions> {
                 ),
               ),
               SizedBox(height: 20),
-              _profilePicture(),
+              _profilePicture(data),
               _sellerButton(),
-              _followers(user.isSeller),
+              _followers(true),
               SizedBox(height: 10),
               _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
               _lowButton(Icons.notifications_outlined,
                   "Notificaciones y mensajes", () {}),
               _lowButton(Icons.help_outline, "Configuración", () {}),
-              _lowButton(Icons.logout_outlined, "Salir", () {}),
+              _lowButton(Icons.logout_outlined, "Salir", () {
+                BlocProvider.of<AuthBloc>(context).add(
+                  SignOutEvent(
+                    buildcontext: context,
+                  ),
+                );
+              }),
             ],
           ),
         ),
@@ -87,7 +129,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  SizedBox _profilePicture() {
+  SizedBox _profilePicture(Map<String, dynamic>? data) {
     return SizedBox(
         height: 110,
         width: 110,
@@ -109,7 +151,7 @@ class _UserOptionsState extends State<UserOptions> {
                 );
               },
               fit: BoxFit.contain,
-              imageUrl: user.image,
+              imageUrl: data!['profilePicture'],
               imageBuilder: (context, imageProvider) {
                 return CircleAvatar(
                   backgroundImage: imageProvider,
@@ -206,13 +248,12 @@ class _UserOptionsState extends State<UserOptions> {
               MaterialStateColor.resolveWith((states) => _tertiaryColor),
         ),
         onPressed: () {
-          user.isSeller = !user.isSeller;
           setState(() {});
         },
         child: Row(
           children: [
             Expanded(
-              child: _text(user.isSeller),
+              child: _text(true),
             ),
           ],
         ),

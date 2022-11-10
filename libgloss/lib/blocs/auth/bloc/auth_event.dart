@@ -4,7 +4,6 @@ part of 'auth_bloc.dart';
 abstract class AuthEvent {
   const AuthEvent();
 
-  @override
   List<Object> get props => [];
 }
 
@@ -12,6 +11,14 @@ class VerifyAuthEvent extends AuthEvent {}
 
 class AnonymousAuthEvent extends AuthEvent {}
 
-class GoogleAuthEvent extends AuthEvent {}
+class GoogleAuthEvent extends AuthEvent {
+  final BuildContext buildcontext;
 
-class SignOutEvent extends AuthEvent {}
+  GoogleAuthEvent({required this.buildcontext});
+}
+
+class SignOutEvent extends AuthEvent {
+  final BuildContext buildcontext;
+
+  SignOutEvent({required this.buildcontext});
+}

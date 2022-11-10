@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/auth/bloc/auth_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../parts/have_account.dart';
@@ -119,7 +121,11 @@ class _LogInFormState extends State<LogInForm> {
               logo: _tertiaryColor,
               splash: _primaryColor,
               action: () {
-                print("Google");
+                BlocProvider.of<AuthBloc>(context).add(
+                  GoogleAuthEvent(
+                    buildcontext: context,
+                  ),
+                );
               }),
         ],
       ),

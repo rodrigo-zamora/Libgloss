@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../config/routes.dart';
 import '../../../repositories/auth/user_auth_repository.dart';
 
 part 'auth_event.dart';
@@ -20,7 +21,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _authVerfication(event, emit) {
-    // inicializar datos de la app
     if (_authRepo.isAuthenticated()) {
       emit(AuthSuccessState());
     } else {
@@ -29,22 +29,90 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _signOut(event, emit) async {
-    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-      await _authRepo.signOutFirebaseUser();
-    } else {
-      await _authRepo.signOutGoogleUser();
-      await _authRepo.signOutFirebaseUser();
+    try {
+      print('signing out');
+
+      await _authRepo.signOut();
+
+      print('signed out');
+
+      print('Sign out success');
+
+      ScaffoldMessenger.of(event.buildcontext)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('Has cerrado sesión'),
+          ),
+        );
+
+      Navigator.pushAndRemoveUntil(
+          event.buildcontext,
+          PageRouteBuilder(pageBuilder: (BuildContext context,
+              Animation animation, Animation secondaryAnimation) {
+            return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+          }, transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            return new SlideTransition(
+              position: new Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          }),
+          (Route route) => false);
+
+      emit(SignOutSuccessState());
+    } catch (e) {
+      emit(AuthErrorState());
     }
-    emit(SignOutSuccessState());
   }
 
   FutureOr<void> _authUser(event, emit) async {
     emit(AuthAwaitingState());
     try {
       await _authRepo.signInWithGoogle();
+
+      ScaffoldMessenger.of(event.buildcontext)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('Has iniciado sesión'),
+          ),
+        );
+
+      Navigator.pushAndRemoveUntil(
+          event.buildcontext,
+          PageRouteBuilder(pageBuilder: (BuildContext context,
+              Animation animation, Animation secondaryAnimation) {
+            return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+          }, transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            return new SlideTransition(
+              position: new Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          }),
+          (Route route) => false);
+
       emit(AuthSuccessState());
     } catch (e) {
-      print("Error al autenticar: $e");
+      ScaffoldMessenger.of(event.buildcontext)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Error al iniciar sesión: $e'),
+          ),
+        );
       emit(AuthErrorState());
     }
   }

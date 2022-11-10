@@ -3,18 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserAuthRepository {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool isAuthenticated() {
     return _auth.currentUser != null;
   }
 
-  Future<void> signOutGoogleUser() async {
+  Future<void> signOut() async {
     await _googleSignIn.signOut();
-  }
-
-  Future<void> signOutFirebaseUser() async {
     await _auth.signOut();
   }
 
@@ -47,10 +44,18 @@ class UserAuthRepository {
           'id': user.uid,
           'username': user.displayName,
           'profilePicture': user.photoURL,
+          'email': user.email,
+          'phoneNumber': user.phoneNumber,
+          'isSeller': false,
+          'isAdministrator': false,
         });
       }
     } else {
       throw Exception('Error signing in with Google');
     }
+  }
+
+  String? getuid() {
+    return _auth.currentUser?.uid.toString();
   }
 }

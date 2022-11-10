@@ -17,7 +17,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-  bool isLoggedIn = false;
 
   List<Widget> _pagesList = UserAuthRepository().isAuthenticated() == true
       ? [
@@ -58,7 +57,7 @@ class _HomeState extends State<Home> {
     Color _currentColor = ColorSelector.getSecondary(
         LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW)
             .runtimeType
-            .toString());
+            .toString()); 
 
     return Scaffold(
       body: IndexedStack(
@@ -84,7 +83,9 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.userGear),
-            label: isLoggedIn ? 'Mi perfil' : 'Iniciar sesión',
+            label: UserAuthRepository().isAuthenticated()
+                ? 'Mi perfil'
+                : 'Iniciar sesión',
           ),
         ],
         onTap: (index) {

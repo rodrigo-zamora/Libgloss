@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
-import 'login.dart';
-import 'sign_up.dart';
 import '../parts/bunny_silhouette.dart';
 import '../parts/button_log.dart';
 
-
-class Account extends StatefulWidget {  
+class Account extends StatefulWidget {
   Account({super.key});
 
   @override
@@ -17,12 +14,17 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
-  final Color _tertiaryColor = ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
-  final Color _quaternaryColor = ColorSelector.getQuaternary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _tertiaryColor =
+      ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _quaternaryColor =
+      ColorSelector.getQuaternary(LibglossRoutes.CURRENT_ROUTE);
   final Color _iconColors = ColorSelector.getGrey();
-  final AssetImage _logo = ColorSelector.getBackground(LibglossRoutes.CURRENT_ROUTE);
+  final AssetImage _logo =
+      ColorSelector.getBackground(LibglossRoutes.CURRENT_ROUTE);
 
   @override
   Widget build(BuildContext context) {
@@ -56,31 +58,29 @@ class _AccountState extends State<Account> {
             height: MediaQuery.of(context).size.height * 0.04,
           ),
           ButtonLog(
-            context: context, 
-            background: _secondaryColor, 
-            splash: _primaryColor, 
-            text_color: _quaternaryColor,
-            text: "Iniciar sesión", 
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                LibglossRoutes.LOGIN,
-              );
-            }
-          ),
+              context: context,
+              background: _secondaryColor,
+              splash: _primaryColor,
+              text_color: _quaternaryColor,
+              text: "Iniciar sesión",
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.LOGIN,
+                );
+              }),
           ButtonLog(
-            context: context, 
-            background: _primaryColor, 
-            splash: _secondaryColor, 
-            text_color: _tertiaryColor,
-            text: "Regístrate", 
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                LibglossRoutes.SIGN_UP,
-              );
-            }
-          ),
+              context: context,
+              background: _primaryColor,
+              splash: _secondaryColor,
+              text_color: _tertiaryColor,
+              text: "Regístrate",
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  LibglossRoutes.SIGN_UP,
+                );
+              }),
         ],
       ),
     );

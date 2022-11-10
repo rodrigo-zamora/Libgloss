@@ -4,8 +4,6 @@ import 'package:libgloss/screens/log_in/account.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
-import 'login.dart';
-import 'sign_up.dart';
 import '../parts/bunny_silhouette.dart';
 import '../parts/button_log.dart';
 

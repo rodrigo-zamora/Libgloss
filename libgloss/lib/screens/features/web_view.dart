@@ -20,7 +20,6 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
-  late Map<String, dynamic> _arguments;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
@@ -38,7 +37,6 @@ class _WebViewPageState extends State<WebViewPage> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    _arguments = _args;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
