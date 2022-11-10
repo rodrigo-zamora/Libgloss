@@ -40,7 +40,7 @@ class _UserOptionsState extends State<UserOptions> {
           if (snapshot.hasData) {
             Map<String, dynamic>? data =
                 snapshot.data!.data() as Map<String, dynamic>?;
-            return _buildUserOptions(data);
+            if (data != null) return _buildUserOptions(data);
           }
         }
 
@@ -81,7 +81,7 @@ class _UserOptionsState extends State<UserOptions> {
             children: [
               SizedBox(height: 20),
               Text(
-                data!['username'],
+                data?['username'],
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class _UserOptionsState extends State<UserOptions> {
                 ),
               ),
               Text(
-                data['email'],
+                data!['email'],
                 style: TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,

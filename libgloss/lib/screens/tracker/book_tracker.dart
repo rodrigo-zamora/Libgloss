@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/animations/loading_animation.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../config/colors.dart';
+import '../../repositories/auth/user_auth_repository.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
@@ -68,6 +71,36 @@ class BookTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference lists = FirebaseFirestore.instance.collection('lists');
+
+    return FutureBuilder<DocumentSnapshot>(
+      // Get the documents where useruid is equal to the uid
+      future: lists
+          .where('useruid', isEqualTo: UserAuthRepository().getuid())
+          .get()
+          .then((value) => value.docs[0].reference.get()),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            Map<String, dynamic>? data =
+                snapshot.data!.data() as Map<String, dynamic>?;
+            return _buildLists(context, data);
+          }
+        }
+
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  Widget _buildLists(BuildContext context, Map<String, dynamic>? data) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(

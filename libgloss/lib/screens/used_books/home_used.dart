@@ -143,23 +143,19 @@ class _HomeUsedState extends State<HomeUsed> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _add(context, data!['isSeller']),
+      body: _add(context, data),
     );
   }
 
-  SizedBox _add(context, bool isSeller) {
+  SizedBox _add(context, Map<String, dynamic>? data) {
     return SizedBox(
         child: Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
       _found(context),
-      _button(isSeller) ??
-          Container(
-            height: 0,
-            width: 0,
-          ),
+      data != null ? _button(data['isSeller']) : Container(),
     ]));
   }
 
-  Widget? _button(bool isSeller) {
+  Widget _button(bool isSeller) {
     if (UserAuthRepository().isAuthenticated() && isSeller) {
       return Positioned(
         bottom: MediaQuery.of(context).size.height * 0.03,
@@ -183,8 +179,9 @@ class _HomeUsedState extends State<HomeUsed> {
           ),
         ),
       );
+    } else {
+      return Container();
     }
-    return null;
   }
 
   Column _found(BuildContext context) {

@@ -4,17 +4,24 @@ import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
 
-class WishItem extends StatelessWidget {
+class WishItem extends StatefulWidget {
   final Map<String, String> item;
 
   const WishItem({super.key, required this.item});
 
   @override
+  State<WishItem> createState() => _WishItemState();
+}
+
+class _WishItemState extends State<WishItem> {
+  @override
   Widget build(BuildContext context) {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
-    
+    final Color _primaryColor =
+        ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+    final Color _secondaryColor =
+        ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+    final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -37,7 +44,7 @@ class WishItem extends StatelessWidget {
                     width: 100,
                     height: 150,
                     child: OnlineImage(
-                      imageUrl: item["image"]!,
+                      imageUrl: widget.item["image"]!,
                       height: 100,
                     ),
                   ),
@@ -53,7 +60,7 @@ class WishItem extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              item["title"]!,
+                              widget.item["title"]!,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               maxLines: 2,
@@ -64,7 +71,7 @@ class WishItem extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          item["author"]!,
+                          widget.item["author"]!,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(

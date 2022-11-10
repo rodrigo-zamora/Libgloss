@@ -83,6 +83,11 @@ class LibglossRoutes {
   }
 
   static Widget getRoute(String routeName) {
+    if (routeName == "HomeNew") routeName = "/home_new";
+    if (routeName == "HomeUsed") routeName = "/home_used";
+    if (routeName == "BookTracker") routeName = "/book_tracker";
+    if (routeName == "UserOptions") routeName = "/user_options";
+    print("\u001b[33mRoute: $routeName");
     return _routes[routeName]!(null);
   }
 }

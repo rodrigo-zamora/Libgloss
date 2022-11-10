@@ -54,11 +54,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Color _currentColor = ColorSelector.getSecondary(
-        LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW)
-            .runtimeType
-            .toString()); 
-
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
@@ -67,7 +62,8 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: _currentColor,
+        selectedItemColor:
+            ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE),
         items: [
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.book),
@@ -91,6 +87,7 @@ class _HomeState extends State<Home> {
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
+            LibglossRoutes.CURRENT_ROUTE = _pagesList[index].toString();
           });
         },
       ),

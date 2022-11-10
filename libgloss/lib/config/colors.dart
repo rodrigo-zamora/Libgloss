@@ -6,7 +6,7 @@ class ColorSelector {
   static const TERTIARY_BLUE = Color.fromRGBO(16, 112, 130, 1); //#107082
   static const SECONDARY_BLUE = Color.fromRGBO(54, 179, 201, 1); //#36B3C9
   static const PRIMARY_BLUE = Color.fromRGBO(199, 246, 255, 1); //#C7F6FF
-  static const QUATERNARY_BLUE = Color.fromRGBO(228, 243, 245, 1); 
+  static const QUATERNARY_BLUE = Color.fromRGBO(228, 243, 245, 1);
 
   // Colors Used
   static const TERTIARY_GREEN = Color.fromRGBO(78, 120, 25, 1); //#4E7819
@@ -48,6 +48,7 @@ class ColorSelector {
   }
 
   static Color getSecondary(currentRoute) {
+    print('\u001b[33m COLOR SELECTOR $currentRoute');
     switch (currentRoute) {
       case "HomeNew":
       case LibglossRoutes.HOME:

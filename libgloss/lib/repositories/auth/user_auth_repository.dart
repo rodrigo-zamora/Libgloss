@@ -49,6 +49,12 @@ class UserAuthRepository {
           'isSeller': false,
           'isAdministrator': false,
         });
+
+        FirebaseFirestore.instance.collection('lists').doc(user.uid).set({
+          'useruid': user.uid,
+          'tracking': [],
+          'wish': [],
+        });
       }
     } else {
       throw Exception('Error signing in with Google');
