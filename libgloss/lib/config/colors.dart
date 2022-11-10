@@ -48,7 +48,6 @@ class ColorSelector {
   }
 
   static Color getSecondary(currentRoute) {
-    print('\u001b[33m COLOR SELECTOR $currentRoute');
     switch (currentRoute) {
       case "HomeNew":
       case LibglossRoutes.HOME:
@@ -60,6 +59,7 @@ class ColorSelector {
       case LibglossRoutes.BOOK_TRACKER:
         return SECONDARY_PURPLE;
       case "UserOptions":
+      case "Account":
       case LibglossRoutes.OPTIONS:
         return SECONDARY_ORANGE;
       default:

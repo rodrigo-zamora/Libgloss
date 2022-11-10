@@ -87,6 +87,7 @@ class LibglossRoutes {
     if (routeName == "HomeUsed") routeName = "/home_used";
     if (routeName == "BookTracker") routeName = "/book_tracker";
     if (routeName == "UserOptions") routeName = "/user_options";
+    if (routeName == "Account") routeName = "/account";
     print("\u001b[33mRoute: $routeName");
     return _routes[routeName]!(null);
   }
