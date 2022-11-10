@@ -242,7 +242,7 @@ class _HomeNewState extends State<HomeNew> {
             },
             child: Container(
               height:
-                  (MediaQuery.of(context).size.height / 5.2),
+                  (MediaQuery.of(context).size.height / 5.5),
               child: OnlineImage(
                 imageUrl: books[index]["thumbnail"] ??
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",

@@ -244,7 +244,7 @@ class _HomeUsedState extends State<HomeUsed> {
               );
             },
             child: Container(
-              height: (MediaQuery.of(context).size.height / 5.2),
+              height: (MediaQuery.of(context).size.height / 5.5),
               child: OnlineImage(
                 imageUrl: "${_listElements[index]["thumbnail"]}",
                 height: 100,
