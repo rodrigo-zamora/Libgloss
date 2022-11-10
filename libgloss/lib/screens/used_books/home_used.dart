@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
 import '../../widgets/shared/online_image.dart';
@@ -96,6 +98,37 @@ class _HomeUsedState extends State<HomeUsed> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference user = FirebaseFirestore.instance.collection('users');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: user.doc(UserAuthRepository().getuid()).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            Map<String, dynamic>? data =
+                snapshot.data!.data() as Map<String, dynamic>?;
+            return _buildSellingPage(data);
+          }
+        }
+
+        return _loadingPage();
+      },
+    );
+  }
+
+  // TODO: Add a loading screen
+  Widget _loadingPage() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildSellingPage(Map<String, dynamic>? data) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -110,15 +143,25 @@ class _HomeUsedState extends State<HomeUsed> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _add(context),
+      body: _add(context, data!['isSeller']),
     );
   }
 
-  SizedBox _add(context) {
+  SizedBox _add(context, bool isSeller) {
     return SizedBox(
         child: Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
       _found(context),
-      Positioned(
+      _button(isSeller) ??
+          Container(
+            height: 0,
+            width: 0,
+          ),
+    ]));
+  }
+
+  Widget? _button(bool isSeller) {
+    if (UserAuthRepository().isAuthenticated() && isSeller) {
+      return Positioned(
         bottom: MediaQuery.of(context).size.height * 0.03,
         right: MediaQuery.of(context).size.height * 0.03,
         child: SizedBox(
@@ -129,7 +172,6 @@ class _HomeUsedState extends State<HomeUsed> {
             backgroundColor: _primaryColor,
             splashColor: _secondaryColor,
             onPressed: () {
-              print("Add book");
               _openCamera();
             },
             child: FaIcon(
@@ -140,8 +182,9 @@ class _HomeUsedState extends State<HomeUsed> {
             ),
           ),
         ),
-      ),
-    ]));
+      );
+    }
+    return null;
   }
 
   Column _found(BuildContext context) {

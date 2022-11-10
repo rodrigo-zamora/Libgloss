@@ -44,25 +44,15 @@ class _UserOptionsState extends State<UserOptions> {
           }
         }
 
-        // TODO: implement loading screen
-        return Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Shimmer.fromColors(
-                  baseColor: _tertiaryColor,
-                  highlightColor: _secondaryColor,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    color: _tertiaryColor,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
+        return _loadingUserOptions();
       },
+    );
+  }
+
+  // TODO: Add a loading screen for the user options
+  Widget _loadingUserOptions() {
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -108,7 +98,7 @@ class _UserOptionsState extends State<UserOptions> {
               ),
               SizedBox(height: 20),
               _profilePicture(data),
-              _sellerButton(),
+              _sellerButton(data['isSeller']),
               _followers(true),
               SizedBox(height: 10),
               _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
@@ -230,7 +220,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Padding _sellerButton() {
+  Padding _sellerButton(bool isSeller) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 90),
       child: ElevatedButton(
@@ -248,12 +238,26 @@ class _UserOptionsState extends State<UserOptions> {
               MaterialStateColor.resolveWith((states) => _tertiaryColor),
         ),
         onPressed: () {
-          setState(() {});
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(UserAuthRepository().getuid())
+              .update({'isSeller': !isSeller});
+          Navigator.pushNamedAndRemoveUntil(
+              context, LibglossRoutes.HOME, (route) => false);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  isSeller ? "Ya no eres vendedor" : "Ahora eres vendedor",
+                ),
+              ),
+            );
         },
         child: Row(
           children: [
             Expanded(
-              child: _text(true),
+              child: _text(isSeller),
             ),
           ],
         ),
@@ -272,7 +276,7 @@ class _UserOptionsState extends State<UserOptions> {
       );
     } else {
       return Text(
-        "Ya eres Vendedor",
+        "Ya eres vendedor",
         style: TextStyle(
           color: _iconColors,
         ),
