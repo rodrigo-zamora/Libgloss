@@ -6,8 +6,23 @@ class UserAuthRepository {
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  static FirebaseAuth? userInstance = null;
+
+  UserAuthRepository() {
+    userInstance = _auth;
+  }
+
+  FirebaseAuth getInstance() {
+    return _auth;
+  }
+
   bool isAuthenticated() {
     return _auth.currentUser != null;
+  }
+
+  String? getuid() {
+    print('\x1B[32mcurrent user: ${_auth.currentUser}');
+    return _auth.currentUser?.uid;
   }
 
   Future<void> signOut() async {
@@ -59,9 +74,5 @@ class UserAuthRepository {
     } else {
       throw Exception('Error signing in with Google');
     }
-  }
-
-  String? getuid() {
-    return _auth.currentUser?.uid.toString();
   }
 }
