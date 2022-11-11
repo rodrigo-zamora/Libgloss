@@ -236,44 +236,44 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         break;
     }
     return Container(
-      child: Card(
-        elevation: 4, // the size of the shadow
-        shadowColor: _greyColor, // shadow color
-        color: _quaternaryColor, // the color of the card
-        shape: RoundedRectangleBorder(
-          // the shape of the card
-          borderRadius: BorderRadius.all(Radius.circular(
-              15)), // the radius of the border, made to be circular
-          side: BorderSide(color: _secondaryColor, width: 0.5),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  if (url != "") {
-                    _launchURL(url);
-                  } else {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text("No se encontró el libro en $title"),
-                        ),
-                      );
-                  }
-                },
-                child: Container(
+      child: GestureDetector(
+        onTap: () {
+          if (url != "") {
+            _launchURL(url);
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text("No se encontró el libro en $title"),
+                ),
+              );
+          }
+        },
+        child: Card(
+          elevation: 4, // the size of the shadow
+          shadowColor: _greyColor, // shadow color
+          color: _quaternaryColor, // the color of the card
+          shape: RoundedRectangleBorder(
+            // the shape of the card
+            borderRadius: BorderRadius.all(Radius.circular(
+                15)), // the radius of the border, made to be circular
+            side: BorderSide(color: _secondaryColor, width: 0.5),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
                   child: _text(
                       title, color, 15.0, FontWeight.bold, TextAlign.center),
                 ),
-              ),
-              SizedBox(height: 5),
-              _text(value, _defaultColor, 15.0, FontWeight.normal,
-                  TextAlign.center),
-            ],
+                SizedBox(height: 5),
+                _text(value, _defaultColor, 15.0, FontWeight.normal,
+                    TextAlign.center),
+              ],
+            ),
           ),
         ),
       ),
@@ -287,8 +287,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         return AlertDialog(
           title: Text("Seguimiento del libro"),
           shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(25.0))),
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
           contentPadding: EdgeInsets.all(22.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -382,32 +381,31 @@ class _NewBookDetailsState extends State<NewBookDetails> {
 
   Future<dynamic> _wish_list(BuildContext context) {
     return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Agregar a la lista de deseos"),
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(25.0))),
-          contentPadding: EdgeInsets.all(22.0),
-          content: Text(
-              "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // TODO: Add to wishlist using bloc
-              },
-              child: Text("Agregar"),
-            ),
-          ],
-        );
-      });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Agregar a la lista de deseos"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            contentPadding: EdgeInsets.all(22.0),
+            content: Text(
+                "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // TODO: Add to wishlist using bloc
+                },
+                child: Text("Agregar"),
+              ),
+            ],
+          );
+        });
   }
 }
