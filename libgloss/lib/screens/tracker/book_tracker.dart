@@ -175,24 +175,28 @@ class BookTracker extends StatelessWidget {
   }
 
   Widget _trackingWidget(Map<String, dynamic>? data) {
-    if (data == null) {
+    print('\x1B[32m[BookTracker] _trackingWidget: ${data}');
+    if (data?["tracking"].length == 0) {
       return Column(
         children: [
+          SizedBox(
+            height: 12,
+          ),
           Text(
-            'No hay libros en seguimiento',
+            'Seguimientos',
             style: TextStyle(
-              color: _blueColor,
-              fontSize: 20,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 12,
           ),
-          Text(
-            'Agrega libros a tu lista de seguimiento para que puedas recibir notificaciones sobre su precio y disponibilidad',
-            style: TextStyle(
-              color: _blueColor,
-              fontSize: 20,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Agrega libros a tu lista de seguimiento para que puedas recibir notificaciones sobre su precio y disponibilidad',
+              textAlign: TextAlign.center,
             ),
           ),
         ],
@@ -244,46 +248,73 @@ class BookTracker extends StatelessWidget {
   }
 
   Widget _wishListWidget(Map<String, dynamic>? data) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 12,
-        ),
-        Text(
-          'Lista de deseos',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+    if (data?["wish"].length == 0) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 12,
           ),
-        ),
-        SizedBox(
-          height: 12,
-        ),
-        SizedBox(
-          height: 180,
-          child: PageView.builder(
+          Text(
+            'Lista de deseos',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Agrega libros a tu lista de deseos para que puedas encontrarlos más fácilmente',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            'Lista de deseos',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          SizedBox(
+            height: 180,
+            child: PageView.builder(
+              controller: controllerW,
+              itemBuilder: (_, index) {
+                //return pages[index % pages.length];
+                return WishItem(item: _wishList[index % _wishList.length]);
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SmoothPageIndicator(
             controller: controllerW,
-            itemBuilder: (_, index) {
-              //return pages[index % pages.length];
-              return WishItem(item: _wishList[index % _wishList.length]);
-            },
+            count: _wishList.length,
+            effect: WormEffect(
+              dotHeight: 8,
+              dotWidth: 16,
+              type: WormType.thin,
+              activeDotColor: _secondaryColor,
+              // strokeWidth: 5,
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        SmoothPageIndicator(
-          controller: controllerW,
-          count: _wishList.length,
-          effect: WormEffect(
-            dotHeight: 8,
-            dotWidth: 16,
-            type: WormType.thin,
-            activeDotColor: _secondaryColor,
-            // strokeWidth: 5,
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
   }
 }
