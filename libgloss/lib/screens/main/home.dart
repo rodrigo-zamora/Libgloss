@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 
 import '../../blocs/books/bloc/books_bloc.dart';
 
@@ -17,8 +17,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-  final List<Widget> _pagesList = LibglossRoutes.getRoutesList();
-  final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+
+  List<Widget> _pagesList = UserAuthRepository().isAuthenticated() == true
+      ? [
+          LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW),
+          LibglossRoutes.getRoute(LibglossRoutes.HOME_USED),
+          LibglossRoutes.getRoute(LibglossRoutes.BOOK_TRACKER),
+          LibglossRoutes.getRoute(LibglossRoutes.OPTIONS),
+        ]
+      : [
+          LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW),
+          LibglossRoutes.getRoute(LibglossRoutes.HOME_USED),
+          LibglossRoutes.getRoute(LibglossRoutes.BOOK_TRACKER),
+          LibglossRoutes.getRoute(LibglossRoutes.ACCOUNT),
+        ];
 
   @override
   void initState() {
@@ -42,12 +54,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        LibglossRoutes.getRoutesList()[_selectedIndex].runtimeType.toString());
-
-    Color _currentColor = ColorSelector.getSecondary(
-        LibglossRoutes.getRoutesList()[_selectedIndex].runtimeType.toString());
-
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
@@ -56,7 +62,8 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: _currentColor,
+        selectedItemColor:
+            ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE),
         items: [
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.book),
@@ -72,12 +79,15 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.userGear),
-            label: isLoggedIn ? 'Mi perfil' : 'Iniciar sesión',
+            label: UserAuthRepository().isAuthenticated()
+                ? 'Mi perfil'
+                : 'Iniciar sesión',
           ),
         ],
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
+            LibglossRoutes.CURRENT_ROUTE = _pagesList[index].toString();
           });
         },
       ),

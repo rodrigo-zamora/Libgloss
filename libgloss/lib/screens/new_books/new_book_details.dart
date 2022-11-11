@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
-import 'package:shimmer/shimmer.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../blocs/bookPrice/stores.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -24,23 +23,22 @@ class NewBookDetails extends StatefulWidget {
 class _NewBookDetailsState extends State<NewBookDetails> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _quaternaryColor =
+      ColorSelector.getQuaternary(LibglossRoutes.HOME);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _redColor = ColorSelector.getRed();
   final Color _defaultColor = ColorSelector.getBlack();
+  final Color _greyColor = ColorSelector.getGrey();
 
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    // For each store in the enum Store
-    for (var store in Store.values) {
-      BlocProvider.of<BookPriceBloc>(context).add(
-        GetBookPriceEvent(
-          bookId: _args["isbn"],
-          store: store,
-        ),
-      );
-    }
+    BlocProvider.of<BookPriceBloc>(context).add(
+      GetBookPriceEvent(
+        bookId: _args["isbn"],
+      ),
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -88,7 +86,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, LibglossRoutes.BOOK_TRACKER);
+                _wish_list(context);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -99,7 +97,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, LibglossRoutes.BOOK_TRACKER);
+                _tracking(context);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -135,7 +133,91 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ));
   }
 
-  TableRow _row(String title, Color color, String value, String url) {
+  void _launchURL(String _url) async {
+    var _arguments = {
+      "url": _url,
+    };
+    Navigator.pushNamed(context, LibglossRoutes.WEB_VIEW,
+        arguments: _arguments);
+  }
+
+  BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
+    return BlocConsumer<BookPriceBloc, BookPriceState>(
+      listener: (context, state) {
+        if (state is BookPriceError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        double size = MediaQuery.of(context).size.height /
+            MediaQuery.of(context).size.width;
+        switch (state.runtimeType) {
+          case BookPriceLoaded:
+            final Map<String, dynamic> books = state.props[0];
+            return GridView.count(
+              primary: false,
+              childAspectRatio: size,
+              //padding: EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: <Widget>[
+                for (var book in books.entries)
+                  _buildCard(book.key, book.value),
+              ],
+            );
+          case BookPriceLoading:
+            return GridView.count(
+              primary: false,
+              childAspectRatio: size,
+              //padding: EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: <Widget>[
+                for (var i = 0; i < 4; i++)
+                  Container(
+                    child: Card(
+                      elevation: 4, // the size of the shadow
+                      shadowColor: _greyColor, // shadow color
+                      color: _quaternaryColor, // the color of the card
+                      shape: RoundedRectangleBorder(
+                        // the shape of the card
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            15)), // the radius of the border, made to be circular
+                      ),
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: _secondaryColor,
+                        size: size * 20,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          default:
+            return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  _buildCard(String key, value) {
+    if (value == null) {
+      return _storeCard(key, _redColor, "No disponible", "");
+    } else {
+      return _storeCard(
+          key, _blueColor, value["price"].toString(), value["url"]);
+    }
+  }
+
+  Widget _storeCard(String title, Color color, String value, String url) {
     switch (title) {
       case "amazon":
         title = "Amazon";
@@ -153,115 +235,177 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         title = "Mercado Libre";
         break;
     }
-    return TableRow(children: [
-      TableCell(
-        child: GestureDetector(
-          onTap: () {
-            if (url != "") {
-              _launchURL(url);
-            } else {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content: Text("No se encontró el libro en $title"),
-                  ),
-                );
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          if (url != "") {
+            _launchURL(url);
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text("No se encontró el libro en $title"),
+                ),
+              );
+          }
+        },
+        child: Card(
+          elevation: 4, // the size of the shadow
+          shadowColor: _greyColor, // shadow color
+          color: _quaternaryColor, // the color of the card
+          shape: RoundedRectangleBorder(
+            // the shape of the card
+            borderRadius: BorderRadius.all(Radius.circular(
+                15)), // the radius of the border, made to be circular
+            side: BorderSide(color: _secondaryColor, width: 0.5),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  child: _text(
+                      title, color, 15.0, FontWeight.bold, TextAlign.center),
+                ),
+                SizedBox(height: 5),
+                _text(value, _defaultColor, 15.0, FontWeight.normal,
+                    TextAlign.center),
+              ],
+            ),
           ),
         ),
       ),
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
-        ),
-      ),
-    ]);
+    );
   }
 
-  void _launchURL(String _url) async {
-    var _arguments = {
-      "url": _url,
-    };
-    Navigator.pushNamed(context, LibglossRoutes.WEB_VIEW,
-        arguments: _arguments);
-  }
-
-  // TODO: Fix bloc to dynamically add rows to table instead of creating a new table for each store
-  BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
-    return BlocConsumer<BookPriceBloc, BookPriceState>(
-      listener: (context, state) {
-        if (state is BookPriceError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        switch (state.runtimeType) {
-          case BookPriceLoaded:
-            final Map<String, dynamic> books = state.props[0];
-            return Table(
-              border: TableBorder.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              children: [
-                for (var book in books.entries) _buildRow(book.key, book.value),
-              ],
-            );
-          case BookPriceLoading:
-            Widget _loadingShimmer = Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                color: Colors.white,
-                height: 100,
-                width: 100,
+  Future<dynamic> _tracking(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Seguimiento del libro"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          contentPadding: EdgeInsets.all(22.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Agrega los siguientes datos para poder "
+                  "seguir el libro"),
+              Form(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Precio",
+                      ),
+                    ),
+                    DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("Todas las tiendas"),
+                          value: "all",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Amazon"),
+                          value: "amazon",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Gandhi"),
+                          value: "gandhi",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Gonvill"),
+                          value: "gonvill",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("El Sótano"),
+                          value: "el_sotano",
+                        ),
+                      ],
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        labelText: "Tienda",
+                      ),
+                    ),
+                    DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("1 mes"),
+                          value: 1,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("3 meses"),
+                          value: 3,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("6 meses"),
+                          value: 6,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("1 año"),
+                          value: 12,
+                        ),
+                      ],
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        labelText: "Tiempo",
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            );
-            return Table(
-              border: TableBorder.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              children: [
-                for (var i = 0; i < 5; i++)
-                  TableRow(children: [
-                    TableCell(
-                      child: Container(
-                        height: 25,
-                        padding: EdgeInsets.all(5.0),
-                        child: _loadingShimmer,
-                      ),
-                    ),
-                    TableCell(
-                      child: Container(
-                        height: 25,
-                        padding: EdgeInsets.all(5.0),
-                        child: _loadingShimmer,
-                      ),
-                    ),
-                  ]),
-              ],
-            );
-          default:
-            return Center(child: CircularProgressIndicator());
-        }
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Agregar"),
+            )
+          ],
+        );
       },
     );
   }
 
-  _buildRow(String key, value) {
-    if (value == null) {
-      return _row(key, _redColor, "No Disponible", "");
-    } else {
-      return _row(key, _blueColor, value["price"].toString(), value["url"]);
-    }
+  Future<dynamic> _wish_list(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Agregar a la lista de deseos"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            contentPadding: EdgeInsets.all(22.0),
+            content: Text(
+                "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // TODO: Add to wishlist using bloc
+                },
+                child: Text("Agregar"),
+              ),
+            ],
+          );
+        });
   }
 }

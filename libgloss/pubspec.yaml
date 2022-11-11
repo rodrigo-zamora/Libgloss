@@ -48,6 +48,7 @@ dependencies:
   auto_animated: ^3.1.0
   flutter_native_splash: ^2.2.11
   pull_to_refresh: ^2.0.0
+  loading_animation_widget: ^1.2.0+3
 
   # Firebase
   firebase_core: ^2.1.0
@@ -59,6 +60,7 @@ dependencies:
   google_sign_in: ^5.4.2
   webview_flutter: ^3.0.4
   share_plus: ^6.1.0
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -75,7 +77,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/icon.png"
+  image_path: "assets/images/icon/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -90,17 +92,19 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/images/onlybunny.png
-      - assets/images/loading_bunny_blue.gif
-      - assets/images/loading_bunny_green.gif
-      - assets/images/icon.png
-
-      - assets/images/silhouette.png
-      - assets/images/background_o.png
-      - assets/images/background_p.png
-
-      - assets/images/random.png
-      #- assets/images/onlybunny_50.png
+      # icon
+      - assets/images/icon/onlybunny.png
+      - assets/images/icon/icon.png
+      # loading
+      - assets/images/loading/loading_bunny_blue.gif
+      - assets/images/loading/loading_bunny_green.gif
+      # login
+      - assets/images/login/silhouette.png
+      - assets/images/login/background_o.png
+      - assets/images/login/background_p.png
+      # special
+      - assets/images/special/not_found.png
+      - assets/images/special/not_found_e.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

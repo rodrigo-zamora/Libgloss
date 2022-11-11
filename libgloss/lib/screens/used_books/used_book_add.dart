@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -22,17 +20,12 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
-  final Color _redColor = ColorSelector.getRed();
   final Color _defaultColor = ColorSelector.getBlack();
 
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
-
-    print(_args);
-
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: SearchAppBar(
@@ -46,11 +39,11 @@ class _UsedBookAddState extends State<UsedBookAdd> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: Text("EMPTY"),//_main(context, _args),
+      body: _main(context, _args),
     );
   }
 
-  /* SingleChildScrollView _main(
+  SingleChildScrollView _main(
       BuildContext context, Map<String, dynamic> _args) {
     return SingleChildScrollView(
       child: Container(
@@ -65,37 +58,42 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             SizedBox(height: 5),
             _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
                 TextAlign.center),
-            SizedBox(height: 5),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _text("vendido por:  ", _defaultColor, 14.0, FontWeight.normal,
+                    TextAlign.center),
+                _text("${_args["vendedor"]}", _greenColor, 14.0,
+                    FontWeight.normal, TextAlign.center),
+              ],
+            ),
+            SizedBox(height: 8),
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["thumbnail"]! as String),
+            _image(_args["thumbnail"]),
             SizedBox(height: 20.0),
+            _text("Información", _defaultColor, 15.0, FontWeight.normal,
+                TextAlign.center),
             Container(
-              child: _getPrices(),
+              width: MediaQuery.of(context).size.width / 2.5,
+              child: Divider(
+                color: _defaultColor,
+                thickness: 0.5,
+              ),
+            ),
+            Container(
+              child: Table(
+                children: [
+                  _row("precio:", "\$${_args["precio"]}"),
+                  _row("localización:", "${_args["localizacion"]}"),
+                  _row("contacto:", "${_args["contacto"]}"),
+                ],
+              ),
             ),
             SizedBox(height: 20.0),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, LibglossRoutes.BOOK_TRACKER);
-              },
-              child: Container(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  alignment: Alignment.topLeft,
-                  child: _text("Agregar a Lista de Deseos", _blueColor, 15.0,
-                      FontWeight.bold, TextAlign.left)),
-            ),
-            SizedBox(height: 15.0),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, LibglossRoutes.BOOK_TRACKER);
-              },
-              child: Container(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  alignment: Alignment.topLeft,
-                  child: _text("Hacer Seguimiento de Libro", _blueColor, 15.0,
-                      FontWeight.bold, TextAlign.left)),
-            ),
+            _buttonSeller(context, _args),
           ],
         ),
       ),
@@ -115,100 +113,61 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     );
   }
 
-  Container _image(String image) {
-    return Container(
+  Container _image(String? image) {
+    if (image == null) {
+      return Container(
+        child: Image.asset(
+          'assets/images/special/not_found_e.png',
+        ),
+      );
+    }
+    else {
+      return Container(
         height: (MediaQuery.of(context).size.height / 2.5),
         child: OnlineImage(
           imageUrl: image,
           height: 100,
-        ));
+        )
+      );
+    }
   }
 
-  TableRow _row(String title, Color color, String value) {
+  TableRow _row(String title, String value) {
     return TableRow(children: [
       TableCell(
         child: Container(
           padding: EdgeInsets.all(5.0),
-          child: _text(title, color, 15.0, FontWeight.bold, TextAlign.center),
+          child: _text(
+              title, _defaultColor, 15.0, FontWeight.normal, TextAlign.right),
         ),
       ),
       TableCell(
         child: Container(
           padding: EdgeInsets.all(5.0),
           child: _text(
-              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.center),
+              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.left),
         ),
       ),
     ]);
   }
 
-  BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
-    return BlocConsumer<BookPriceBloc, BookPriceState>(
-      listener: (context, state) {
-        if (state is BookPriceError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+  ElevatedButton _buttonSeller(
+      BuildContext context, Map<String, dynamic> _args) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _secondaryColor,
+        foregroundColor: _primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      ),
+      onPressed: () {
+        // TODO: add book to firebase and go to home
+        print("Guardar libro");
       },
-      builder: (context, state) {
-        switch (state.runtimeType) {
-          case BookPriceLoaded:
-            final Map<String, dynamic> books = state.props[0];
-            return Table(
-              border: TableBorder.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              children: [
-                for (var book in books.entries)
-                  _row(
-                      book.key,
-                      book.value == null ? _redColor : _blueColor,
-                      book.value == null
-                          ? "No Disponible"
-                          : book.value.toString()),
-              ],
-            );
-          case BookPriceLoading:
-            Widget _loadingShimmer = Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                color: Colors.white,
-                height: 100,
-                width: 100,
-              ),
-            );
-            return Table(
-              border: TableBorder.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              children: [
-                for (var i = 0; i < 5; i++)
-                  TableRow(children: [
-                    TableCell(
-                      child: Container(
-                        height: 25,
-                        padding: EdgeInsets.all(5.0),
-                        child: _loadingShimmer,
-                      ),
-                    ),
-                    TableCell(
-                      child: Container(
-                        height: 25,
-                        padding: EdgeInsets.all(5.0),
-                        child: _loadingShimmer,
-                      ),
-                    ),
-                  ]),
-              ],
-            );
-          default:
-            return Center(child: CircularProgressIndicator());
-        }
-      },
+      child: _text("Guardar libro", _defaultColor, 15.0, FontWeight.normal,
+          TextAlign.center),
     );
-  } */
+  }
 }
-

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:libgloss/screens/new_books/home_new.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                child: Image.asset("assets/images/icon.png"),
+                child: Image.asset("assets/images/icon/icon.png"),
               ),
               Padding(padding: EdgeInsets.only(top: 20.0)),
               Text(

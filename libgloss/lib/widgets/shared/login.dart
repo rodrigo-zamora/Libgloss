@@ -92,7 +92,7 @@ class _LogInFormState extends State<LogInForm> {
         width: MediaQuery.of(context).size.height * 0.15,
         alignment: Alignment.center,
         child: Image(
-          image: AssetImage('assets/images/silhouette.png'),
+          image: AssetImage('assets/images/login/silhouette.png'),
           color: Colors.grey[50],
         ),
       ),

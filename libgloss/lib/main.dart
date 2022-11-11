@@ -15,7 +15,7 @@ void main() async {
   // Run the initialization splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // Run the app
-  runApp(Bloc.getBlocProviders(Libgloss()));
+  runApp(BlocSettings.getBlocProviders(Libgloss()));
   FlutterNativeSplash.remove();
 }
 
@@ -26,7 +26,7 @@ class Libgloss extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LibglossRoutes.getHomeRoute(),
+      home: LibglossRoutes.getRoute(LibglossRoutes.HOME),
       onGenerateRoute: (settings) {
         return SlideRoute(
           page: LibglossRoutes.getRoutes()[settings.name]!(context),

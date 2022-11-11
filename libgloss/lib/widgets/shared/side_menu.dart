@@ -48,16 +48,19 @@ class _SideMenuState extends State<SideMenu> {
         "Otros"
       ],
     },
-    "Rango de precios": {
+    "Editorial": {
       "isExpanded": true,
-      "keyword": "price",
+      "keyword": "publisher",
       "items": [
-        "Menos de \$100",
-        "Entre \$100 y \$200",
-        "Entre \$200 y \$300",
-        "Entre \$300 y \$400",
-        "Entre \$400 y \$500",
-        "Más de \$500",
+        "Alfaguara",
+        "Fondo de Cultura Económica",
+        "Hachette Book Group",
+        "Macmillan",
+        "McGraw-Hill Education",
+        "Pearson",
+        "Penguin Random House",
+        "Scholastic",
+        "Otros"
       ],
     },
   };
@@ -216,7 +219,7 @@ class _SideMenuState extends State<SideMenu> {
           Row(
             children: [
               Image.asset(
-                'assets/images/onlybunny.png',
+                'assets/images/icon/onlybunny.png',
                 width: 48,
                 height: 48,
               ),

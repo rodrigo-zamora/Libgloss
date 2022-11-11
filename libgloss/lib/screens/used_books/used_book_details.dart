@@ -56,7 +56,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["author"]}", _blueColor, 15.0, FontWeight.normal,
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 8),
             Row(
@@ -72,7 +72,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["thumbnail"]!),
+            _image(_args["thumbnail"]),
             SizedBox(height: 20.0),
             _text("Información", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
@@ -113,13 +113,23 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
     );
   }
 
-  Container _image(String image) {
-    return Container(
+  Container _image(String? image) {
+    if (image == null) {
+      return Container(
+        child: Image.asset(
+          'assets/images/special/not_found.png',
+        ),
+      );
+    }
+    else {
+      return Container(
         height: (MediaQuery.of(context).size.height / 2.5),
         child: OnlineImage(
           imageUrl: image,
           height: 100,
-        ));
+        )
+      );
+    }
   }
 
   TableRow _row(String title, String value) {

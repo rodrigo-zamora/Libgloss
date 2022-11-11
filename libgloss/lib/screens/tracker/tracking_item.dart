@@ -4,16 +4,23 @@ import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
 
-class TrackingItem extends StatelessWidget {
+class TrackingItem extends StatefulWidget {
   final Map<String, String> item;
 
   const TrackingItem({super.key, required this.item});
 
   @override
+  State<TrackingItem> createState() => _TrackingItemState();
+}
+
+class _TrackingItemState extends State<TrackingItem> {
+  @override
   Widget build(BuildContext context) {
-    final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+    final Color _primaryColor =
+        ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+    final Color _secondaryColor =
+        ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+    final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
     return Container(
       alignment: Alignment.center,
@@ -40,7 +47,7 @@ class TrackingItem extends StatelessWidget {
                           width: 100,
                           height: 150,
                           child: OnlineImage(
-                            imageUrl: item["image"]!,
+                            imageUrl: widget.item["image"]!,
                             height: 100,
                           ),
                         ),
@@ -49,11 +56,12 @@ class TrackingItem extends StatelessWidget {
                     Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.only(bottom: 12),
+                          padding: EdgeInsets.only(bottom: 12, left: 12),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                item["title"]!,
+                                widget.item["title"]!,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
@@ -62,7 +70,7 @@ class TrackingItem extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                item["author"]!,
+                                widget.item["author"]!,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -87,7 +95,7 @@ class TrackingItem extends StatelessWidget {
                       color: _secondaryColor,
                     ),
                     onPressed: () {
-                      print("HI");
+                      // TODO: Implement edit
                     },
                   )),
             ],
@@ -103,7 +111,7 @@ class TrackingItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Plataforma: ${item["plataforma"]}",
+                      "Plataforma: ${widget.item["plataforma"]}",
                       style: TextStyle(
                         fontSize: 12,
                       ),
@@ -114,7 +122,7 @@ class TrackingItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Precio deseado: \$${item["precio"]}",
+                      "Precio deseado: \$${widget.item["precio"]}",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 12,
@@ -126,7 +134,7 @@ class TrackingItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Tiempo: ${item["tiempo"]}",
+                      "Tiempo: ${widget.item["tiempo"]}",
                       style: TextStyle(
                         fontSize: 12,
                       ),

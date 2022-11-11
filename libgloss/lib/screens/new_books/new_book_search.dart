@@ -2,10 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
-import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
-import '../../blocs/bookPrice/stores.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/animations/loading_animation.dart';
@@ -73,7 +71,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   LoadingAnimation(animationColor: _secondaryColor),
                   Image.asset(
-                    'assets/images/loading_bunny_blue.gif',
+                    'assets/images/loading/loading_bunny_blue.gif',
                   ),
                 ],
               ),
@@ -139,7 +137,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       BlocProvider.of<BookPriceBloc>(context).add(
                         GetBookPriceEvent(
                           bookId: books[index]["isbn"],
-                          store: Store.amazon,
                         ),
                       );
                       Navigator.pushNamed(
@@ -151,7 +148,9 @@ class _NewBookSearchState extends State<NewBookSearch> {
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 4.7),
                       child: OnlineImage(
-                        imageUrl: books[index]["thumbnail"],
+                        imageUrl: books[index]["thumbnail"] != null
+                            ? books[index]["thumbnail"]
+                            : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
                         height: 100,
                       ),
                     ),
@@ -171,7 +170,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
                   SizedBox(
                     height: 5,
                   ),
-                  // TODO: Fix authors list
                   Text(
                     "${books[index]["authors"].join(', ')}",
                     overflow: TextOverflow.ellipsis,

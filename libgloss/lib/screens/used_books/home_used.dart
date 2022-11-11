@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
+//import 'pop_up.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -28,7 +31,7 @@ class _HomeUsedState extends State<HomeUsed> {
   final List<Map<String, dynamic>> _listElements = [
     {
       "title": "Maze Runner",
-      "author": "James Dashner",
+      "authors": ["James Dashner"],
       "thumbnail": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
       "vendedor": "Ernesto Contreras",
       "isbn": "978-6077547327",
@@ -38,7 +41,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "Bajo la Misma Estrella",
-      "author": "John Green",
+      "authors": ["John Green"],
       "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
       "vendedor": "Lupita Gómez",
@@ -49,7 +52,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El niño de la pijama de rayas",
-      "author": "John Boyne",
+      "authors": ["John Boyne"],
       "thumbnail":
           "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
       "vendedor": "Julian Vico",
@@ -60,7 +63,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El Principito",
-      "author": "Antoine de Saint-Exupéry",
+      "authors": ["Antoine de Saint-Exupéry"],
       "thumbnail":
           "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
       "vendedor": "Maria Lucia Perera",
@@ -71,7 +74,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "1984",
-      "author": "George Orwell",
+      "authors": ["George Orwell"],
       "thumbnail":
           "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
       "vendedor": "Roman Dominguez",
@@ -82,7 +85,7 @@ class _HomeUsedState extends State<HomeUsed> {
     },
     {
       "title": "El señor de las moscas",
-      "author": "William Golding",
+      "authors": ["William Golding"],
       "thumbnail":
           "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
       "vendedor": "Maria Asuncion Perez",
@@ -95,6 +98,37 @@ class _HomeUsedState extends State<HomeUsed> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference user = FirebaseFirestore.instance.collection('users');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: user.doc(UserAuthRepository().getuid()).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            Map<String, dynamic>? data =
+                snapshot.data!.data() as Map<String, dynamic>?;
+            return _buildSellingPage(data);
+          }
+        }
+
+        return _loadingPage();
+      },
+    );
+  }
+
+  // TODO: Add a loading screen
+  Widget _loadingPage() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildSellingPage(Map<String, dynamic>? data) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -109,38 +143,45 @@ class _HomeUsedState extends State<HomeUsed> {
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
       ),
-      body: _add(context),
+      body: _add(context, data),
     );
   }
 
-  SizedBox _add(context) {
+  SizedBox _add(context, Map<String, dynamic>? data) {
     return SizedBox(
         child: Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
       _found(context),
-      Positioned(
+      data != null ? _button(data['isSeller']) : Container(),
+    ]));
+  }
+
+  Widget _button(bool isSeller) {
+    if (UserAuthRepository().isAuthenticated() && isSeller) {
+      return Positioned(
         bottom: MediaQuery.of(context).size.height * 0.03,
         right: MediaQuery.of(context).size.height * 0.03,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.07,
-          width: MediaQuery.of(context).size.height * 0.07,
+          height: MediaQuery.of(context).size.height * 0.06,
+          width: MediaQuery.of(context).size.height * 0.06,
           child: FloatingActionButton(
             heroTag: "btn2",
             backgroundColor: _primaryColor,
             splashColor: _secondaryColor,
             onPressed: () {
-              print("Add book");
               _openCamera();
             },
             child: FaIcon(
               //Icons.photo_camera_outlined,
               FontAwesomeIcons.plus,
               color: _greenColor,
-              size: MediaQuery.of(context).size.height * 0.04,
+              size: MediaQuery.of(context).size.height * 0.03,
             ),
           ),
         ),
-      )
-    ]));
+      );
+    } else {
+      return Container();
+    }
   }
 
   Column _found(BuildContext context) {
@@ -154,88 +195,109 @@ class _HomeUsedState extends State<HomeUsed> {
               physics: ScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 10,
+                crossAxisSpacing: 15,
                 mainAxisSpacing: 18,
                 childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 1.5),
+                    (MediaQuery.of(context).size.height / 1.22),
               ),
               itemCount: _listElements.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  //color: Colors.teal[100],
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (kDebugMode)
-                            print(
-                                "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
-                          Navigator.pushNamed(
-                            context,
-                            LibglossRoutes.USED_BOOK_DETAILS,
-                            arguments: _listElements[index],
-                          );
-                        },
-                        child: Container(
-                          height: (MediaQuery.of(context).size.height / 5.2),
-                          child: OnlineImage(
-                            imageUrl: "${_listElements[index]["thumbnail"]}",
-                            height: 100,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "${_listElements[index]["title"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        //maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "${_listElements[index]["author"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: _blueColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "Vendido por",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        "${_listElements[index]["vendedor"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: _greenColor,
-                          fontSize: 12,
-                        ),
-                      )
-                    ],
-                  ),
-                );
+                return _card(index, context);
               },
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Container _card(int index, BuildContext context) {
+    return Container(
+      //color: Colors.teal[100],
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey[200]!),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 3,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(15),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (kDebugMode)
+                print(
+                    "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
+              Navigator.pushNamed(
+                context,
+                LibglossRoutes.USED_BOOK_DETAILS,
+                arguments: _listElements[index],
+              );
+            },
+            child: Container(
+              height: (MediaQuery.of(context).size.height / 5.5),
+              child: OnlineImage(
+                imageUrl: "${_listElements[index]["thumbnail"]}",
+                height: 100,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Divider(
+            color: Colors.grey[300],
+            thickness: 1,
+          ),
+          Text(
+            "${_listElements[index]["title"]}",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            //maxLines: 2,
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "${_listElements[index]["author"]}",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _blueColor,
+              fontSize: 12,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "Vendido por",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
+          Text(
+            "${_listElements[index]["vendedor"]}",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _greenColor,
+              fontSize: 12,
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -277,6 +339,14 @@ class _HomeUsedState extends State<HomeUsed> {
                   Navigator.pop(context, 'Cancel');
                 },
                 child: Text("Cancelar", style: TextStyle(color: _greenColor)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  // TODO: Add window to enter the book manually
+                },
+                child: Text("Ingresar código manualmente",
+                    style: TextStyle(color: _greenColor)),
               ),
               TextButton(
                 onPressed: () {

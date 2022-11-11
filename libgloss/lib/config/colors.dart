@@ -6,7 +6,7 @@ class ColorSelector {
   static const TERTIARY_BLUE = Color.fromRGBO(16, 112, 130, 1); //#107082
   static const SECONDARY_BLUE = Color.fromRGBO(54, 179, 201, 1); //#36B3C9
   static const PRIMARY_BLUE = Color.fromRGBO(199, 246, 255, 1); //#C7F6FF
-  static const QUATERNARY_BLUE = Color.fromRGBO(199, 246, 255, 1);
+  static const QUATERNARY_BLUE = Color.fromRGBO(228, 243, 245, 1);
 
   // Colors Used
   static const TERTIARY_GREEN = Color.fromRGBO(78, 120, 25, 1); //#4E7819
@@ -27,9 +27,10 @@ class ColorSelector {
   static const QUATERNARY_ORANGE = Color.fromRGBO(251, 236, 233, 1); //#FBECF9
 
   // Extra Colors
-  static const RED = Color.fromRGBO(130, 48, 16, 1);
-  static const BLACK = Color.fromRGBO(0, 0, 0, 1);
-  static const GREY = Color.fromRGBO(36, 36, 36, 1);
+  static const RED = Color.fromRGBO(130, 48, 16, 1); //#823010
+  static const BLACK = Color.fromRGBO(0, 0, 0, 1); //#000000
+  static const GREY = Color.fromRGBO(36, 36, 36, 1); //#242424
+  static const GREYISH = Color.fromRGBO(235, 240, 244, 1); //#E1D9E6
 
   static Color getPrimary(currentRoute) {
     switch (currentRoute) {
@@ -58,6 +59,7 @@ class ColorSelector {
       case LibglossRoutes.BOOK_TRACKER:
         return SECONDARY_PURPLE;
       case "UserOptions":
+      case "Account":
       case LibglossRoutes.OPTIONS:
         return SECONDARY_ORANGE;
       default:
@@ -107,11 +109,15 @@ class ColorSelector {
     return GREY;
   }
 
+  static Color getGreyish() {
+    return GREYISH;
+  }
+
   static AssetImage getBackground(currentRoute) {
     if (currentRoute == LibglossRoutes.OPTIONS) {
-      return AssetImage('assets/images/background_o.png');
+      return AssetImage('assets/images/login/background_o.png');
     } else {
-      return AssetImage('assets/images/background_p.png');
+      return AssetImage('assets/images/login/background_p.png');
     }
   }
 }

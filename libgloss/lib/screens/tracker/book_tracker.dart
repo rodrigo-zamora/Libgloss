@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../config/colors.dart';
+import '../../repositories/auth/user_auth_repository.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
@@ -68,6 +71,71 @@ class BookTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference lists = FirebaseFirestore.instance.collection('lists');
+
+    print(
+        "\x1B[32m[BookTracker] User: ${UserAuthRepository.userInstance?.currentUser?.uid}");
+
+    String useruid = UserAuthRepository.userInstance?.currentUser?.uid ?? "";
+
+    if (useruid == "") {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80),
+          child: SearchAppBar(
+            primaryColor: _primaryColor,
+            secondaryColor: _secondaryColor,
+            showMenuButton: true,
+            showCameraButton: false,
+            showSearchField: true,
+          ),
+        ),
+        drawer: SideMenu(
+          sideMenuColor: _primaryColor,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              "Tienes que iniciar sesión para poder guardar libros en tus listas",
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return FutureBuilder<DocumentSnapshot>(
+        // Get the documents where useruid is equal to the uid
+        future: lists
+            .where('useruid',
+                isEqualTo: UserAuthRepository.userInstance?.currentUser?.uid)
+            .get()
+            .then((value) => value.docs[0].reference.get()),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("Something went wrong");
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              Map<String, dynamic>? data =
+                  snapshot.data!.data() as Map<String, dynamic>?;
+              print('\x1B[32mdata from firestore: ${data}');
+              return _buildLists(context, data);
+            }
+          }
+
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildLists(BuildContext context, Map<String, dynamic>? data) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
@@ -91,13 +159,13 @@ class BookTracker extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                child: _trackingWidget(),
+                child: _trackingWidget(data),
               ),
               SizedBox(
                 height: 20,
               ),
               SizedBox(
-                child: _wishListWidget(),
+                child: _wishListWidget(data),
               ),
             ],
           ),
@@ -106,92 +174,147 @@ class BookTracker extends StatelessWidget {
     );
   }
 
-  Widget _trackingWidget() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 12,
-        ),
-        Text(
-          'Seguimientos',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget _trackingWidget(Map<String, dynamic>? data) {
+    print('\x1B[32m[BookTracker] _trackingWidget: ${data}');
+    if (data?["tracking"].length == 0) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 12,
           ),
-        ),
-        SizedBox(
-          height: 12,
-        ),
-        SizedBox(
-          height: 240,
-          child: PageView.builder(
+          Text(
+            'Seguimientos',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Agrega libros a tu lista de seguimiento para que puedas recibir notificaciones sobre su precio y disponibilidad',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            'Seguimientos',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          SizedBox(
+            height: 240,
+            child: PageView.builder(
+              controller: controllerT,
+              itemBuilder: (_, index) {
+                //return pages[index % pages.length];
+                return TrackingItem(
+                    item: _listSeguimientos[index % _listSeguimientos.length]);
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SmoothPageIndicator(
             controller: controllerT,
-            itemBuilder: (_, index) {
-              //return pages[index % pages.length];
-              return TrackingItem(
-                  item: _listSeguimientos[index % _listSeguimientos.length]);
-            },
+            count: _listSeguimientos.length,
+            effect: WormEffect(
+              dotHeight: 8,
+              dotWidth: 16,
+              type: WormType.thin,
+              activeDotColor: _secondaryColor,
+              // strokeWidth: 5,
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        SmoothPageIndicator(
-          controller: controllerT,
-          count: _listSeguimientos.length,
-          effect: WormEffect(
-            dotHeight: 8,
-            dotWidth: 16,
-            type: WormType.thin,
-            activeDotColor: _secondaryColor,
-            // strokeWidth: 5,
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
   }
 
-  Widget _wishListWidget() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 12,
-        ),
-        Text(
-          'Lista de deseos',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget _wishListWidget(Map<String, dynamic>? data) {
+    if (data?["wish"].length == 0) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 12,
           ),
-        ),
-        SizedBox(
-          height: 12,
-        ),
-        SizedBox(
-          height: 180,
-          child: PageView.builder(
+          Text(
+            'Lista de deseos',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Agrega libros a tu lista de deseos para que puedas encontrarlos más fácilmente',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            'Lista de deseos',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          SizedBox(
+            height: 180,
+            child: PageView.builder(
+              controller: controllerW,
+              itemBuilder: (_, index) {
+                //return pages[index % pages.length];
+                return WishItem(item: _wishList[index % _wishList.length]);
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SmoothPageIndicator(
             controller: controllerW,
-            itemBuilder: (_, index) {
-              //return pages[index % pages.length];
-              return WishItem(item: _wishList[index % _wishList.length]);
-            },
+            count: _wishList.length,
+            effect: WormEffect(
+              dotHeight: 8,
+              dotWidth: 16,
+              type: WormType.thin,
+              activeDotColor: _secondaryColor,
+              // strokeWidth: 5,
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        SmoothPageIndicator(
-          controller: controllerW,
-          count: _wishList.length,
-          effect: WormEffect(
-            dotHeight: 8,
-            dotWidth: 16,
-            type: WormType.thin,
-            activeDotColor: _secondaryColor,
-            // strokeWidth: 5,
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
   }
 }

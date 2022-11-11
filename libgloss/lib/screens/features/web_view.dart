@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -19,7 +20,9 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
   final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
-  late Map<String, dynamic> _arguments;
+
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
 
   @override
   void initState() {
@@ -34,7 +37,6 @@ class _WebViewPageState extends State<WebViewPage> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    _arguments = _args;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -51,6 +53,17 @@ class _WebViewPageState extends State<WebViewPage> {
       body: WebView(
         initialUrl: _args["url"],
         javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: _secondaryColor,
+        onPressed: () async {
+          final String url = _args["url"];
+          Share.share(url);
+        },
+        child: const Icon(Icons.share),
       ),
     );
   }
@@ -79,11 +92,11 @@ class _WebViewPageState extends State<WebViewPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.12,
                   child: IconButton(
-                    icon: Icon(Icons.share),
+                    icon: Icon(Icons.settings),
                     onPressed: () {
-                      Share.share(
-                          "Check out this awesome book on Libgloss: ${_arguments["url"]}");
+                      Navigator.pop(context);
                     },
+                    // TODO: Add to favorites
                   ),
                 ),
               ],
@@ -102,7 +115,7 @@ class _WebViewPageState extends State<WebViewPage> {
                   child: Container(
                     margin: EdgeInsets.only(left: 12),
                     child: Image.asset(
-                      'assets/images/onlybunny.png',
+                      'assets/images/icon/onlybunny.png',
                     ),
                   ),
                 ),
