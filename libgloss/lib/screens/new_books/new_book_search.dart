@@ -151,7 +151,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                         imageUrl: books[index]["thumbnail"] != null
                             ? books[index]["thumbnail"]
                             : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
-                        height: MediaQuery.of(context).size.height / 3
+                        height: MediaQuery.of(context).size.height / 3.3
                       ),
                     ),
                   ),
