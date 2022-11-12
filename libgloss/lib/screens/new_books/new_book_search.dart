@@ -146,7 +146,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       );
                     },
                     child: Container(
-                      height: (MediaQuery.of(context).size.height / 4.4),
+                      height: (MediaQuery.of(context).size.height / 5),
                       child: OnlineImage(
                         imageUrl: books[index]["thumbnail"] != null
                             ? books[index]["thumbnail"]
