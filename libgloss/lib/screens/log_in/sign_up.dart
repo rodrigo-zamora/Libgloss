@@ -21,17 +21,15 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
+  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
   final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
+      ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
   final Color _tertiaryColor =
-      ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
+      ColorSelector.getTertiary(LibglossRoutes.OPTIONS);
   final Color _quaternaryColor =
-      ColorSelector.getQuaternary(LibglossRoutes.CURRENT_ROUTE);
+      ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
   final Color _iconColors = ColorSelector.getGrey();
-  final AssetImage _logo =
-      ColorSelector.getBackground(LibglossRoutes.CURRENT_ROUTE);
+  final AssetImage _logo = ColorSelector.getBackground(LibglossRoutes.OPTIONS);
 
   @override
   Widget build(BuildContext context) {
