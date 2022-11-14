@@ -168,43 +168,41 @@ Possible query parameters:
 `/api/books/history?isbn=9788416867349`
 #### Response
 ```json
-[
-    {
-        "isbn": "9788416867349",
-        "stores": {
-            "amazon": {
-                "data": [
-                    {
-                        "price": 265,
-                        "date": "2022-10-25T02:09:30.158Z"
-                    }
-                ]
-            },
-            "gandhi": {
-                "data": [
-                    {
-                        "price": 334,
-                        "date": "2022-10-25T02:09:30.158Z"
-                    }
-                ]
-            },
-            "gonvill": {
-                "data": [
-                    {
-                        "price": 314.57,
-                        "date": "2022-10-25T02:09:30.158Z"
-                    }
-                ]
-            },
-            "el_sotano": {
-                "data": [
-                    {
-                        "price": 379,
-                        "date": "2022-10-25T02:09:30.159Z"
-                    }
-                ]
-            }
+{
+    "isbn": "9788416867349",
+    "stores": {
+        "amazon": {
+            "data": [
+                {
+                    "price": 265,
+                    "date": "2022-10-25T02:09:30.158Z"
+                }
+            ]
+        },
+        "gandhi": {
+            "data": [
+                {
+                    "price": 334,
+                    "date": "2022-10-25T02:09:30.158Z"
+                }
+            ]
+        },
+        "gonvill": {
+            "data": [
+                {
+                    "price": 314.57,
+                    "date": "2022-10-25T02:09:30.158Z"
+                }
+            ]
+        },
+        "el_sotano": {
+            "data": [
+                {
+                    "price": 379,
+                    "date": "2022-10-25T02:09:30.159Z"
+                }
+            ]
         }
     }
-]
+}
 ```
