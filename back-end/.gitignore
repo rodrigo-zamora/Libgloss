@@ -97,7 +97,6 @@ Thumbs.db
 *.der
 *.key
 *.pem
-serviceAccountKey.json
 
 # --------------------------------------------------------
 # BEGIN Explictly Allowed Files (i.e. do NOT ignore these)
