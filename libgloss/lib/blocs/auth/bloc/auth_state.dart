@@ -15,6 +15,16 @@ class UnAuthState extends AuthState {}
 
 class SignOutSuccessState extends AuthState {}
 
-class AuthErrorState extends AuthState {}
+class AuthErrorState extends AuthState {
+  final String message;
+
+  const AuthErrorState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+
+  @override
+  String toString() => 'AuthErrorState { message: $message }';
+}
 
 class AuthAwaitingState extends AuthState {}

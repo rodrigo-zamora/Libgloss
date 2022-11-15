@@ -86,71 +86,8 @@ class _LogInFormState extends State<LogInForm> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.04,
           ),
-          LogText(
-              context: context,
-              tertiaryColor: _quaternaryColor,
-              secondaryColor: _secondaryColor,
-              icon: Icons.person_outlined,
-              text: "E-mail",
-              onChanged: (value) {},
-              tailIcon: null,
-              obscure: false),
-          LogText(
-              context: context,
-              tertiaryColor: _quaternaryColor,
-              secondaryColor: _secondaryColor,
-              icon: Icons.lock_outline,
-              text: "Contraseña",
-              onChanged: (value) {},
-              tailIcon: Icons.visibility,
-              obscure: true),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          HaveAccount(
-              tertiaryColor: null,
-              secondaryColor: _secondaryColor,
-              text1: "",
-              text2: "¿Olvidaste tu contraseña?",
-              route: () {
-                print("Forgot password");
-              }),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          ButtonLog(
-              context: context,
-              background: _secondaryColor,
-              splash: _primaryColor,
-              text_color: Colors.white,
-              text: "Acceder",
-              onPressed: () {
-                Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
-              }),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          HaveAccount(
-              tertiaryColor: _tertiaryColor,
-              secondaryColor: _secondaryColor,
-              text1: "¿No tienes cuenta?  ",
-              text2: "Regístrate",
-              route: () {
-                setState(() {
-                  _current = !_current;
-                });
-              }),
-          OrLine(tertiaryColor: _tertiaryColor, context: context),
-          SocialLog(
-              logo: _tertiaryColor,
-              splash: _primaryColor,
-              action: () {
-                BlocProvider.of<AuthBloc>(context).add(
-                  GoogleAuthEvent(
-                    buildcontext: context,
-                  ),
-                );
-              }),
+          _auth(context, _primaryColor, _secondaryColor, _tertiaryColor,
+              _quaternaryColor, _logo),
         ],
       ),
     );
@@ -170,62 +107,187 @@ class _LogInFormState extends State<LogInForm> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.04,
           ),
-          LogText(
-              context: context,
-              tertiaryColor: _quaternaryColor,
-              secondaryColor: _secondaryColor,
-              icon: Icons.person_outlined,
-              text: "E-mail",
-              onChanged: (value) {},
-              tailIcon: null,
-              obscure: false),
-          LogText(
-              context: context,
-              tertiaryColor: _quaternaryColor,
-              secondaryColor: _secondaryColor,
-              icon: Icons.lock_outline,
-              text: "Contraseña",
-              onChanged: (value) {},
-              tailIcon: Icons.visibility,
-              obscure: true),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.041,
-          ),
-          ButtonLog(
-              context: context,
-              background: _secondaryColor,
-              splash: _primaryColor,
-              text_color: Colors.white,
-              text: "Acceder",
-              onPressed: () {
-                Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
-              }),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          HaveAccount(
-              tertiaryColor: _tertiaryColor,
-              secondaryColor: _secondaryColor,
-              text1: "¿Ya tienes cuenta?  ",
-              text2: "Inicia sesión",
-              route: () {
-                setState(() {
-                  _current = !_current;
-                });
-              }),
-          OrLine(tertiaryColor: _tertiaryColor, context: context),
-          SocialLog(
-              logo: _tertiaryColor,
-              splash: _primaryColor,
-              action: () {
-                BlocProvider.of<AuthBloc>(context).add(
-                  GoogleAuthEvent(
-                    buildcontext: context,
-                  ),
-                );
-              }),
+          _auth(context, _primaryColor, _secondaryColor, _tertiaryColor,
+              _quaternaryColor, _logo),
         ],
       ),
+    );
+  }
+
+  BlocConsumer<AuthBloc, AuthState> _auth(
+      BuildContext context,
+      Color _primaryColor,
+      Color _secondaryColor,
+      Color _tertiaryColor,
+      Color _quaternaryColor,
+      AssetImage _logo) {
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthErrorState) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(state.toString()),
+                backgroundColor: Colors.red,
+              ),
+            );
+        }
+      },
+      builder: (context, state) {
+        if (state is UnAuthState ||
+            state is AuthErrorState ||
+            state is SignOutSuccessState) {
+          if (_current) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LogText(
+                    context: context,
+                    tertiaryColor: _quaternaryColor,
+                    secondaryColor: _secondaryColor,
+                    icon: Icons.person_outlined,
+                    text: "E-mail",
+                    onChanged: (value) {},
+                    tailIcon: null,
+                    obscure: false),
+                LogText(
+                    context: context,
+                    tertiaryColor: _quaternaryColor,
+                    secondaryColor: _secondaryColor,
+                    icon: Icons.lock_outline,
+                    text: "Contraseña",
+                    onChanged: (value) {},
+                    tailIcon: Icons.visibility,
+                    obscure: true),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.01,
+                ),
+                HaveAccount(
+                    tertiaryColor: null,
+                    secondaryColor: _secondaryColor,
+                    text1: "",
+                    text2: "¿Olvidaste tu contraseña?",
+                    route: () {
+                      print("Forgot password");
+                    }),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.01,
+                ),
+                ButtonLog(
+                    context: context,
+                    background: _secondaryColor,
+                    splash: _primaryColor,
+                    text_color: Colors.white,
+                    text: "Acceder",
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, LibglossRoutes.CURRENT_ROUTE);
+                    }),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.01,
+                ),
+                HaveAccount(
+                  tertiaryColor: _tertiaryColor,
+                  secondaryColor: _secondaryColor,
+                  text1: "¿No tienes cuenta?  ",
+                  text2: "Regístrate",
+                  route: () {
+                    setState(
+                      () {
+                        _current = !_current;
+                      },
+                    );
+                  },
+                ),
+                OrLine(tertiaryColor: _tertiaryColor, context: context),
+                SocialLog(
+                  logo: _tertiaryColor,
+                  splash: _primaryColor,
+                  action: () {
+                    BlocProvider.of<AuthBloc>(context).add(
+                      GoogleAuthEvent(
+                        buildcontext: context,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LogText(
+                    context: context,
+                    tertiaryColor: _quaternaryColor,
+                    secondaryColor: _secondaryColor,
+                    icon: Icons.person_outlined,
+                    text: "E-mail",
+                    onChanged: (value) {},
+                    tailIcon: null,
+                    obscure: false),
+                LogText(
+                    context: context,
+                    tertiaryColor: _quaternaryColor,
+                    secondaryColor: _secondaryColor,
+                    icon: Icons.lock_outline,
+                    text: "Contraseña",
+                    onChanged: (value) {},
+                    tailIcon: Icons.visibility,
+                    obscure: true),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.041,
+                ),
+                ButtonLog(
+                  context: context,
+                  background: _secondaryColor,
+                  splash: _primaryColor,
+                  text_color: Colors.white,
+                  text: "Acceder",
+                  onPressed: () {
+                    Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
+                  },
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.01,
+                ),
+                HaveAccount(
+                  tertiaryColor: _tertiaryColor,
+                  secondaryColor: _secondaryColor,
+                  text1: "¿Ya tienes cuenta?  ",
+                  text2: "Inicia sesión",
+                  route: () {
+                    setState(() {
+                      _current = !_current;
+                    });
+                  },
+                ),
+                OrLine(tertiaryColor: _tertiaryColor, context: context),
+                SocialLog(
+                  logo: _tertiaryColor,
+                  splash: _primaryColor,
+                  action: () {
+                    BlocProvider.of<AuthBloc>(context).add(
+                      GoogleAuthEvent(
+                        buildcontext: context,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          }
+        } else {
+          return Container(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              color: _primaryColor,
+              backgroundColor: _secondaryColor,
+            ),
+          );
+        }
+      },
     );
   }
 }
