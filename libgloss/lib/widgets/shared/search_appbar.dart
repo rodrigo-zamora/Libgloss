@@ -14,12 +14,14 @@ class SearchAppBar extends StatelessWidget {
     required bool showMenuButton,
     required bool showCameraButton,
     required bool showSearchField,
+    String? title,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
         _showMenuButton = showMenuButton,
         _showCameraButton = showCameraButton,
         _showSearchField = showSearchField,
         _textFieldController = TextEditingController(),
+        _title = title,
         super(key: key);
 
   final TextEditingController _textFieldController;
@@ -28,6 +30,7 @@ class SearchAppBar extends StatelessWidget {
   final bool _showMenuButton;
   final bool _showCameraButton;
   final bool _showSearchField;
+  final String? _title;
 
   @override
   Widget build(BuildContext context) {
@@ -62,21 +65,8 @@ class SearchAppBar extends StatelessWidget {
               ),
             if (!_showMenuButton)
               Container(
-                width: MediaQuery.of(context).size.width * 0.12,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    switch (LibglossRoutes.CURRENT_ROUTE) {
-                      case LibglossRoutes.SEARCH_NEW:
-                        LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
-                        break;
-                      case LibglossRoutes.SEARCH_USED:
-                        LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
-                        break;
-                    }
-                  },
-                ),
+                height: 48,
+                child: _popIcon(context),
               ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -118,11 +108,15 @@ class SearchAppBar extends StatelessWidget {
     if (!_showSearchField)
       return Container(
         alignment: Alignment.center,
-        child: Text(
-          'Escanea un código de barras',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 48.0),
+          child: Text(
+            _title!,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       );
@@ -190,5 +184,25 @@ class SearchAppBar extends StatelessWidget {
           ),
         ),
       );
+  }
+
+  Widget? _popIcon(BuildContext context) {
+    if (_title != null) {
+      IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+          switch (LibglossRoutes.CURRENT_ROUTE) {
+            case LibglossRoutes.SEARCH_NEW:
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
+              break;
+            case LibglossRoutes.SEARCH_USED:
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
+              break;
+          }
+        },
+      );
+    }
+    return null;
   }
 }

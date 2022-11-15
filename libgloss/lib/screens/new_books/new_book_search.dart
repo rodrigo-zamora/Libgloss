@@ -146,12 +146,12 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       );
                     },
                     child: Container(
-                      height: (MediaQuery.of(context).size.height / 4.7),
+                      height: (MediaQuery.of(context).size.height / 5),
                       child: OnlineImage(
                         imageUrl: books[index]["thumbnail"] != null
                             ? books[index]["thumbnail"]
                             : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
-                        height: 100,
+                        height: MediaQuery.of(context).size.height / 3.5
                       ),
                     ),
                   ),

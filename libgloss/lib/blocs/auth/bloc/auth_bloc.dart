@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../config/routes.dart';
 import '../../../repositories/auth/user_auth_repository.dart';
@@ -15,7 +14,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc() : super(AuthInitial()) {
     on<VerifyAuthEvent>(_authVerfication);
-    on<AnonymousAuthEvent>(_authAnonymous);
     on<GoogleAuthEvent>(_authUser);
     on<SignOutEvent>(_signOut);
   }
@@ -69,7 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(SignOutSuccessState());
     } catch (e) {
-      emit(AuthErrorState());
+      emit(AuthErrorState(message: e.toString()));
     }
   }
 
@@ -117,11 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             content: Text('Error al iniciar sesión: $e'),
           ),
         );
-      emit(AuthErrorState());
+      emit(AuthErrorState(message: e.toString()));
     }
-  }
-
-  FutureOr<void> _authAnonymous(event, emit) {
-    // TODO:
   }
 }

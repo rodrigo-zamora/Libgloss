@@ -13,9 +13,7 @@ import '../screens/used_books/used_book_details.dart';
 import '../screens/used_books/used_book_search.dart';
 import '../screens/used_books/used_book_seller.dart';
 import '../screens/user/user_options.dart';
-import '../screens/log_in/account.dart';
 import '../screens/log_in/login.dart';
-import '../screens/log_in/sign_up.dart';
 import '../screens/features/web_view.dart';
 import '../widgets/animations/splash.dart';
 
@@ -71,8 +69,6 @@ class LibglossRoutes {
     USED_BOOK_SCANNER: (context) => UploadBookScanner(),
     // Log In
     LOGIN: (context) => LogInForm(),
-    SIGN_UP: (context) => SignUp(),
-    ACCOUNT: (context) => Account(),
     // Extras
     SPLASH: (context) => SplashScreen(),
     WEB_VIEW: (context) => WebViewPage(),
