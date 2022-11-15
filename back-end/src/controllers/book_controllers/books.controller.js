@@ -1,28 +1,35 @@
-const googleController = require('../controllers/online/google');
-const mlController = require('../controllers/online/ml');
-const amzController = require('../controllers/online/amz');
-const gandhiController = require('../controllers/online/gandhi');
-const gonvillController = require('../controllers/online/gonvill');
-const elSotanoController = require('../controllers/online/el_sotano');
+const googleController = require('./stores/google.js');
+const amzController = require('./stores/amz.js');
+const gandhiController = require('./stores/gandhi.js');
+const gonvillController = require('./stores/gonvill.js');
+const elSotanoController = require('./stores/el_sotano.js');
 
-const Book = require('../models/book');
-const BookDetails = require('../models/book_details');
-const { NotFoundError, BadRequestError } = require('../utils/errors');
+const Book = require('../../models/book');
+const BookDetails = require('../../models/book_details');
+const { NotFoundError, BadRequestError } = require('../../utils/errors.js');
 
 const booksController = {
 
     // Handle search requests, including title, category, and ISBN
     searchBooks: async (query) => {
+
+        console.log('Searching for books...');
         let books = [];
 
-        // Replace spaces with '%20' to make a valid URL
+        // Search for books using google controller
         books = await googleController.search(
-            query.title ? query.title.replace(/ /g, '%20') : null,
-            query.category ? query.category : null,
-            query.author ? query.author.replace(/ /g, '%20') : null,
-            query.isbn ? query.isbn : null,
-            query.publisher ? query.publisher : null
+                query.title ? query.title.replace(/ /g, '%20') : null,
+                query.category ? query.category : null,
+                query.author ? query.author.replace(/ /g, '%20') : null,
+                query.isbn ? query.isbn : null,
+                query.publisher ? query.publisher : null
         );
+
+        console.log('Found', books.length, 'books');
+        console.table(books);
+
+        // If no books were found, return an empty array
+        if (books.length == 0) return [];
 
         // Add all books to the database
         for (let i = 0; i < books.length; i++) {
@@ -42,6 +49,7 @@ const booksController = {
 
         // Get the title of the book
         let books = await booksController.searchBooks({ isbn: query.isbn });
+        console.log('\t\tBooks:', books);
         let title = books[0].title;
         title = title.replace(/ /g, '-');
 
