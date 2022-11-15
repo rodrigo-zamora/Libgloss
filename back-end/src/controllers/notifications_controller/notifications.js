@@ -10,15 +10,17 @@ const NotificationsController = {
         
         // Get all usersuid from lists where the book is in the tracking list
         console.log('\t\tGetting users from the database...');
+
+        // Get only user where the book is in the tracking list
         let users = await admin.firestore().collection('users').get();
 
         // Get all usersuid from lists where the book is in the tracking list
         console.log('\t\tUsers with the book in the tracking list:', users.docs.length);
-        for (let user of users.docs) {
-            console.log('\t\tUser:', user.data());
-        }
 
         let tokens = users.docs.map(user => user.data().token);
+
+        let detailsString = JSON.stringify(details);
+        console.log('\t\tDetails:', detailsString);
 
         let message = {
             notification: {
