@@ -23,10 +23,7 @@ const NotificationsController = {
         let message = {
             notification: {
                 title: 'book-tracker',
-                body: {
-                    isbn: isbn,
-                    details: details,
-                },
+                body: `isbn:${isbn},${details}}`,
             },
         }
 
@@ -34,11 +31,11 @@ const NotificationsController = {
         console.log('\t\t\tTokens:', tokens);
 
         console.log('\t\tSending notifications...');
-        /*admin.messaging().sendToDevice(tokens, message, notification_options).then((response) => {
+        admin.messaging().sendToDevice(tokens, message, notification_options).then((response) => {
             console.log('\t\tNotifications sent successfully:', response);
         }).catch((error) => {
             console.log('\t\tError sending notifications:', error);
-        });*/
+        });
     },
 }
 
