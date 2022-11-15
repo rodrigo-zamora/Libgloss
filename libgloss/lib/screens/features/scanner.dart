@@ -28,6 +28,7 @@ class Scanner extends StatelessWidget {
             showMenuButton: false,
             showCameraButton: false,
             showSearchField: false,
+            title: 'Escanea un libro',
           ),
         ),
         body: _buildScanner(context));

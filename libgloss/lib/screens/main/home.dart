@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
           LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW),
           LibglossRoutes.getRoute(LibglossRoutes.HOME_USED),
           LibglossRoutes.getRoute(LibglossRoutes.BOOK_TRACKER),
-          LibglossRoutes.getRoute(LibglossRoutes.ACCOUNT),
+          LibglossRoutes.getRoute(LibglossRoutes.LOGIN),
         ];
 
   @override

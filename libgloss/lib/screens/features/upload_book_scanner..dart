@@ -30,6 +30,7 @@ class UploadBookScanner extends StatelessWidget {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: false,
+          title: 'Escanea un libro',
         ),
       ),
       body: _getBookDetails(context),
@@ -77,16 +78,15 @@ class UploadBookScanner extends StatelessWidget {
         } else if (state is BookIsbnLoaded) {
           var books = state.bookDetails;
           var image = books[0]["thumbnail"];
-          var imageHolder; 
+          var imageHolder;
           if (image == null) {
             imageHolder = Image.asset(
               'assets/images/special/not_found.png',
             );
-          }
-          else {
+          } else {
             imageHolder = OnlineImage(
               imageUrl: books[0]["thumbnail"] ??
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
               height: MediaQuery.of(context).size.height / 4,
             );
           }

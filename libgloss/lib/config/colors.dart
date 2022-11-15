@@ -59,7 +59,7 @@ class ColorSelector {
       case LibglossRoutes.BOOK_TRACKER:
         return SECONDARY_PURPLE;
       case "UserOptions":
-      case "Account":
+      case "LogInForm":
       case LibglossRoutes.OPTIONS:
         return SECONDARY_ORANGE;
       default:
