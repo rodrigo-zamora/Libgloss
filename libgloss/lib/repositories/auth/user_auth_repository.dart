@@ -30,9 +30,7 @@ class UserAuthRepository {
     await _auth.signOut();
   }
 
-  Future<void> signIn() async {
-    
-  }
+  Future<void> signIn() async {}
 
   Future<void> signInWithGoogle() async {
     try {
@@ -66,6 +64,7 @@ class UserAuthRepository {
             'profilePicture': user.photoURL,
             'email': user.email,
             'phoneNumber': user.phoneNumber,
+            'zipCode': null,
             'isSeller': false,
             'isAdministrator': false,
           });
