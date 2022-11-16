@@ -87,7 +87,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
   }
 
   Column _search(BuildContext context, List<dynamic> books) {
-    var left = MediaQuery.of(context).size.width * 0.70;
+    var left = MediaQuery.of(context).size.width * 0.65;
     return Column(
       children: [
         Expanded(
