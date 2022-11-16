@@ -96,10 +96,23 @@ class BookTracker extends StatelessWidget {
         ),
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Text(
-              "Tienes que iniciar sesión para poder guardar libros en tus listas",
-              textAlign: TextAlign.center,
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Tienes que iniciar sesión para poder guardar libros en tus listas",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                Image.asset(
+                  "assets/images/special/purple_reading_bunny.png",
+                  height: 300,
+                )
+              ],
             ),
           ),
         ),

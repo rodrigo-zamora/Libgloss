@@ -39,7 +39,7 @@ dependencies:
   shared_preferences: ^2.0.15
   mobile_scanner: ^2.0.0
   webview_flutter: ^3.0.4
-  share_plus: ^6.1.0
+  #share_plus: ^6.1.0
   equatable: ^2.0.5
 
   # UI Widgets
@@ -104,6 +104,8 @@ flutter:
       # special
       - assets/images/special/not_found.png
       - assets/images/special/not_found_e.png
+      - assets/images/special/green_reading_bunny.png
+      - assets/images/special/purple_reading_bunny.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
