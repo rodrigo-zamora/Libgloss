@@ -172,12 +172,17 @@ class BookTracker extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: _trackingWidget(data),
               ),
               SizedBox(
                 height: 20,
               ),
-              SizedBox(
+              Container(
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: _wishListWidget(data),
               ),
             ],
