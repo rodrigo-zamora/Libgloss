@@ -50,6 +50,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
+          showBackButton: true,
         ),
       ),
       drawer: SideMenu(

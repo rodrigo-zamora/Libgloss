@@ -14,6 +14,7 @@ class SearchAppBar extends StatelessWidget {
     required bool showMenuButton,
     required bool showCameraButton,
     required bool showSearchField,
+    bool showBackButton = true,
     String? title,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
@@ -22,6 +23,7 @@ class SearchAppBar extends StatelessWidget {
         _showSearchField = showSearchField,
         _textFieldController = TextEditingController(),
         _title = title,
+        _backButton = showBackButton,
         super(key: key);
 
   final TextEditingController _textFieldController;
@@ -30,6 +32,7 @@ class SearchAppBar extends StatelessWidget {
   final bool _showMenuButton;
   final bool _showCameraButton;
   final bool _showSearchField;
+  final bool _backButton;
   final String? _title;
 
   @override
@@ -187,8 +190,8 @@ class SearchAppBar extends StatelessWidget {
   }
 
   Widget? _popIcon(BuildContext context) {
-    if (_title != null) {
-      IconButton(
+    if (_backButton) {
+      return IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
@@ -203,6 +206,5 @@ class SearchAppBar extends StatelessWidget {
         },
       );
     }
-    return null;
   }
 }
