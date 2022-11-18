@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
 import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/models/user.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -154,7 +156,6 @@ class UploadBookScanner extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context, 'Cancel');
-                        // TODO: Go to book details to edit
                         Navigator.pushNamed(
                           context,
                           LibglossRoutes.USED_BOOK_ADD,
@@ -162,11 +163,14 @@ class UploadBookScanner extends StatelessWidget {
                             "title": books[0]["title"],
                             "authors": books[0]["authors"],
                             "thumbnail": books[0]["thumbnail"],
-                            "vendedor": "NAME",
+                            "vendedor": UserAuthRepository
+                                .userInstance?.currentUser!.displayName,
                             "isbn": books[0]["isbn"],
-                            "precio": 0,
-                            "localizacion": "LOCATION",
-                            "contacto": "CONTACT",
+                            "precio": null,
+                            "localizacion": UserAuthRepository
+                                .userInstance?.currentUser!.metadata,
+                            "contacto": UserAuthRepository
+                                .userInstance?.currentUser!.metadata,
                           },
                         );
                       },

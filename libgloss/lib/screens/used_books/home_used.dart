@@ -121,10 +121,24 @@ class _HomeUsedState extends State<HomeUsed> {
     );
   }
 
-  // TODO: Add a loading screen
   Widget _loadingPage() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SearchAppBar(
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: true,
+          showCameraButton: false,
+          showSearchField: true,
+        ),
+      ),
+      drawer: SideMenu(
+        sideMenuColor: _primaryColor,
+      ),
+      body: Center(
+        child: CircularProgressIndicator(color: _secondaryColor),
+      ),
     );
   }
 

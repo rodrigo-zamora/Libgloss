@@ -16,8 +16,10 @@ class UsedBookAdd extends StatefulWidget {
 }
 
 class _UsedBookAddState extends State<UsedBookAdd> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
   final Color _defaultColor = ColorSelector.getBlack();
@@ -56,13 +58,13 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
-                TextAlign.center),
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
+                FontWeight.normal, TextAlign.center),
             SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _text("vendido por:  ", _defaultColor, 14.0, FontWeight.normal,
+                _text("Vendido por:  ", _defaultColor, 14.0, FontWeight.normal,
                     TextAlign.center),
                 _text("${_args["vendedor"]}", _greenColor, 14.0,
                     FontWeight.normal, TextAlign.center),
@@ -86,9 +88,9 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             Container(
               child: Table(
                 children: [
-                  _row("precio:", "\$${_args["precio"]}"),
-                  _row("localización:", "${_args["localizacion"]}"),
-                  _row("contacto:", "${_args["contacto"]}"),
+                  _row("Precio:", "\$${_args["precio"]}"),
+                  _row("Localización:", "${_args["localizacion"]}"),
+                  _row("Contacto:", "${_args["contacto"]}"),
                 ],
               ),
             ),
@@ -114,22 +116,19 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   }
 
   Container _image(String? image) {
-    if (image == null) {
-      return Container(
-        child: Image.asset(
-          'assets/images/special/green_reading_bunny.png',
-        ),
-      );
-    }
-    else {
-      return Container(
-        height: (MediaQuery.of(context).size.height / 2.5),
-        child: OnlineImage(
-          imageUrl: image,
-          height: 100,
-        )
-      );
-    }
+    return image == null
+        ? Container(
+            child: Image.asset(
+              'assets/images/special/green_reading_bunny.png',
+            ),
+          )
+        : Container(
+            height: (MediaQuery.of(context).size.height / 2.5),
+            child: OnlineImage(
+              imageUrl: image,
+              height: 100,
+            ),
+          );
   }
 
   TableRow _row(String title, String value) {
