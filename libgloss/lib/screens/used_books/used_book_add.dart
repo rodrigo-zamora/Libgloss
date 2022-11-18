@@ -115,20 +115,69 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     );
   }
 
-  Container _image(String? image) {
-    return image == null
-        ? Container(
-            child: Image.asset(
+  Widget _textField(
+    String text, 
+    Color color, 
+    double size, 
+    FontWeight weight,
+    TextAlign align, 
+    TextEditingController controller) 
+  {
+    return TextField(
+      controller: controller, //user[0]['zipCode'] == null ? _zpController : _zpController = TextEditingController(text: user[0]['zipCode']),
+      textAlign: align,
+      style: TextStyle(
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+      ),
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: text,
+      ),
+    );
+  }
+
+  Widget _image(String? image) {
+    return GestureDetector(
+      onTap: () {
+        //TODO: Implementar agregar imágenes
+        print("HIII");
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: _secondaryColor),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            Text(
+              "Haz click para ingresar las imágenes del libro", 
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 15,
+                fontStyle: FontStyle.italic,
+                color: _secondaryColor,
+              ),
+            ),
+            Image.asset(
               'assets/images/special/green_reading_bunny.png',
             ),
-          )
-        : Container(
-            height: (MediaQuery.of(context).size.height / 2.5),
-            child: OnlineImage(
-              imageUrl: image,
-              height: 100,
-            ),
-          );
+          ],
+        ),
+      ),
+    );
   }
 
   TableRow _row(String title, String value) {
