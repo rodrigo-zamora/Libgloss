@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
@@ -154,8 +155,23 @@ class UploadBookScanner extends StatelessWidget {
                           style: TextStyle(color: _greenColor)),
                     ),
                     TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'Cancel');
+                      onPressed: () async {
+                        String phoneNumber = await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(UserAuthRepository
+                                .userInstance?.currentUser!.uid)
+                            .get()
+                            .then((value) => value.data()!['phoneNumber']);
+                        String zipCode = await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(UserAuthRepository
+                                .userInstance?.currentUser!.uid)
+                            .get()
+                            .then((value) => value.data()!['zipCode']);
+                        Navigator.popUntil(context, (route) {
+                          return route.settings.name ==
+                              LibglossRoutes.HOME_USED;
+                        });
                         Navigator.pushNamed(
                           context,
                           LibglossRoutes.USED_BOOK_ADD,
@@ -167,10 +183,8 @@ class UploadBookScanner extends StatelessWidget {
                                 .userInstance?.currentUser!.displayName,
                             "isbn": books[0]["isbn"],
                             "precio": null,
-                            "localizacion": UserAuthRepository
-                                .userInstance?.currentUser!.metadata,
-                            "contacto": UserAuthRepository
-                                .userInstance?.currentUser!.metadata,
+                            "localizacion": zipCode,
+                            "contacto": phoneNumber,
                           },
                         );
                       },
