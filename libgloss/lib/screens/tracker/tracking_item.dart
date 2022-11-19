@@ -111,7 +111,7 @@ class _TrackingItemState extends State<TrackingItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Plataforma: ${widget.item["plataforma"]}",
+                      "Plataforma: ${widget.item["store"] == "all" ? "Todas las plataformas" : widget.item["store"]}",
                       style: TextStyle(
                         fontSize: 12,
                       ),
@@ -122,7 +122,7 @@ class _TrackingItemState extends State<TrackingItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Precio deseado: \$${widget.item["precio"]}",
+                      "Precio deseado: \$${widget.item["price"]}",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 12,
@@ -134,7 +134,7 @@ class _TrackingItemState extends State<TrackingItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Tiempo: ${widget.item["tiempo"]}",
+                      "Tiempo: ${widget.item["time"]} meses",
                       style: TextStyle(
                         fontSize: 12,
                       ),
