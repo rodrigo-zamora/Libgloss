@@ -32,6 +32,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
+          route: LibglossRoutes.HOME_USED,
         ),
       ),
       body: Container(

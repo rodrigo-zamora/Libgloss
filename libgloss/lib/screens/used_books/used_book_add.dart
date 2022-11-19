@@ -75,6 +75,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             return Semantics(
               label: 'image_picker_example_picked_image',
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.file(
                     File(
@@ -307,7 +308,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     GeoCode geoCode = GeoCode();
     try {
       Coordinates coordinates = await geoCode.forwardGeocoding(
-        address: ",$zipCode, Mexico",
+        address: "$zipCode, Mexico",
       );
 
       return await Future.value({

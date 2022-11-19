@@ -58,6 +58,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
           showCameraButton: false,
           showSearchField: true,
           showBackButton: true,
+          route: LibglossRoutes.HOME_NEW,
         ),
       ),
       drawer: SideMenu(

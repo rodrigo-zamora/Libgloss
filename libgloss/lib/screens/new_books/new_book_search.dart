@@ -36,6 +36,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
           showCameraButton: true,
           showSearchField: true,
           showBackButton: true,
+          route: LibglossRoutes.HOME_NEW,
         ),
       ),
       drawer: SideMenu(

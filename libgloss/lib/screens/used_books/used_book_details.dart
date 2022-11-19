@@ -16,8 +16,10 @@ class UsedBookDetails extends StatefulWidget {
 }
 
 class _UsedBookDetailsState extends State<UsedBookDetails> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
   final Color _defaultColor = ColorSelector.getBlack();
@@ -34,6 +36,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
+          route: LibglossRoutes.HOME_USED,
         ),
       ),
       drawer: SideMenu(
@@ -56,8 +59,8 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
-                TextAlign.center),
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
+                FontWeight.normal, TextAlign.center),
             SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -152,8 +155,8 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
               ],
             ),
           ),
-          
-          Image.network('https://www.mapsofindia.com/images2/india-map-2019.jpg'),
+          Image.network(
+              'https://www.mapsofindia.com/images2/india-map-2019.jpg'),
         ],
       ),
     );
@@ -179,15 +182,13 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
           'assets/images/special/not_found.png',
         ),
       );
-    }
-    else {
+    } else {
       return Container(
-        height: (MediaQuery.of(context).size.height / 2.5),
-        child: OnlineImage(
-          imageUrl: image,
-          height: 100,
-        )
-      );
+          height: (MediaQuery.of(context).size.height / 2.5),
+          child: OnlineImage(
+            imageUrl: image,
+            height: 100,
+          ));
     }
   }
 

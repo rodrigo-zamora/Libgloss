@@ -18,8 +18,10 @@ class UsedBookSearch extends StatefulWidget {
 }
 
 class _UsedBookSearchState extends State<UsedBookSearch> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
 
@@ -102,6 +104,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
+          route: LibglossRoutes.HOME_USED,
         ),
       ),
       drawer: SideMenu(

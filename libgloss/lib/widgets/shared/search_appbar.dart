@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/main.dart';
 
 import '../../blocs/search/bloc/search_bloc.dart';
 
@@ -16,6 +17,7 @@ class SearchAppBar extends StatelessWidget {
     required bool showSearchField,
     bool showBackButton = true,
     String? title,
+    String? route,
   })  : _primaryColor = primaryColor,
         _secondaryColor = secondaryColor,
         _showMenuButton = showMenuButton,
@@ -24,6 +26,7 @@ class SearchAppBar extends StatelessWidget {
         _textFieldController = TextEditingController(),
         _title = title,
         _backButton = showBackButton,
+        _route = route,
         super(key: key);
 
   final TextEditingController _textFieldController;
@@ -34,6 +37,7 @@ class SearchAppBar extends StatelessWidget {
   final bool _showSearchField;
   final bool _backButton;
   final String? _title;
+  final String? _route;
 
   @override
   Widget build(BuildContext context) {
@@ -132,16 +136,24 @@ class SearchAppBar extends StatelessWidget {
           // TODO: Add filters to search
           Map<String, dynamic> filters = {};
 
-          if (kDebugMode)
+          if (kDebugMode) {
             print(
-                "\u001b[32m[SearchAppBar] Current screen is ${LibglossRoutes.CURRENT_ROUTE}");
-          if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME) {
+                "\u001b[32m[SearchAppBar] Received route: ${_route}\u001b[0m");
+            print(
+                "\u001b[32m[SearchAppBar] Search query is ${_textFieldController.text}");
+            print("\u001b[32m[SearchAppBar] Filters are ${filters.toString()}");
+            print(
+                "\u001b[32m[SearchAppBar] Current page is ${ModalRoute.of(context)?.settings.name}");
+          }
+          if (_route == LibglossRoutes.HOME_NEW) {
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_NEW,
               arguments: filters,
             );
           }
+
+          print(_route == LibglossRoutes.HOME);
           if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME_USED) {
             Navigator.pushNamed(
               context,

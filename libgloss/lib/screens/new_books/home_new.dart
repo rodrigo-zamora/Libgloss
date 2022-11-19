@@ -36,6 +36,7 @@ class _HomeNewState extends State<HomeNew> {
           showMenuButton: true,
           showCameraButton: true,
           showSearchField: true,
+          route: LibglossRoutes.HOME_NEW,
         ),
       ),
       drawer: SideMenu(
@@ -175,42 +176,37 @@ class _HomeNewState extends State<HomeNew> {
   }
 
   Widget _gender(BuildContext context, List<dynamic> books, int index) {
-    if (books[index]["categories"].length != 0){
+    if (books[index]["categories"].length != 0) {
       return SizedBox(
-        child: Stack(
-          fit: StackFit.expand, 
-          clipBehavior: Clip.none, 
-          children: [
-            _card(context, books, index),
-            Positioned(
-              left: MediaQuery.of(context).size.height * 0.01,
-              top: MediaQuery.of(context).size.height * 0.01,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.04,
-                width: MediaQuery.of(context).size.height * 0.09,
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: _secondaryColor,
-                  ),
-                  child: Text(
-                    "${books[index]["categories"][0]}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
-                  ),
+          child:
+              Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
+        _card(context, books, index),
+        Positioned(
+          left: MediaQuery.of(context).size.height * 0.01,
+          top: MediaQuery.of(context).size.height * 0.01,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.04,
+            width: MediaQuery.of(context).size.height * 0.09,
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                color: _secondaryColor,
+              ),
+              child: Text(
+                "${books[index]["categories"][0]}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
                 ),
               ),
             ),
-          ]
-        )
-      );
-    }
-    else {
+          ),
+        ),
+      ]));
+    } else {
       return _card(context, books, index);
     }
   }
@@ -241,13 +237,11 @@ class _HomeNewState extends State<HomeNew> {
               );
             },
             child: Container(
-              height:
-                  (MediaQuery.of(context).size.height / 5.5),
+              height: (MediaQuery.of(context).size.height / 5.5),
               child: OnlineImage(
                 imageUrl: books[index]["thumbnail"] ??
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
-                height: MediaQuery.of(context).size.height /
-                    2.5, //100
+                height: MediaQuery.of(context).size.height / 2.5, //100
               ),
             ),
           ),
