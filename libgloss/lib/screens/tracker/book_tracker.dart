@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../blocs/tracking/bloc/tracking_bloc.dart';
 import '../../config/colors.dart';
 import '../../repositories/auth/user_auth_repository.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -12,62 +13,25 @@ import '../../widgets/shared/side_menu.dart';
 import 'tracking_item.dart';
 import 'wish_item.dart';
 
-class BookTracker extends StatelessWidget {
+class BookTracker extends StatefulWidget {
+  BookTracker({super.key});
+
+  @override
+  State<BookTracker> createState() => _BookTrackerState();
+}
+
+class _BookTrackerState extends State<BookTracker> {
   final Color _primaryColor =
       ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+
   final Color _secondaryColor =
       ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
-  BookTracker({super.key});
   final controllerT = PageController(viewportFraction: 0.8, keepPage: true);
+
   final controllerW = PageController(viewportFraction: 0.8, keepPage: true);
-
-  final List<Map<String, String>> _listSeguimientos = [
-    {
-      "title": "Pet Sematary",
-      "author": "Stephen King",
-      "image": "https://m.media-amazon.com/images/I/713xSwL4TyL.jpg",
-      "precio": "150.00",
-      "plataforma": "cualquier plataforma",
-      "tiempo": "3 meses",
-    },
-    {
-      "title": "Loveless",
-      "author": "Alice Oseman",
-      "image": "https://m.media-amazon.com/images/I/61PpXmjK2KL.jpg",
-      "precio": "250.00",
-      "plataforma": "cualquier plataforma",
-      "tiempo": "6 meses",
-    },
-    {
-      "title": "Bloom",
-      "author": "Kevin Panetta",
-      "image": "https://m.media-amazon.com/images/I/91Sia1ZLldL.jpg",
-      "precio": "190.00",
-      "plataforma": "cualquier plataforma",
-      "tiempo": "4 meses",
-    },
-  ];
-
-  late final List<Map<String, String>> _wishList = [
-    {
-      "title": "Gone Girl",
-      "author": "Gillian Flynn",
-      "image": "https://m.media-amazon.com/images/I/81g5ooiHAXL.jpg",
-    },
-    {
-      "title": "The Girl from the Sea",
-      "author": "Molly Knox Ostertag",
-      "image": "https://m.media-amazon.com/images/I/71Dnpq3Tt-L.jpg",
-    },
-    {
-      "title": "The Lord of the Rings",
-      "author": "J.R.R. Tolkien",
-      "image":
-          "https://m.media-amazon.com/images/I/51kfFS5-fnL._SX332_BO1,204,203,200_.jpg",
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +104,26 @@ class BookTracker extends StatelessWidget {
             }
           }
 
-          return Center(
-            child: CircularProgressIndicator(),
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(80),
+              child: SearchAppBar(
+                primaryColor: _primaryColor,
+                secondaryColor: _secondaryColor,
+                showMenuButton: true,
+                showCameraButton: false,
+                showSearchField: true,
+              ),
+            ),
+            drawer: SideMenu(
+              sideMenuColor: _primaryColor,
+            ),
+            body: Center(
+              child: CircularProgressIndicator(
+                color: _secondaryColor,
+              ),
+            ),
           );
         },
       );
@@ -171,6 +153,7 @@ class BookTracker extends StatelessWidget {
           ),
           child: Column(
             children: [
+              _update(),
               SizedBox(
                 height: 10,
               ),
@@ -242,7 +225,8 @@ class BookTracker extends StatelessWidget {
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
                 return TrackingItem(
-                    item: _listSeguimientos[index % _listSeguimientos.length]);
+                  item: data?["tracking"][index % data["tracking"].length],
+                );
               },
             ),
           ),
@@ -251,7 +235,7 @@ class BookTracker extends StatelessWidget {
           ),
           SmoothPageIndicator(
             controller: controllerT,
-            count: _listSeguimientos.length,
+            count: data?["tracking"].length,
             effect: WormEffect(
               dotHeight: 8,
               dotWidth: 16,
@@ -313,7 +297,8 @@ class BookTracker extends StatelessWidget {
               controller: controllerW,
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
-                return WishItem(item: _wishList[index % _wishList.length]);
+                return WishItem(
+                    item: data?["wish"][index % data["wish"].length]);
               },
             ),
           ),
@@ -322,7 +307,7 @@ class BookTracker extends StatelessWidget {
           ),
           SmoothPageIndicator(
             controller: controllerW,
-            count: _wishList.length,
+            count: data?["wish"].length,
             effect: WormEffect(
               dotHeight: 8,
               dotWidth: 16,
@@ -334,5 +319,20 @@ class BookTracker extends StatelessWidget {
         ],
       );
     }
+  }
+
+  BlocConsumer<TrackingBloc, TrackingState> _update() {
+    print("UPDATING TRACKING");
+    return BlocConsumer(
+      builder: (context, state) {
+        return Container();
+      },
+      listener: (context, state) {
+        if (state is TrackingUpdated) {
+          print("UPDATING");
+          setState(() {});
+        }
+      },
+    );
   }
 }
