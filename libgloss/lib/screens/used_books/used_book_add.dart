@@ -257,33 +257,39 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _text("Precio", _defaultColor, 15.0, FontWeight.normal,
-                        TextAlign.center),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Favor de ingresar el precio",
-                      ),
-                      controller: _controller,
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                    )
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Column(
+                    children: [
+                      _text("Precio", _defaultColor, 15.0, FontWeight.normal,
+                          TextAlign.center),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: "Precio",
+                        ),
+                        textAlign: TextAlign.center,
+                        controller: _controller,
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                      )
+                    ],
+                  ),
                 ),
                 VerticalDivider(
                   color: _secondaryColor,
                   thickness: 1,
                 ),
-                Column(
-                  children: [
-                    _text("Contacto", _defaultColor, 15.0, FontWeight.normal,
-                        TextAlign.center),
-                    _text("${_args["contacto"]}", _greenColor, 15.0,
-                        FontWeight.normal, TextAlign.center),
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _text("Contacto", _defaultColor, 15.0, FontWeight.normal,
+                          TextAlign.center),
+                      _text("${_args["contacto"]}", _greenColor, 15.0,
+                          FontWeight.normal, TextAlign.center),
+                    ],
+                  ),
                 ),
               ],
             ),
