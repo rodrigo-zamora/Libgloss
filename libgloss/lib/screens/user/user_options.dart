@@ -49,7 +49,6 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  // TODO: Add a loading screen for the user options
   Widget _loadingUserOptions() {
     return Scaffold(
       resizeToAvoidBottomInset: false,

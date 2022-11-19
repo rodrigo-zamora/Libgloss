@@ -46,5 +46,6 @@ app.*.map.json
 # Firebase
 google-services.json
 
-# Env files
+# Secret files
 .env
+secrets.xml

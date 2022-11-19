@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:geocode/geocode.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -294,11 +296,72 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               ],
             ),
           ),
-          
-          Image.network('https://www.mapsofindia.com/images2/india-map-2019.jpg'),
+          FutureBuilder(
+            future: _getLocalizacion(_args["localizacion"]),
+            builder: (context, snapshot) {
+              print("CONNECTION STATE: ${snapshot.connectionState}");
+              if (snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done) {
+                Completer<GoogleMapController> _controller = Completer();
+
+                final CameraPosition _kGooglePlex = CameraPosition(
+                  target: LatLng(
+                      snapshot.data!["latitude"], snapshot.data!["longitude"]),
+                  zoom: 11.5,
+                );
+                return Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: GoogleMap(
+                    mapType: MapType.normal,
+                    initialCameraPosition: _kGooglePlex,
+                    onMapCreated: (GoogleMapController controller) {
+                      controller.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          _kGooglePlex,
+                        ),
+                      );
+                      _controller.complete(controller);
+                    },
+                  ),
+                );
+              } else {
+                return Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: _secondaryColor,
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
+  }
+
+  Future<Map> _getLocalizacion(String zipCode) async {
+    double _latitude = 0.0;
+    double _longitude = 0.0;
+
+    GeoCode geoCode = GeoCode();
+    try {
+      Coordinates coordinates = await geoCode.forwardGeocoding(
+        address: ",$zipCode, Mexico",
+      );
+
+      return await Future.value({
+        "latitude": coordinates.latitude,
+        "longitude": coordinates.longitude,
+      });
+    } catch (e) {
+      print(e);
+      return {
+        "latitude": _latitude,
+        "longitude": _longitude,
+      };
+    }
   }
 
   Text _text(String text, Color color, double size, FontWeight weight,
@@ -314,16 +377,11 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     );
   }
 
-  Widget _textField(
-    String text, 
-    Color color, 
-    double size, 
-    FontWeight weight,
-    TextAlign align, 
-    TextEditingController controller) 
-  {
+  Widget _textField(String text, Color color, double size, FontWeight weight,
+      TextAlign align, TextEditingController controller) {
     return TextField(
-      controller: controller, //user[0]['zipCode'] == null ? _zpController : _zpController = TextEditingController(text: user[0]['zipCode']),
+      controller:
+          controller, //user[0]['zipCode'] == null ? _zpController : _zpController = TextEditingController(text: user[0]['zipCode']),
       textAlign: align,
       style: TextStyle(
         fontSize: size,
@@ -361,7 +419,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
           children: [
             SizedBox(height: 20),
             Text(
-              "Haz click para ingresar las imágenes del libro", 
+              "Haz click para ingresar las imágenes del libro",
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               style: TextStyle(
