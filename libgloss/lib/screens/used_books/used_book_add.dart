@@ -46,25 +46,17 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   final TextEditingController maxHeightController = TextEditingController();
   final TextEditingController qualityController = TextEditingController();
 
-  Future<void> _onImageButtonPressed(ImageSource source,
-      {BuildContext? context}) async {
-    await _displayPickImageDialog(context!,
-        (double? maxWidth, double? maxHeight, int? quality) async {
-      try {
-        final List<XFile> pickedFileList = await _picker.pickMultiImage(
-          maxWidth: maxWidth,
-          maxHeight: maxHeight,
-          imageQuality: quality,
-        );
-        setState(() {
-          _imageFileList = pickedFileList;
-        });
-      } catch (e) {
-        setState(() {
-          _pickImageError = e;
-        });
-      }
-    });
+  Future<void> _onImageButtonPressed(BuildContext? context) async {
+    try {
+      final List<XFile> pickedFileList = await _picker.pickMultiImage();
+      setState(() {
+        _imageFileList = pickedFileList;
+      });
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
   }
 
   Widget _previewImages() {
@@ -72,17 +64,29 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     if (retrieveError != null) {
       return retrieveError;
     }
+    // TODO: Fix image preview
     if (_imageFileList != null) {
       return Semantics(
         label: 'image_picker_example_picked_images',
         child: ListView.builder(
+          scrollDirection: Axis.horizontal,
           key: UniqueKey(),
           itemBuilder: (BuildContext context, int index) {
-            // Why network for web?
-            // See https://pub.dev/packages/image_picker#getting-ready-for-the-web-platform
             return Semantics(
               label: 'image_picker_example_picked_image',
-              child: Image.file(File(_imageFileList![index].path)),
+              child: Row(
+                children: [
+                  Image.file(
+                    File(
+                      _imageFileList![index].path,
+                    ),
+                    fit: BoxFit.fill,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
             );
           },
           itemCount: _imageFileList!.length,
@@ -94,9 +98,22 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         textAlign: TextAlign.center,
       );
     } else {
-      return const Text(
-        'You have not yet picked an image.',
-        textAlign: TextAlign.center,
+      return Column(
+        children: [
+          Text(
+            "Haz click para agregar las imágenes del libro",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(
+              fontSize: 15,
+              fontStyle: FontStyle.italic,
+              color: _secondaryColor,
+            ),
+          ),
+          Image.asset(
+            'assets/images/special/green_reading_bunny.png',
+          ),
+        ],
       );
     }
   }
@@ -108,64 +125,6 @@ class _UsedBookAddState extends State<UsedBookAdd> {
       return result;
     }
     return null;
-  }
-
-  Future<void> _displayPickImageDialog(
-      BuildContext context, OnPickImageCallback onPick) async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Add optional parameters'),
-            content: Column(
-              children: <Widget>[
-                TextField(
-                  controller: maxWidthController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                      hintText: 'Enter maxWidth if desired'),
-                ),
-                TextField(
-                  controller: maxHeightController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                      hintText: 'Enter maxHeight if desired'),
-                ),
-                TextField(
-                  controller: qualityController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter quality if desired'),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                  child: const Text('PICK'),
-                  onPressed: () {
-                    final double? width = maxWidthController.text.isNotEmpty
-                        ? double.parse(maxWidthController.text)
-                        : null;
-                    final double? height = maxHeightController.text.isNotEmpty
-                        ? double.parse(maxHeightController.text)
-                        : null;
-                    final int? quality = qualityController.text.isNotEmpty
-                        ? int.parse(qualityController.text)
-                        : null;
-                    onPick(width, height, quality);
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          );
-        });
   }
 
   Widget build(BuildContext context) {
@@ -399,7 +358,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     return GestureDetector(
       onTap: () {
         //TODO: Implementar agregar imágenes
-        print("HIII");
+        _onImageButtonPressed(context);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -418,18 +377,10 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         child: Column(
           children: [
             SizedBox(height: 20),
-            Text(
-              "Haz click para ingresar las imágenes del libro",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 15,
-                fontStyle: FontStyle.italic,
-                color: _secondaryColor,
-              ),
-            ),
-            Image.asset(
-              'assets/images/special/green_reading_bunny.png',
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: _previewImages(),
             ),
           ],
         ),
