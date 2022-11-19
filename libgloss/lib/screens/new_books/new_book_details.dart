@@ -32,6 +32,10 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   final Color _defaultColor = ColorSelector.getBlack();
   final Color _greyColor = ColorSelector.getGrey();
 
+  final TextEditingController _priceController = TextEditingController();
+  int _monthsTracking = 0;
+  String _storeTracking = '';
+
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
@@ -100,7 +104,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                _tracking(context);
+                _tracking(context, _args);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -283,9 +287,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Future<dynamic> _tracking(BuildContext context) {
+  Future<dynamic> _tracking(BuildContext _context, Map<String, dynamic> _args) {
     return showDialog(
-      context: context,
+      context: _context,
       builder: (context) {
         return AlertDialog(
           title: Text("Seguimiento del libro"),
@@ -301,6 +305,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: _priceController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: "Precio",
@@ -329,7 +334,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                           value: "el_sotano",
                         ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        _storeTracking = value!;
+                      },
                       decoration: InputDecoration(
                         labelText: "Tienda",
                       ),
@@ -353,7 +360,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                           value: 12,
                         ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        _monthsTracking = value!;
+                      },
                       decoration: InputDecoration(
                         labelText: "Tiempo",
                       ),
@@ -371,8 +380,95 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               child: Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
+
+                var isLoggedIn =
+                    (await UserAuthRepository().getInstance().currentUser);
+                print("[TrackingList] Adding book to wish list");
+                print("[TrackingList] User uid: $isLoggedIn");
+
+                if (isLoggedIn == null) {
+                  print("[TrackingList] User not logged in");
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text("Debes iniciar sesión para agregar "
+                            "libros a tu lista de seguimiento"),
+                      ),
+                    );
+                } else {
+                  print("[TrackingList] User logged in");
+                  String uid = isLoggedIn.uid;
+                  print("[TrackingList] User uid: $uid");
+
+                  print(
+                      "[TrackingList] Adding book to wish list: ${_args["isbn"]}");
+
+                  print(
+                      "[TrackingList] Checking if book is already in tracking list");
+
+                  String? useruid =
+                      UserAuthRepository.userInstance?.currentUser!.uid;
+
+                  var book = await FirebaseFirestore.instance
+                      .collection("lists")
+                      .where("useruid", isEqualTo: useruid)
+                      .get();
+                  List<DocumentSnapshot> booksList = book.docs;
+
+                  List<dynamic> books = booksList[0]["tracking"];
+                  print("[TrackingList] Books in tracking list: $books");
+
+                  bool isAlreadyInList = false;
+                  for (var book in books) {
+                    if (book["isbn"] == _args["isbn"]) {
+                      isAlreadyInList = true;
+                      print("[TrackingList] Book is already in tracking list");
+                      break;
+                    }
+                  }
+
+                  if (!isAlreadyInList) {
+                    print("[TrackingList] Adding book to tracking list");
+                    await FirebaseFirestore.instance
+                        .collection("lists")
+                        .doc(booksList[0].id)
+                        .update({
+                      "tracking": FieldValue.arrayUnion([
+                        {
+                          "isbn": _args["isbn"],
+                          "title": _args["title"],
+                          "authors": _args["authors"],
+                          "price": int.parse(_priceController.text),
+                          "time": _monthsTracking,
+                          "thumbnail": _args["thumbnail"],
+                          "store": _storeTracking,
+                        }
+                      ])
+                    });
+                    print("[TrackingList] Book added to tracking list");
+                    ScaffoldMessenger.of(_context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Libro agregado a tu lista de seguimiento"),
+                        ),
+                      );
+                  } else {
+                    print("[TrackingList] Book is already in tracking list");
+                    ScaffoldMessenger.of(_context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text("El libro ya se encuentra en tu lista "
+                              "de seguimiento"),
+                        ),
+                      );
+                  }
+                }
               },
               child: Text("Agregar"),
             )
