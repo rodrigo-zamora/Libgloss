@@ -463,6 +463,7 @@ class _HomeUsedState extends State<HomeUsed> {
                               SnackBar(content: Text('Processing Data')),
                             );
                           }
+                          //TODO: Arreglar el código para que sí mande la info del bloc
                           _getBookDetails(_isbnController.text);
                         },
                         child: Text('Continuar', style: TextStyle(color: _greenColor)),

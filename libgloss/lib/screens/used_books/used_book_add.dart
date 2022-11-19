@@ -85,19 +85,69 @@ class _UsedBookAddState extends State<UsedBookAdd> {
                 thickness: 0.5,
               ),
             ),
-            Container(
-              child: Table(
-                children: [
-                  _row("Precio:", "\$${_args["precio"]}"),
-                  _row("Localización:", "${_args["localizacion"]}"),
-                  _row("Contacto:", "${_args["contacto"]}"),
-                ],
-              ),
-            ),
+            _table(_args),
             SizedBox(height: 20.0),
             _buttonSeller(context, _args),
           ],
         ),
+      ),
+    );
+  }
+
+  Container _table(Map<String, dynamic> _args) {
+    TextEditingController _controller = TextEditingController();
+    return Container(
+      /* child: Table(
+        children: [
+          _row("Precio:", "\$${_args["precio"]}"),
+          _row("Localización:", "${_args["localizacion"]}"),
+          _row("Contacto:", "${_args["contacto"]}"),
+        ],
+      ), */
+      decoration: BoxDecoration(
+        border: Border.all(color: _secondaryColor),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    _text("Precio", _defaultColor, 15.0, FontWeight.normal,
+                        TextAlign.center),
+                    TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Favor de ingresar el precio",
+                      ),
+                      controller: _controller,
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                    )
+                  ],
+                ),
+                VerticalDivider(
+                  color: _secondaryColor,
+                  thickness: 1,
+                ),
+                Column(
+                  children: [
+                    _text("Contacto", _defaultColor, 15.0, FontWeight.normal,
+                        TextAlign.center),
+                    _text("${_args["contacto"]}", _greenColor, 15.0,
+                        FontWeight.normal, TextAlign.center),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          
+          Image.network('https://www.mapsofindia.com/images2/india-map-2019.jpg'),
+        ],
       ),
     );
   }
@@ -151,10 +201,10 @@ class _UsedBookAddState extends State<UsedBookAdd> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
+              color: Colors.grey.withOpacity(0.6),
+              spreadRadius: 7,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: Offset(1, 5), // changes position of shadow
             ),
           ],
         ),
