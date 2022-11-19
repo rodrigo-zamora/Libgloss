@@ -50,9 +50,11 @@ class _BookTrackerState extends State<BookTracker> {
           child: SearchAppBar(
             primaryColor: _primaryColor,
             secondaryColor: _secondaryColor,
-            showMenuButton: true,
+            showMenuButton: false,
             showCameraButton: false,
-            showSearchField: true,
+            showSearchField: false,
+            showBackButton: false,
+            title: 'Mis listas',
           ),
         ),
         drawer: SideMenu(
@@ -111,9 +113,11 @@ class _BookTrackerState extends State<BookTracker> {
               child: SearchAppBar(
                 primaryColor: _primaryColor,
                 secondaryColor: _secondaryColor,
-                showMenuButton: true,
+                showMenuButton: false,
                 showCameraButton: false,
-                showSearchField: true,
+                showSearchField: false,
+                showBackButton: false,
+                title: 'Mis listas',
               ),
             ),
             drawer: SideMenu(
@@ -138,9 +142,11 @@ class _BookTrackerState extends State<BookTracker> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          showMenuButton: true,
+          showMenuButton: false,
           showCameraButton: false,
-          showSearchField: true,
+          showSearchField: false,
+          showBackButton: false,
+          title: 'Mis listas',
         ),
       ),
       drawer: SideMenu(

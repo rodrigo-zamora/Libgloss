@@ -51,8 +51,25 @@ class _UserOptionsState extends State<UserOptions> {
 
   // TODO: Add a loading screen for the user options
   Widget _loadingUserOptions() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SearchAppBar(
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: false,
+          showCameraButton: false,
+          showSearchField: false,
+          showBackButton: false,
+          title: 'Mi perfil',
+        ),
+      ),
+      body: Center(
+        child: CircularProgressIndicator(
+          color: _secondaryColor,
+        ),
+      ),
     );
   }
 
@@ -64,9 +81,11 @@ class _UserOptionsState extends State<UserOptions> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          showMenuButton: true,
+          showMenuButton: false,
           showCameraButton: false,
-          showSearchField: true,
+          showSearchField: false,
+          showBackButton: false,
+          title: 'Mi perfil',
         ),
       ),
       body: //Container(
@@ -238,13 +257,18 @@ class _UserOptionsState extends State<UserOptions> {
               MaterialStateColor.resolveWith((states) => _tertiaryColor),
         ),
         onPressed: () {
-          if(!isSeller)
-            _showSellerDialog(FirebaseFirestore.instance.collection('users').where('id', isEqualTo: UserAuthRepository().getuid()).get(), isSeller);
+          if (!isSeller)
+            _showSellerDialog(
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .where('id', isEqualTo: UserAuthRepository().getuid())
+                    .get(),
+                isSeller);
           else {
             FirebaseFirestore.instance
-              .collection('users')
-              .doc(UserAuthRepository().getuid())
-              .update({'isSeller': !isSeller});
+                .collection('users')
+                .doc(UserAuthRepository().getuid())
+                .update({'isSeller': !isSeller});
             Navigator.pushNamedAndRemoveUntil(
                 context, LibglossRoutes.HOME, (route) => false);
             ScaffoldMessenger.of(context)
@@ -412,13 +436,16 @@ class _UserOptionsState extends State<UserOptions> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Debes ingresar tu teléfono", 
+                    "Debes ingresar tu teléfono",
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),
                   ),
                   TextField(
-                    controller: user[0]['phoneNumber'] == null ? _phoneController : _phoneController = TextEditingController(text: user[0]['phoneNumber']),
+                    controller: user[0]['phoneNumber'] == null
+                        ? _phoneController
+                        : _phoneController =
+                            TextEditingController(text: user[0]['phoneNumber']),
                     keyboardType: TextInputType.number,
                     maxLength: 10,
                     decoration: InputDecoration(
@@ -433,13 +460,16 @@ class _UserOptionsState extends State<UserOptions> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Debes ingresar tu código postal", 
+                    "Debes ingresar tu código postal",
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),
                   ),
                   TextField(
-                    controller: user[0]['zipCode'] == null ? _zpController : _zpController = TextEditingController(text: user[0]['zipCode']),
+                    controller: user[0]['zipCode'] == null
+                        ? _zpController
+                        : _zpController =
+                            TextEditingController(text: user[0]['zipCode']),
                     keyboardType: TextInputType.number,
                     maxLength: 5,
                     decoration: InputDecoration(
@@ -466,8 +496,8 @@ class _UserOptionsState extends State<UserOptions> {
                         .collection('users')
                         .doc(user[0].id)
                         .update({
-                          'phoneNumber': _phoneController.text,
-                        });
+                      'phoneNumber': _phoneController.text,
+                    });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -475,15 +505,15 @@ class _UserOptionsState extends State<UserOptions> {
                       ),
                     );
                   }
-                }   
+                }
                 if (user[0]['zipCode'] == null) {
                   if (_zpController.text.length == 5) {
                     FirebaseFirestore.instance
                         .collection('users')
                         .doc(user[0].id)
                         .update({
-                          'zipCode': _zpController.text,
-                        });
+                      'zipCode': _zpController.text,
+                    });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -491,13 +521,14 @@ class _UserOptionsState extends State<UserOptions> {
                       ),
                     );
                   }
-                }   
-                if (_zpController.text.length == 5 && _phoneController.text.length == 10) {
+                }
+                if (_zpController.text.length == 5 &&
+                    _phoneController.text.length == 10) {
                   FirebaseFirestore.instance
-                    .collection('users')
-                    //.doc(UserAuthRepository().getuid())
-                    .doc(user[0].id)
-                    .update({'isSeller': !isSeller});
+                      .collection('users')
+                      //.doc(UserAuthRepository().getuid())
+                      .doc(user[0].id)
+                      .update({'isSeller': !isSeller});
                   Navigator.pushNamedAndRemoveUntil(
                       context, LibglossRoutes.HOME, (route) => false);
                   ScaffoldMessenger.of(context)
@@ -505,7 +536,9 @@ class _UserOptionsState extends State<UserOptions> {
                     ..showSnackBar(
                       SnackBar(
                         content: Text(
-                          isSeller ? "Ya no eres vendedor" : "Ahora eres vendedor",
+                          isSeller
+                              ? "Ya no eres vendedor"
+                              : "Ahora eres vendedor",
                         ),
                       ),
                     );
