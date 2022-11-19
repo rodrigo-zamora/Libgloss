@@ -109,6 +109,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_USED,
       ),
       body: _searchBook(context),
     );

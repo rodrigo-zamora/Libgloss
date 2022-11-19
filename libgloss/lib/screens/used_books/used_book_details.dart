@@ -41,6 +41,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_USED,
       ),
       body: _main(context, _args),
     );

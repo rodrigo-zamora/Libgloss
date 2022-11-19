@@ -63,6 +63,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_NEW,
       ),
       body: _main(context, _args),
     );

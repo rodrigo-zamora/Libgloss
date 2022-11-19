@@ -160,6 +160,7 @@ class _HomeUsedState extends State<HomeUsed> {
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_USED,
       ),
       body: _add(context, data),
     );

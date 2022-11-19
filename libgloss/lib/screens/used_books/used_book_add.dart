@@ -358,7 +358,6 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   Widget _image(String? image) {
     return GestureDetector(
       onTap: () {
-        //TODO: Implementar agregar imágenes
         _onImageButtonPressed(context);
       },
       child: Container(

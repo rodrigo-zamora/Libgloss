@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/main.dart';
 
 import '../../blocs/search/bloc/search_bloc.dart';
 

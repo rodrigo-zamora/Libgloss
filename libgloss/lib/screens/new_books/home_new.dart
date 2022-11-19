@@ -41,6 +41,7 @@ class _HomeNewState extends State<HomeNew> {
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_NEW,
       ),
       body: _getBooks(context),
     );

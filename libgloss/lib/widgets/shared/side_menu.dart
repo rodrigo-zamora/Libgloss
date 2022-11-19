@@ -9,10 +9,13 @@ class SideMenu extends StatefulWidget {
   SideMenu({
     Key? key,
     required Color sideMenuColor,
+    String? route,
   })  : _sideMenuColor = sideMenuColor,
+        _route = route,
         super(key: key);
 
   final Color _sideMenuColor;
+  final String? _route;
 
   @override
   State<SideMenu> createState() => _SideMenuState();
@@ -64,7 +67,7 @@ class _SideMenuState extends State<SideMenu> {
       ],
     },
   };
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -159,12 +162,11 @@ class _SideMenuState extends State<SideMenu> {
         if (kDebugMode) {
           print("\u001b[32m[SideMenu] Searching with filter: " +
               filters.toString());
-          print("\u001b[32m[SideMenu] Current route: " +
-              LibglossRoutes.CURRENT_ROUTE);
+          print("\u001b[32m[SideMenu] Current route: " + widget._route!);
         }
         Navigator.pop(context);
-        switch (LibglossRoutes.CURRENT_ROUTE) {
-          case LibglossRoutes.HOME:
+        switch (widget._route) {
+          case LibglossRoutes.HOME_NEW:
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_NEW,

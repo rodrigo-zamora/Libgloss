@@ -41,6 +41,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_NEW,
       ),
       body: _searchBook(context),
     );
