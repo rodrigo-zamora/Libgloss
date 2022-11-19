@@ -83,7 +83,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                 thickness: 0.5,
               ),
             ),
-            Container(
+            /* Container(
               child: Table(
                 children: [
                   _row("precio:", "\$${_args["precio"]}"),
@@ -91,11 +91,70 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                   _row("contacto:", "${_args["contacto"]}"),
                 ],
               ),
-            ),
+            ), */
+            _table(_args),
             SizedBox(height: 20.0),
             _buttonSeller(context, _args),
           ],
         ),
+      ),
+    );
+  }
+
+  Container _table(Map<String, dynamic> _args) {
+    TextEditingController _controller = TextEditingController();
+    return Container(
+      /* child: Table(
+        children: [
+          _row("Precio:", "\$${_args["precio"]}"),
+          _row("Localización:", "${_args["localizacion"]}"),
+          _row("Contacto:", "${_args["contacto"]}"),
+        ],
+      ), */
+      decoration: BoxDecoration(
+        border: Border.all(color: _secondaryColor),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Column(
+                    children: [
+                      _text("Precio", _defaultColor, 15.0, FontWeight.normal,
+                          TextAlign.center),
+                      _text("\$${_args["precio"]}", _greenColor, 15.0,
+                          FontWeight.normal, TextAlign.center),
+                    ],
+                  ),
+                ),
+                VerticalDivider(
+                  color: _secondaryColor,
+                  thickness: 1,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _text("Contacto", _defaultColor, 15.0, FontWeight.normal,
+                          TextAlign.center),
+                      _text("${_args["contacto"]}", _greenColor, 15.0,
+                          FontWeight.normal, TextAlign.center),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          Image.network('https://www.mapsofindia.com/images2/india-map-2019.jpg'),
+        ],
       ),
     );
   }
