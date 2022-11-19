@@ -6,6 +6,7 @@ import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 
 import '../blocs/bookPrice/bloc/book_price_bloc.dart';
 import '../blocs/search/bloc/search_bloc.dart';
+import '../blocs/tracking/bloc/tracking_bloc.dart';
 
 class BlocSettings {
   static Widget getBlocProviders(Widget app) {
@@ -14,17 +15,20 @@ class BlocSettings {
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc()..add(VerifyAuthEvent()),
         ),
-        BlocProvider(
+        BlocProvider<SearchBloc>(
           create: (context) => SearchBloc(),
         ),
-        BlocProvider(
+        BlocProvider<BooksBloc>(
           create: (context) => BooksBloc(),
         ),
-        BlocProvider(
+        BlocProvider<BookPriceBloc>(
           create: (context) => BookPriceBloc(),
         ),
-        BlocProvider(
+        BlocProvider<BookIsbnBloc>(
           create: (context) => BookIsbnBloc(),
+        ),
+        BlocProvider<TrackingBloc>(
+          create: (context) => TrackingBloc(),
         ),
       ],
       child: app,

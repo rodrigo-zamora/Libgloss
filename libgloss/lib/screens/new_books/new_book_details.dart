@@ -8,6 +8,7 @@ import 'package:libgloss/widgets/shared/online_image.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../blocs/tracking/bloc/tracking_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -457,6 +458,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                               Text("Libro agregado a tu lista de seguimiento"),
                         ),
                       );
+                    BlocProvider.of<TrackingBloc>(_context)
+                        .add(UpdateTracking());
                   } else {
                     print("[TrackingList] Book is already in tracking list");
                     ScaffoldMessenger.of(_context)
@@ -569,6 +572,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                                   Text("Libro agregado a tu lista de deseos"),
                             ),
                           );
+                        BlocProvider.of<TrackingBloc>(_context)
+                            .add(UpdateTracking());
                       }).catchError((error) {
                         print("[WishList] Error adding book to wish list");
                         print("[WishList] Error: $error");
