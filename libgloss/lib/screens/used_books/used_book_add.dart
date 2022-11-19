@@ -258,6 +258,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     _text("Precio", _defaultColor, 15.0, FontWeight.normal,
                         TextAlign.center),
