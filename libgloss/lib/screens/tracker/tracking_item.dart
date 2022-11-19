@@ -5,7 +5,7 @@ import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
 
 class TrackingItem extends StatefulWidget {
-  final Map<String, String> item;
+  final Map<String, dynamic> item;
 
   const TrackingItem({super.key, required this.item});
 
@@ -47,7 +47,7 @@ class _TrackingItemState extends State<TrackingItem> {
                           width: 100,
                           height: 150,
                           child: OnlineImage(
-                            imageUrl: widget.item["image"]!,
+                            imageUrl: widget.item["thumbnail"]!,
                             height: 100,
                           ),
                         ),
@@ -70,7 +70,7 @@ class _TrackingItemState extends State<TrackingItem> {
                                 ),
                               ),
                               Text(
-                                widget.item["author"]!,
+                                widget.item["authors"].toString(),
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

@@ -5,7 +5,7 @@ import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
 
 class WishItem extends StatefulWidget {
-  final Map<String, String> item;
+  final Map<String, dynamic> item;
 
   const WishItem({super.key, required this.item});
 
@@ -44,7 +44,7 @@ class _WishItemState extends State<WishItem> {
                     width: 100,
                     height: 150,
                     child: OnlineImage(
-                      imageUrl: widget.item["image"]!,
+                      imageUrl: widget.item["thumbnail"]!,
                       height: 100,
                     ),
                   ),
@@ -71,7 +71,7 @@ class _WishItemState extends State<WishItem> {
                           ],
                         ),
                         Text(
-                          widget.item["author"]!,
+                          widget.item["authors"].toString(),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(

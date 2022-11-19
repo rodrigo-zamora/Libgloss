@@ -242,7 +242,8 @@ class BookTracker extends StatelessWidget {
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
                 return TrackingItem(
-                    item: _listSeguimientos[index % _listSeguimientos.length]);
+                  item: data?["tracking"][index],
+                );
               },
             ),
           ),
@@ -313,7 +314,8 @@ class BookTracker extends StatelessWidget {
               controller: controllerW,
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
-                return WishItem(item: _wishList[index % _wishList.length]);
+                return WishItem(
+                    item: data?["wish"][index % data["wish"].length]);
               },
             ),
           ),
