@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -87,7 +89,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                _wish_list(context);
+                _wish_list(context, _args);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -380,9 +382,10 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Future<dynamic> _wish_list(BuildContext context) {
+  Future<dynamic> _wish_list(
+      BuildContext _context, Map<String, dynamic> _args) {
     return showDialog(
-        context: context,
+        context: _context,
         builder: (context) {
           return AlertDialog(
             title: Text("Agregar a la lista de deseos"),
@@ -399,9 +402,102 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                 child: Text("Cancelar"),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
-                  // TODO: Add to wishlist using bloc
+                  var isLoggedIn =
+                      (await UserAuthRepository().getInstance().currentUser);
+                  print("[WishList] Adding book to wish list");
+                  print("[WishList] User uid: $isLoggedIn");
+
+                  if (isLoggedIn == null) {
+                    print("[WishList] User not logged in");
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text("Debes iniciar sesión para agregar "
+                              "libros a tu lista de deseos"),
+                        ),
+                      );
+                  } else {
+                    print("[WishList] User logged in");
+                    String uid = isLoggedIn.uid;
+                    print("[WishList] User uid: $uid");
+
+                    print(
+                        "[WishList] Adding book to wish list: ${_args["isbn"]}");
+
+                    print(
+                        "[WishList] Checking if book is already in wish list");
+                    String? useruid =
+                        UserAuthRepository.userInstance?.currentUser!.uid;
+                    var book = await FirebaseFirestore.instance
+                        .collection("lists")
+                        .where("useruid", isEqualTo: useruid)
+                        .get();
+                    List<DocumentSnapshot> bookList = book.docs;
+
+                    List<dynamic> books = bookList[0]["wish"];
+                    print("[WishList] Book list: $books");
+
+                    bool isBookInList = false;
+                    for (var book in books) {
+                      if (book["isbn"] == _args["isbn"]) {
+                        isBookInList = true;
+                        print("[WishList] Book is already in wish list");
+                        break;
+                      }
+                    }
+
+                    if (!isBookInList) {
+                      print("[WishList] Adding book to wish list");
+                      FirebaseFirestore.instance
+                          .collection("lists")
+                          .doc(bookList[0].id)
+                          .update({
+                        "wish": FieldValue.arrayUnion([
+                          {
+                            "isbn": _args["isbn"],
+                            "title": _args["title"],
+                            "authors": _args["authors"],
+                            "thumbnail": _args["thumbnail"],
+                          }
+                        ])
+                      }).then((value) {
+                        print("[WishList] Book added to wish list");
+                        ScaffoldMessenger.of(_context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text("Libro agregado a tu lista de deseos"),
+                            ),
+                          );
+                      }).catchError((error) {
+                        print("[WishList] Error adding book to wish list");
+                        print("[WishList] Error: $error");
+                        ScaffoldMessenger.of(_context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text("Error agregando libro a tu lista de "
+                                      "deseos"),
+                            ),
+                          );
+                      });
+                    } else {
+                      ScaffoldMessenger.of(_context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content:
+                                Text("El libro ya se encuentra en tu lista "
+                                    "de deseos"),
+                          ),
+                        );
+                    }
+                  }
                 },
                 child: Text("Agregar"),
               ),
