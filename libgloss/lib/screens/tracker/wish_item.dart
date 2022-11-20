@@ -40,7 +40,7 @@ class _WishItemState extends State<WishItem> {
             children: [
               Column(
                 children: [
-                  SizedBox(
+                  Container(
                     width: 100,
                     height: 150,
                     child: OnlineImage(
@@ -53,30 +53,32 @@ class _WishItemState extends State<WishItem> {
               Column(
                 children: [
                   Container(
+                    width: MediaQuery.of(context).size.width * 0.42,
                     padding: EdgeInsets.only(bottom: 12, left: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              widget.item["title"]!,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
+                        Container(
+                          child: Text(
+                            widget.item["title"]!,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontSize: 14,
                             ),
-                          ],
+                          ),
                         ),
-                        Text(
-                          widget.item["authors"].toString(),
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: _blueColor,
-                            fontSize: 12,
+                        Container(
+                          child: Text(
+                            widget.item["authors"].toString(),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: TextStyle(
+                              color: _blueColor,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ],

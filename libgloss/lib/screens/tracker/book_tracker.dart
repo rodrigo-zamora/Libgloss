@@ -225,7 +225,7 @@ class _BookTrackerState extends State<BookTracker> {
             height: 12,
           ),
           SizedBox(
-            height: 240,
+            height: MediaQuery.of(context).size.height * 0.3, // 240
             child: PageView.builder(
               controller: controllerT,
               itemBuilder: (_, index) {
@@ -298,7 +298,7 @@ class _BookTrackerState extends State<BookTracker> {
             height: 12,
           ),
           SizedBox(
-            height: 180,
+            height: MediaQuery.of(context).size.height * 0.23, // 180
             child: PageView.builder(
               controller: controllerW,
               itemBuilder: (_, index) {
