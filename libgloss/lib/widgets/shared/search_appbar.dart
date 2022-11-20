@@ -206,6 +206,7 @@ class SearchAppBar extends StatelessWidget {
                             child: FaIcon(
                               FontAwesomeIcons.magnifyingGlassPlus,
                               color: Color.fromARGB(255, 53, 53, 53),
+                              size: 20,
                             ),
                             onTap: () {
                               _showFilterDialog(context);

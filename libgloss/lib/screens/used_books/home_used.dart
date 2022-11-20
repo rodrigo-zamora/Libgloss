@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/main.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
@@ -36,7 +35,7 @@ class _HomeUsedState extends State<HomeUsed> {
       "title": "Maze Runner",
       "authors": ["James Dashner"],
       "thumbnail": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
-      "vendedor": "Ernesto Contreras",
+      "vendedor": "Rodrigo Zamora",
       "isbn": "978-6077547327",
       "precio": 100,
       "localizacion": "Guadalajara, Jalisco",
@@ -110,7 +109,6 @@ class _HomeUsedState extends State<HomeUsed> {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             Map<String, dynamic>? data =
@@ -118,7 +116,6 @@ class _HomeUsedState extends State<HomeUsed> {
             return _buildSellingPage(data);
           }
         }
-
         return _loadingPage();
       },
     );
@@ -287,7 +284,7 @@ class _HomeUsedState extends State<HomeUsed> {
             height: 5,
           ),
           Text(
-            "${_listElements[index]["author"]}",
+            "${_listElements[index]["authors"].join(', ')}",
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: TextStyle(

@@ -27,7 +27,6 @@ class _UserOptionsState extends State<UserOptions> {
   @override
   Widget build(BuildContext context) {
     CollectionReference user = FirebaseFirestore.instance.collection('users');
-
     return FutureBuilder<DocumentSnapshot>(
       future: user.doc(UserAuthRepository().getuid()).get(),
       builder:
@@ -35,7 +34,6 @@ class _UserOptionsState extends State<UserOptions> {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             Map<String, dynamic>? data =
@@ -43,7 +41,6 @@ class _UserOptionsState extends State<UserOptions> {
             if (data != null) return _buildUserOptions(data);
           }
         }
-
         return _loadingUserOptions();
       },
     );

@@ -77,7 +77,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                 TextAlign.center),
             SizedBox(height: 20.0),
             _image(_args["thumbnail"]),
-            SizedBox(height: 20.0),
+            SizedBox(height: 30.0),
             _text("Información", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             Container(
@@ -87,15 +87,6 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                 thickness: 0.5,
               ),
             ),
-            /* Container(
-              child: Table(
-                children: [
-                  _row("precio:", "\$${_args["precio"]}"),
-                  _row("localización:", "${_args["localizacion"]}"),
-                  _row("contacto:", "${_args["contacto"]}"),
-                ],
-              ),
-            ), */
             _table(_args),
             SizedBox(height: 20.0),
             _buttonSeller(context, _args),
@@ -106,15 +97,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
   }
 
   Container _table(Map<String, dynamic> _args) {
-    TextEditingController _controller = TextEditingController();
     return Container(
-      /* child: Table(
-        children: [
-          _row("Precio:", "\$${_args["precio"]}"),
-          _row("Localización:", "${_args["localizacion"]}"),
-          _row("Contacto:", "${_args["contacto"]}"),
-        ],
-      ), */
       decoration: BoxDecoration(
         border: Border.all(color: _secondaryColor),
         borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -191,25 +174,6 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             height: 100,
           ));
     }
-  }
-
-  TableRow _row(String title, String value) {
-    return TableRow(children: [
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              title, _defaultColor, 15.0, FontWeight.normal, TextAlign.right),
-        ),
-      ),
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.left),
-        ),
-      ),
-    ]);
   }
 
   ElevatedButton _buttonSeller(
