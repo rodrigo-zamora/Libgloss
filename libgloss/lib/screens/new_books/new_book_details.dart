@@ -88,7 +88,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["thumbnail"]! as String),
+            _image(
+                _args["thumbnail"] != null ? _args["thumbnail"] as String : ""),
             SizedBox(height: 20.0),
             Container(
               child: _getPrices(),
@@ -155,18 +156,25 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     return BlocConsumer<BookPriceBloc, BookPriceState>(
       listener: (context, state) {
         if (state is BookPriceError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
         }
       },
       builder: (context, state) {
         double size = MediaQuery.of(context).size.height /
             MediaQuery.of(context).size.width;
         switch (state.runtimeType) {
+          case BookPriceError:
+            return Container(
+              child: _text("Error al obtener precios", _redColor, 15.0,
+                  FontWeight.normal, TextAlign.center),
+            );
           case BookPriceLoaded:
             final Map<String, dynamic> books = state.props[0];
             return GridView.count(

@@ -5,7 +5,6 @@ import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
-import '../../widgets/shared/filter.dart';
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
@@ -157,11 +156,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 alignment: Alignment.center,
                 padding:
                     EdgeInsets.only(top: 10, bottom: 10, left: left, right: 10),
-                child: Filter(
-                  primary: _primaryColor,
-                  secondary: _secondaryColor,
-                  tertiary: _greenColor,
-                ),
+                // TODO: Add filter button
               ),
               Divider(color: _greenColor, thickness: 1, height: 1),
               _found(context),

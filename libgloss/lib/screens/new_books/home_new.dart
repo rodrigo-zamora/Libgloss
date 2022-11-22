@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
@@ -73,34 +74,18 @@ class _HomeNewState extends State<HomeNew> {
       },
       builder: (context, state) {
         if (state is BooksLoading) {
-          return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: GridView(
-                padding: EdgeInsets.all(20),
-                scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 18,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height / 1.5),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: _secondaryColor,
+                  size: 64,
                 ),
-                children: List.generate(
-                  10,
-                  (index) => Container(
-                    color: Colors.teal[100],
-                    child: Column(
-                      children: [
-                        Container(
-                          height: (MediaQuery.of(context).size.height / 4.7),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ));
+              ),
+            ],
+          );
         } else if (state is BooksLoaded) {
           return _found(context, state.books);
         } else {

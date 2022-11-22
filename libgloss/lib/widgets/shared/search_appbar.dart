@@ -251,6 +251,7 @@ class SearchAppBar extends StatelessWidget {
         },
       );
     }
+    return null;
   }
 
   void _showFilterDialog(BuildContext context) {
