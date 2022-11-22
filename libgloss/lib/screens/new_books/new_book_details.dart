@@ -88,8 +88,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(
-                _args["thumbnail"] != null ? _args["thumbnail"] as String : ""),
+            _image(_args["thumbnail"] != null
+                ? _args["thumbnail"] as String
+                : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png"),
             SizedBox(height: 20.0),
             Container(
               child: _getPrices(),
@@ -160,8 +161,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
+                content: Text('Error al obtener precios'),
               ),
             );
         }
@@ -171,12 +171,36 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             MediaQuery.of(context).size.width;
         switch (state.runtimeType) {
           case BookPriceError:
-            return Container(
-              child: _text("Error al obtener precios", _redColor, 15.0,
-                  FontWeight.normal, TextAlign.center),
+            final Map<String, dynamic> books = {
+              "amazon": {
+                "price": null,
+              },
+              "gandhi": {
+                "price": null,
+              },
+              "el_sotano": {
+                "price": null,
+              },
+              "gonville": {
+                "price": null,
+              },
+            };
+            return GridView.count(
+              primary: false,
+              childAspectRatio: size,
+              //padding: EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: <Widget>[
+                for (var book in books.entries)
+                  _buildCard(book.key, book.value),
+              ],
             );
           case BookPriceLoaded:
             final Map<String, dynamic> books = state.props[0];
+            print(books);
             return GridView.count(
               primary: false,
               childAspectRatio: size,

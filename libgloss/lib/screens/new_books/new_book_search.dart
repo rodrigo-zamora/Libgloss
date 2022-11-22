@@ -256,7 +256,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                           itemBuilder: (context, index) {
                             return Icon(
                               Icons.star,
-                              color: Colors.amber,
+                              color: Color.fromARGB(255, 213, 131, 22),
                             );
                           },
                           itemCount: 5,
