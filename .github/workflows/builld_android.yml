@@ -14,10 +14,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.3.4'
-
+        
       - name: Create google services file
         env:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON  }}
@@ -25,6 +22,15 @@ jobs:
           cd libgloss/android/app/
           touch google-services.json
           echo $DATA > google-services.json
+          
+      - name: Create empty env file
+        run: |
+          cd libgloss
+          touch .env
+          
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.4'
 
       - name: Create build
         env:
