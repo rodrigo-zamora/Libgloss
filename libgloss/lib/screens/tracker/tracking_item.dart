@@ -56,7 +56,7 @@ class _TrackingItemState extends State<TrackingItem> {
                     Column(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.40,
+                          width: MediaQuery.of(context).size.width * 0.39,
                           padding: EdgeInsets.only(bottom: 12, left: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
