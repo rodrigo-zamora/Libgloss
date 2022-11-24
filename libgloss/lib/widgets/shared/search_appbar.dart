@@ -124,12 +124,17 @@ class SearchAppBar extends StatelessWidget {
     if (!_showSearchField)
       return Container(
         alignment: Alignment.center,
-        child: Text(
-          _title!,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
+        child: Padding(
+          padding: _backButton
+              ? EdgeInsets.only(right: 36)
+              : EdgeInsets.only(left: 64),
+          child: Text(
+            _title!,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       );

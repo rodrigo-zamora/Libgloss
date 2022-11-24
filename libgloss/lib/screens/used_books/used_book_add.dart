@@ -292,8 +292,17 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   Future<Map> _getLocalizacion(String zipCode) async {
     double _latitude = 0.0;
     double _longitude = 0.0;
-    await dotenv.load(fileName: ".env");
-    String? GOOGLE_API_KEY = await dotenv.env['GOOGLE_API_KEY'];
+    String? GOOGLE_API_KEY;
+    try {
+      await dotenv.load(fileName: ".env");
+      GOOGLE_API_KEY = await dotenv.env['GOOGLE_API_KEY'];
+    } catch (e) {
+      print(e);
+    }
+    if (GOOGLE_API_KEY == null) {
+      GOOGLE_API_KEY = String.fromEnvironment("GOOGLE_API_KEY");
+    }
+    print("GOOGLE_API_KEY: $GOOGLE_API_KEY");
     try {
       var url = Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code:$zipCode&sensor=false&&key=$GOOGLE_API_KEY");
