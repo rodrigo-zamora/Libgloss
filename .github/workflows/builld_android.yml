@@ -31,7 +31,7 @@ jobs:
           cd libgloss
           flutter pub get
           flutter build apk
-          flutter build appbundle
+          flutter build appbundle --dart-define=GOOGLE_API_KEY=${{ GOOGLE_API_KEY }}
 
       - name: Upload build
         uses: actions/upload-artifact@v3
