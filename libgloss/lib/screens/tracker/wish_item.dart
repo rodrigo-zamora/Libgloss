@@ -53,7 +53,7 @@ class _WishItemState extends State<WishItem> {
               Column(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.42,
+                    width: MediaQuery.of(context).size.width * 0.40,
                     padding: EdgeInsets.only(bottom: 12, left: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
