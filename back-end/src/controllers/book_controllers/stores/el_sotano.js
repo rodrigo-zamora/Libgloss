@@ -30,6 +30,9 @@ const elSotanoController = {
 
         if (!price) return null;
 
+        // Default price for not found books
+        if (price == 219) return null;
+
         return {
             price: price,
             url: 'https://www.elsotano.com' + href
