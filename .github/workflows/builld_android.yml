@@ -28,7 +28,7 @@ jobs:
 
       - name: Create build
         env:
-          DATA: ${{ GOOGLE_API_KEY }}
+          DATA: ${{ secrets.GOOGLE_API_KEY  }}
         run: |
           cd libgloss
           flutter pub get

@@ -294,6 +294,10 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     double _longitude = 0.0;
     await dotenv.load(fileName: ".env");
     String? GOOGLE_API_KEY = await dotenv.env['GOOGLE_API_KEY'];
+    if (GOOGLE_API_KEY == null) {
+      GOOGLE_API_KEY = String.fromEnvironment("GOOGLE_API_KEY");
+    }
+    print("GOOGLE_API_KEY: $GOOGLE_API_KEY");
     try {
       var url = Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code:$zipCode&sensor=false&&key=$GOOGLE_API_KEY");
