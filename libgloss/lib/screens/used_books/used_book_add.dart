@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../config/colors.dart';
@@ -10,7 +13,9 @@ import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class UsedBookAdd extends StatefulWidget {
   UsedBookAdd({
@@ -30,13 +35,13 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
   final Color _defaultColor = ColorSelector.getBlack();
 
+  double _lat = 0;
+  double _lng = 0;
+  bool uploaded = false;
+
   TextEditingController _controller = TextEditingController();
 
   List<XFile>? _imageFileList;
-
-  void _setImageFileListFromFile(XFile? value) {
-    _imageFileList = value == null ? null : <XFile>[value];
-  }
 
   dynamic _pickImageError;
   bool isVideo = false;
@@ -71,51 +76,95 @@ class _UsedBookAddState extends State<UsedBookAdd> {
 
   SingleChildScrollView _main(
       BuildContext context, Map<String, dynamic> _args) {
-    return SingleChildScrollView(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding:
-            EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
-        child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
-                TextAlign.center),
-            SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
-                FontWeight.normal, TextAlign.center),
-            SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _text("Vendido por:  ", _defaultColor, 14.0, FontWeight.normal,
-                    TextAlign.center),
-                _text("${_args["vendedor"]}", _greenColor, 14.0,
-                    FontWeight.normal, TextAlign.center),
-              ],
-            ),
-            SizedBox(height: 8),
-            _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
-                TextAlign.center),
-            SizedBox(height: 20.0),
-            _image(_args["thumbnail"]),
-            SizedBox(height: 30.0),
-            _text("Información", _defaultColor, 15.0, FontWeight.normal,
-                TextAlign.center),
-            Container(
-              width: MediaQuery.of(context).size.width / 2.5,
-              child: Divider(
-                color: _defaultColor,
-                thickness: 0.5,
+    if (uploaded == false) {
+      return SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding:
+              EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
+          child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
+                  TextAlign.center),
+              SizedBox(height: 5),
+              _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
+                  FontWeight.normal, TextAlign.center),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _text("Vendido por:  ", _defaultColor, 14.0,
+                      FontWeight.normal, TextAlign.center),
+                  _text("${_args["vendedor"]}", _greenColor, 14.0,
+                      FontWeight.normal, TextAlign.center),
+                ],
               ),
-            ),
-            _table(_args),
-            SizedBox(height: 20.0),
-            _buttonSeller(context, _args),
-          ],
+              SizedBox(height: 8),
+              _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
+                  TextAlign.center),
+              SizedBox(height: 20.0),
+              _image(_args["thumbnail"]),
+              SizedBox(height: 30.0),
+              _text("Información", _defaultColor, 15.0, FontWeight.normal,
+                  TextAlign.center),
+              Container(
+                width: MediaQuery.of(context).size.width / 2.5,
+                child: Divider(
+                  color: _defaultColor,
+                  thickness: 0.5,
+                ),
+              ),
+              _table(_args),
+              SizedBox(height: 20.0),
+              _buttonSeller(context, _args),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding:
+              EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
+          child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
+                  TextAlign.center),
+              SizedBox(height: 5),
+              _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
+                  FontWeight.normal, TextAlign.center),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _text("Vendido por:  ", _defaultColor, 14.0,
+                      FontWeight.normal, TextAlign.center),
+                  _text("${_args["vendedor"]}", _greenColor, 14.0,
+                      FontWeight.normal, TextAlign.center),
+                ],
+              ),
+              SizedBox(height: 8),
+              _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
+                  TextAlign.center),
+              SizedBox(height: 64.0),
+              Text(
+                "Subiendo tu libro...",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 24.0),
+              CircularProgressIndicator(
+                color: _secondaryColor,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   Container _table(Map<String, dynamic> _args) {
@@ -165,7 +214,8 @@ class _UsedBookAddState extends State<UsedBookAdd> {
                       //    FontWeight.normal, TextAlign.center),
                       TextField(
                         textAlign: TextAlign.center,
-                        controller: TextEditingController(text: _args["contacto"]),
+                        controller:
+                            TextEditingController(text: _args["contacto"]),
                         style: TextStyle(color: _secondaryColor),
                         maxLines: 1,
                         enabled: false,
@@ -179,13 +229,17 @@ class _UsedBookAddState extends State<UsedBookAdd> {
           FutureBuilder(
             future: _getLocalizacion(_args["localizacion"]),
             builder: (context, snapshot) {
-              print("CONNECTION STATE: ${snapshot.connectionState}");
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {
                 Completer<GoogleMapController> _controller = Completer();
+                double _circleLat =
+                    snapshot.data!["latitude"] + Random().nextDouble() / 50;
+                double _circleLng =
+                    snapshot.data!["longitude"] + Random().nextDouble() / 50;
+                _lat = _circleLat;
+                _lng = _circleLng;
                 final CameraPosition _kGooglePlex = CameraPosition(
-                  target: LatLng(
-                      snapshot.data!["latitude"], snapshot.data!["longitude"]),
+                  target: LatLng(_circleLat, _circleLng),
                   zoom: 11.5,
                 );
                 return Container(
@@ -193,6 +247,21 @@ class _UsedBookAddState extends State<UsedBookAdd> {
                   child: GoogleMap(
                     mapType: MapType.normal,
                     initialCameraPosition: _kGooglePlex,
+                    circles: Set.from(
+                      [
+                        Circle(
+                          circleId: CircleId("1"),
+                          center: LatLng(
+                            _circleLat,
+                            _circleLng,
+                          ),
+                          radius: 4000,
+                          fillColor: _secondaryColor.withOpacity(0.25),
+                          strokeWidth: 2,
+                          strokeColor: _secondaryColor,
+                        ),
+                      ],
+                    ),
                     onMapCreated: (GoogleMapController controller) {
                       controller.animateCamera(
                         CameraUpdate.newCameraPosition(
@@ -223,15 +292,22 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   Future<Map> _getLocalizacion(String zipCode) async {
     double _latitude = 0.0;
     double _longitude = 0.0;
-    GeoCode geoCode = GeoCode();
+    await dotenv.load(fileName: ".env");
+    String? GOOGLE_API_KEY = await dotenv.env['GOOGLE_API_KEY'];
     try {
-      Coordinates coordinates = await geoCode.forwardGeocoding(
-        address: "$zipCode, Mexico",
-      );
-      return await Future.value({
-        "latitude": coordinates.latitude,
-        "longitude": coordinates.longitude,
-      });
+      var url = Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code:$zipCode&sensor=false&&key=$GOOGLE_API_KEY");
+      var response = await http.get(url);
+      print(response.body);
+      var data = jsonDecode(response.body);
+      _latitude = data["results"][0]["geometry"]["location"]["lat"];
+      _longitude = data["results"][0]["geometry"]["location"]["lng"];
+      print("LATITUDE: $_latitude");
+      print("LONGITUDE: $_longitude");
+      return {
+        "latitude": _latitude,
+        "longitude": _longitude,
+      };
     } catch (e) {
       print(e);
       return {
@@ -275,7 +351,6 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 20),
             Container(
               height: MediaQuery.of(context).size.height / 2.4,
               width: MediaQuery.of(context).size.width / 1.3,
@@ -305,34 +380,32 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     if (retrieveError != null) {
       return retrieveError;
     }
-    // TODO: Fix image preview
     if (_imageFileList != null) {
-      return Semantics(
-        label: 'image_picker_example_picked_images',
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          key: UniqueKey(),
-          itemBuilder: (BuildContext context, int index) {
-            return Semantics(
-              label: 'image_picker_example_picked_image',
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.file(
-                    File(
-                      _imageFileList![index].path,
-                    ),
-                    fit: BoxFit.fill,
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        key: UniqueKey(),
+        itemBuilder: (BuildContext context, int index) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 2.4,
+                width: MediaQuery.of(context).size.width / 1.3,
+                decoration: BoxDecoration(
+                  color: index % 2 == 0 ? _primaryColor : _secondaryColor,
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Image.file(
+                    File(_imageFileList![index].path),
+                    fit: BoxFit.cover,
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
+                ),
               ),
-            );
-          },
-          itemCount: _imageFileList!.length,
-        ),
+            ],
+          );
+        },
+        itemCount: _imageFileList!.length,
       );
     } else if (_pickImageError != null) {
       return Text(
@@ -355,11 +428,8 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               color: _secondaryColor,
             ),
           ),
-          FittedBox(
-            child: Image.asset(
-              'assets/images/special/green_reading_bunny.png',
-            ),
-            fit: BoxFit.fitHeight,
+          Image.asset(
+            'assets/images/special/green_reading_bunny.png',
           ),
         ],
       );
@@ -386,13 +456,106 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         ),
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       ),
-      onPressed: () {
-        // TODO: add book to firebase and go to home
-        print("Guardar libro");
+      onPressed: () async {
+        String _price = _controller.text;
+        if (_imageFileList == null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text("Debes agregar al menos una imagen"),
+              ),
+            );
+        } else if (_price.isEmpty) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  "Debes ingresar un precio",
+                ),
+              ),
+            );
+        } else {
+          List<String> _imagesURL = [];
+          setState(() {});
+          for (var i = 0; i < _imageFileList!.length; i++) {
+            String _imageURL = await _uploadImage(_imageFileList![i]);
+            _imagesURL.add(_imageURL);
+          }
+          Map<String, dynamic> _book = {
+            "title": _args["title"],
+            "authors": _args["authors"],
+            "seller": _args["vendedor"],
+            "isbn": _args["isbn"],
+            "thumbnail": _args["thumbnail"],
+            "price": _price,
+            "latitude": _lat,
+            "longitude": _lng,
+            "images": _imagesURL,
+          };
+          print(_book);
+          uploaded = await _addBook(_book);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  uploaded
+                      ? "Libro agregado correctamente"
+                      : "Hubo un error al agregar el libro",
+                ),
+              ),
+            );
+          if (uploaded) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                PageRouteBuilder(pageBuilder: (BuildContext context,
+                    Animation animation, Animation secondaryAnimation) {
+                  return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+                }, transitionsBuilder: (BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child) {
+                  return new SlideTransition(
+                    position: new Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                }),
+                (Route route) => false);
+          }
+        }
       },
       child: _text("Guardar libro", _defaultColor, 15.0, FontWeight.normal,
           TextAlign.center),
     );
+  }
+
+  Future<String> _uploadImage(XFile element) async {
+    final _firebaseStorage = FirebaseStorage.instance;
+    final _storageReference =
+        _firebaseStorage.ref().child('books/${element.name}');
+    final _uploadTask = _storageReference.putFile(File(element.path));
+    final _snapshot = await _uploadTask.whenComplete(() => null);
+    final _downloadURL = await _snapshot.ref.getDownloadURL();
+    return _downloadURL;
+  }
+
+  Future<bool> _addBook(Map<String, dynamic> book) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('books')
+          .add(book)
+          .then((value) => print("Book Added"))
+          .catchError((error) => print("Failed to add book: $error"));
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }
 

@@ -254,8 +254,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     if (value == null) {
       return _storeCard(key, _redColor, "No disponible", "");
     } else {
-      return _storeCard(
-          key, _blueColor, value["price"].toString(), value["url"]);
+      return _storeCard(key, _blueColor, value["price"].toString(),
+          value["url"] != null ? value["url"] : "");
     }
   }
 

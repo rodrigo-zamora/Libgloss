@@ -66,6 +66,7 @@ dependencies:
   google_sign_in: ^5.4.2
   image_picker: ^0.8.6
   flutter_rating_bar: ^4.0.1
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -112,6 +113,9 @@ flutter:
       - assets/images/special/not_found_e.png
       - assets/images/special/green_reading_bunny.png
       - assets/images/special/purple_reading_bunny.png
+
+      # Env
+      - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
