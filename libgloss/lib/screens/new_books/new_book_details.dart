@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../blocs/tracking/bloc/tracking_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/search_appbar.dart';
@@ -30,6 +33,10 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   final Color _defaultColor = ColorSelector.getBlack();
   final Color _greyColor = ColorSelector.getGrey();
 
+  final TextEditingController _priceController = TextEditingController();
+  int _monthsTracking = 0;
+  String _storeTracking = '';
+
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
@@ -50,10 +57,13 @@ class _NewBookDetailsState extends State<NewBookDetails> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
+          showBackButton: true,
+          route: LibglossRoutes.HOME_NEW,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_NEW,
       ),
       body: _main(context, _args),
     );
@@ -78,7 +88,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["thumbnail"]! as String),
+            _image(_args["thumbnail"] != null
+                ? _args["thumbnail"] as String
+                : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png"),
             SizedBox(height: 20.0),
             Container(
               child: _getPrices(),
@@ -86,7 +98,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                _wish_list(context);
+                _wish_list(context, _args);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -97,7 +109,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                _tracking(context);
+                _tracking(context, _args);
               },
               child: Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -145,20 +157,50 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     return BlocConsumer<BookPriceBloc, BookPriceState>(
       listener: (context, state) {
         if (state is BookPriceError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text('Error al obtener precios'),
+              ),
+            );
         }
       },
       builder: (context, state) {
         double size = MediaQuery.of(context).size.height /
             MediaQuery.of(context).size.width;
         switch (state.runtimeType) {
+          case BookPriceError:
+            final Map<String, dynamic> books = {
+              "amazon": {
+                "price": null,
+              },
+              "gandhi": {
+                "price": null,
+              },
+              "el_sotano": {
+                "price": null,
+              },
+              "gonville": {
+                "price": null,
+              },
+            };
+            return GridView.count(
+              primary: false,
+              childAspectRatio: size,
+              //padding: EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              children: <Widget>[
+                for (var book in books.entries)
+                  _buildCard(book.key, book.value),
+              ],
+            );
           case BookPriceLoaded:
             final Map<String, dynamic> books = state.props[0];
+            print(books);
             return GridView.count(
               primary: false,
               childAspectRatio: size,
@@ -212,8 +254,8 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     if (value == null) {
       return _storeCard(key, _redColor, "No disponible", "");
     } else {
-      return _storeCard(
-          key, _blueColor, value["price"].toString(), value["url"]);
+      return _storeCard(key, _blueColor, value["price"].toString(),
+          value["url"] != null ? value["url"] : "");
     }
   }
 
@@ -280,9 +322,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Future<dynamic> _tracking(BuildContext context) {
+  Future<dynamic> _tracking(BuildContext _context, Map<String, dynamic> _args) {
     return showDialog(
-      context: context,
+      context: _context,
       builder: (context) {
         return AlertDialog(
           title: Text("Seguimiento del libro"),
@@ -298,6 +340,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: _priceController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: "Precio",
@@ -326,7 +369,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                           value: "el_sotano",
                         ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        _storeTracking = value!;
+                      },
                       decoration: InputDecoration(
                         labelText: "Tienda",
                       ),
@@ -350,7 +395,9 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                           value: 12,
                         ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        _monthsTracking = value!;
+                      },
                       decoration: InputDecoration(
                         labelText: "Tiempo",
                       ),
@@ -368,8 +415,97 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               child: Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
+
+                var isLoggedIn =
+                    (await UserAuthRepository().getInstance().currentUser);
+                print("[TrackingList] Adding book to wish list");
+                print("[TrackingList] User uid: $isLoggedIn");
+
+                if (isLoggedIn == null) {
+                  print("[TrackingList] User not logged in");
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text("Debes iniciar sesión para agregar "
+                            "libros a tu lista de seguimiento"),
+                      ),
+                    );
+                } else {
+                  print("[TrackingList] User logged in");
+                  String uid = isLoggedIn.uid;
+                  print("[TrackingList] User uid: $uid");
+
+                  print(
+                      "[TrackingList] Adding book to wish list: ${_args["isbn"]}");
+
+                  print(
+                      "[TrackingList] Checking if book is already in tracking list");
+
+                  String? useruid =
+                      UserAuthRepository.userInstance?.currentUser!.uid;
+
+                  var book = await FirebaseFirestore.instance
+                      .collection("lists")
+                      .where("useruid", isEqualTo: useruid)
+                      .get();
+                  List<DocumentSnapshot> booksList = book.docs;
+
+                  List<dynamic> books = booksList[0]["tracking"];
+                  print("[TrackingList] Books in tracking list: $books");
+
+                  bool isAlreadyInList = false;
+                  for (var book in books) {
+                    if (book["isbn"] == _args["isbn"]) {
+                      isAlreadyInList = true;
+                      print("[TrackingList] Book is already in tracking list");
+                      break;
+                    }
+                  }
+
+                  if (!isAlreadyInList) {
+                    print("[TrackingList] Adding book to tracking list");
+                    await FirebaseFirestore.instance
+                        .collection("lists")
+                        .doc(booksList[0].id)
+                        .update({
+                      "tracking": FieldValue.arrayUnion([
+                        {
+                          "isbn": _args["isbn"],
+                          "title": _args["title"],
+                          "authors": _args["authors"],
+                          "price": int.parse(_priceController.text),
+                          "time": _monthsTracking,
+                          "thumbnail": _args["thumbnail"],
+                          "store": _storeTracking,
+                        }
+                      ])
+                    });
+                    print("[TrackingList] Book added to tracking list");
+                    ScaffoldMessenger.of(_context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Libro agregado a tu lista de seguimiento"),
+                        ),
+                      );
+                    BlocProvider.of<TrackingBloc>(_context)
+                        .add(UpdateTracking());
+                  } else {
+                    print("[TrackingList] Book is already in tracking list");
+                    ScaffoldMessenger.of(_context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text("El libro ya se encuentra en tu lista "
+                              "de seguimiento"),
+                        ),
+                      );
+                  }
+                }
               },
               child: Text("Agregar"),
             )
@@ -379,9 +515,10 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Future<dynamic> _wish_list(BuildContext context) {
+  Future<dynamic> _wish_list(
+      BuildContext _context, Map<String, dynamic> _args) {
     return showDialog(
-        context: context,
+        context: _context,
         builder: (context) {
           return AlertDialog(
             title: Text("Agregar a la lista de deseos"),
@@ -398,9 +535,104 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                 child: Text("Cancelar"),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
-                  // TODO: Add to wishlist using bloc
+                  var isLoggedIn =
+                      (await UserAuthRepository().getInstance().currentUser);
+                  print("[WishList] Adding book to wish list");
+                  print("[WishList] User uid: $isLoggedIn");
+
+                  if (isLoggedIn == null) {
+                    print("[WishList] User not logged in");
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text("Debes iniciar sesión para agregar "
+                              "libros a tu lista de deseos"),
+                        ),
+                      );
+                  } else {
+                    print("[WishList] User logged in");
+                    String uid = isLoggedIn.uid;
+                    print("[WishList] User uid: $uid");
+
+                    print(
+                        "[WishList] Adding book to wish list: ${_args["isbn"]}");
+
+                    print(
+                        "[WishList] Checking if book is already in wish list");
+                    String? useruid =
+                        UserAuthRepository.userInstance?.currentUser!.uid;
+                    var book = await FirebaseFirestore.instance
+                        .collection("lists")
+                        .where("useruid", isEqualTo: useruid)
+                        .get();
+                    List<DocumentSnapshot> bookList = book.docs;
+
+                    List<dynamic> books = bookList[0]["wish"];
+                    print("[WishList] Book list: $books");
+
+                    bool isBookInList = false;
+                    for (var book in books) {
+                      if (book["isbn"] == _args["isbn"]) {
+                        isBookInList = true;
+                        print("[WishList] Book is already in wish list");
+                        break;
+                      }
+                    }
+
+                    if (!isBookInList) {
+                      print("[WishList] Adding book to wish list");
+                      FirebaseFirestore.instance
+                          .collection("lists")
+                          .doc(bookList[0].id)
+                          .update({
+                        "wish": FieldValue.arrayUnion([
+                          {
+                            "isbn": _args["isbn"],
+                            "title": _args["title"],
+                            "authors": _args["authors"],
+                            "thumbnail": _args["thumbnail"],
+                          }
+                        ])
+                      }).then((value) {
+                        print("[WishList] Book added to wish list");
+                        ScaffoldMessenger.of(_context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text("Libro agregado a tu lista de deseos"),
+                            ),
+                          );
+                        BlocProvider.of<TrackingBloc>(_context)
+                            .add(UpdateTracking());
+                      }).catchError((error) {
+                        print("[WishList] Error adding book to wish list");
+                        print("[WishList] Error: $error");
+                        ScaffoldMessenger.of(_context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text("Error agregando libro a tu lista de "
+                                      "deseos"),
+                            ),
+                          );
+                      });
+                    } else {
+                      ScaffoldMessenger.of(_context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content:
+                                Text("El libro ya se encuentra en tu lista "
+                                    "de deseos"),
+                          ),
+                        );
+                    }
+                  }
                 },
                 child: Text("Agregar"),
               ),

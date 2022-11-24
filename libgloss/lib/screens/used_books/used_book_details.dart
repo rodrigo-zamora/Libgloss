@@ -16,8 +16,10 @@ class UsedBookDetails extends StatefulWidget {
 }
 
 class _UsedBookDetailsState extends State<UsedBookDetails> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor =
+      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
+  final Color _secondaryColor =
+      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
   final Color _defaultColor = ColorSelector.getBlack();
@@ -34,10 +36,12 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
+          route: LibglossRoutes.HOME_USED,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_USED,
       ),
       body: _main(context, _args),
     );
@@ -56,8 +60,8 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
                 TextAlign.center),
             SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0, FontWeight.normal,
-                TextAlign.center),
+            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
+                FontWeight.normal, TextAlign.center),
             SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +77,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                 TextAlign.center),
             SizedBox(height: 20.0),
             _image(_args["thumbnail"]),
-            SizedBox(height: 20.0),
+            SizedBox(height: 30.0),
             _text("Información", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             Container(
@@ -83,19 +87,61 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                 thickness: 0.5,
               ),
             ),
-            Container(
-              child: Table(
-                children: [
-                  _row("precio:", "\$${_args["precio"]}"),
-                  _row("localización:", "${_args["localizacion"]}"),
-                  _row("contacto:", "${_args["contacto"]}"),
-                ],
-              ),
-            ),
+            _table(_args),
             SizedBox(height: 20.0),
             _buttonSeller(context, _args),
           ],
         ),
+      ),
+    );
+  }
+
+  Container _table(Map<String, dynamic> _args) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: _secondaryColor),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Column(
+                    children: [
+                      _text("Precio", _defaultColor, 15.0, FontWeight.normal,
+                          TextAlign.center),
+                      _text("\$${_args["precio"]}", _greenColor, 15.0,
+                          FontWeight.normal, TextAlign.center),
+                    ],
+                  ),
+                ),
+                VerticalDivider(
+                  color: _secondaryColor,
+                  thickness: 1,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _text("Contacto", _defaultColor, 15.0, FontWeight.normal,
+                          TextAlign.center),
+                      _text("${_args["contacto"]}", _greenColor, 15.0,
+                          FontWeight.normal, TextAlign.center),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Image.network(
+              'https://www.mapsofindia.com/images2/india-map-2019.jpg'),
+        ],
       ),
     );
   }
@@ -120,35 +166,14 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
           'assets/images/special/not_found.png',
         ),
       );
-    }
-    else {
+    } else {
       return Container(
-        height: (MediaQuery.of(context).size.height / 2.5),
-        child: OnlineImage(
-          imageUrl: image,
-          height: 100,
-        )
-      );
+          height: (MediaQuery.of(context).size.height / 2.5),
+          child: OnlineImage(
+            imageUrl: image,
+            height: 100,
+          ));
     }
-  }
-
-  TableRow _row(String title, String value) {
-    return TableRow(children: [
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              title, _defaultColor, 15.0, FontWeight.normal, TextAlign.right),
-        ),
-      ),
-      TableCell(
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: _text(
-              value, _defaultColor, 15.0, FontWeight.normal, TextAlign.left),
-        ),
-      ),
-    ]);
   }
 
   ElevatedButton _buttonSeller(

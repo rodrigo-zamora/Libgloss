@@ -27,7 +27,6 @@ class _UserOptionsState extends State<UserOptions> {
   @override
   Widget build(BuildContext context) {
     CollectionReference user = FirebaseFirestore.instance.collection('users');
-
     return FutureBuilder<DocumentSnapshot>(
       future: user.doc(UserAuthRepository().getuid()).get(),
       builder:
@@ -35,7 +34,6 @@ class _UserOptionsState extends State<UserOptions> {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             Map<String, dynamic>? data =
@@ -43,16 +41,31 @@ class _UserOptionsState extends State<UserOptions> {
             if (data != null) return _buildUserOptions(data);
           }
         }
-
         return _loadingUserOptions();
       },
     );
   }
 
-  // TODO: Add a loading screen for the user options
   Widget _loadingUserOptions() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: SearchAppBar(
+          primaryColor: _primaryColor,
+          secondaryColor: _secondaryColor,
+          showMenuButton: false,
+          showCameraButton: false,
+          showSearchField: false,
+          showBackButton: false,
+          title: 'Mi perfil',
+        ),
+      ),
+      body: Center(
+        child: CircularProgressIndicator(
+          color: _secondaryColor,
+        ),
+      ),
     );
   }
 
@@ -64,9 +77,11 @@ class _UserOptionsState extends State<UserOptions> {
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
-          showMenuButton: true,
+          showMenuButton: false,
           showCameraButton: false,
-          showSearchField: true,
+          showSearchField: false,
+          showBackButton: false,
+          title: 'Mi perfil',
         ),
       ),
       body: //Container(
@@ -238,22 +253,31 @@ class _UserOptionsState extends State<UserOptions> {
               MaterialStateColor.resolveWith((states) => _tertiaryColor),
         ),
         onPressed: () {
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(UserAuthRepository().getuid())
-              .update({'isSeller': !isSeller});
-          Navigator.pushNamedAndRemoveUntil(
-              context, LibglossRoutes.HOME, (route) => false);
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(
-                  isSeller ? "Ya no eres vendedor" : "Ahora eres vendedor",
+          if (!isSeller)
+            _showSellerDialog(
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .where('id', isEqualTo: UserAuthRepository().getuid())
+                    .get(),
+                isSeller);
+          else {
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(UserAuthRepository().getuid())
+                .update({'isSeller': !isSeller});
+            Navigator.pushNamedAndRemoveUntil(
+                context, LibglossRoutes.HOME, (route) => false);
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isSeller ? "Ya no eres vendedor" : "Ahora eres vendedor",
+                  ),
                 ),
-              ),
-            );
-          LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+              );
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+          }
         },
         child: Row(
           children: [
@@ -384,6 +408,144 @@ class _UserOptionsState extends State<UserOptions> {
           child: const Text('OK'),
         ),
       ],
+    );
+  }
+
+  _showSellerDialog(Future<QuerySnapshot> future, bool isSeller) async {
+    List<DocumentSnapshot> user = (await future).docs;
+    TextEditingController _phoneController = TextEditingController();
+    TextEditingController _zpController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("¿Quieres ser vendedor?"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          contentPadding: EdgeInsets.all(22.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Si quieres ser vendedor, debes tener teléfono y dirección"),
+              SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Debes ingresar tu teléfono",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  TextField(
+                    controller: user[0]['phoneNumber'] == null
+                        ? _phoneController
+                        : _phoneController =
+                            TextEditingController(text: user[0]['phoneNumber']),
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    decoration: InputDecoration(
+                      hintText: "Teléfono",
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              //if (user[0]['zipCode'] == null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Debes ingresar tu código postal",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  TextField(
+                    controller: user[0]['zipCode'] == null
+                        ? _zpController
+                        : _zpController =
+                            TextEditingController(text: user[0]['zipCode']),
+                    keyboardType: TextInputType.number,
+                    maxLength: 5,
+                    decoration: InputDecoration(
+                      hintText: "Código Postal",
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (user[0]['phoneNumber'] == null) {
+                  if (_phoneController.text.length == 10) {
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user[0].id)
+                        .update({
+                      'phoneNumber': _phoneController.text,
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("El teléfono debe tener 10 dígitos"),
+                      ),
+                    );
+                  }
+                }
+                if (user[0]['zipCode'] == null) {
+                  if (_zpController.text.length == 5) {
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user[0].id)
+                        .update({
+                      'zipCode': _zpController.text,
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("El código postal debe tener 5 dígitos"),
+                      ),
+                    );
+                  }
+                }
+                if (_zpController.text.length == 5 &&
+                    _phoneController.text.length == 10) {
+                  FirebaseFirestore.instance
+                      .collection('users')
+                      //.doc(UserAuthRepository().getuid())
+                      .doc(user[0].id)
+                      .update({'isSeller': !isSeller});
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LibglossRoutes.HOME, (route) => false);
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          isSeller
+                              ? "Ya no eres vendedor"
+                              : "Ahora eres vendedor",
+                        ),
+                      ),
+                    );
+                  LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+                }
+              },
+              child: Text("Aceptar"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -7,7 +7,9 @@
             <data android:scheme="https" />
         </intent>
     </queries>
-   <application
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
         android:label="Libgloss"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
@@ -38,5 +40,8 @@
             android:name="flutterEmbedding"
             android:value="2"
             android:usesCleartextTraffic="true"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/MAPS_API_KEY"/>
     </application>
 </manifest>

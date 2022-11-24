@@ -39,8 +39,11 @@ dependencies:
   shared_preferences: ^2.0.15
   mobile_scanner: ^2.0.0
   webview_flutter: ^3.0.4
-  share_plus: ^6.1.0
+  #share_plus: ^6.1.0
   equatable: ^2.0.5
+  map: ^1.3.4
+  google_maps_flutter: ^2.2.1
+  geocode: ^1.0.2
 
   # UI Widgets
   font_awesome_flutter: ^10.2.1
@@ -57,9 +60,13 @@ dependencies:
   firebase_auth: ^4.0.2
   cloud_firestore: ^4.0.2
   firebase_ui_firestore: ^1.0.2
+  firebase_storage: ^11.0.6
 
   # Google
   google_sign_in: ^5.4.2
+  image_picker: ^0.8.6
+  flutter_rating_bar: ^4.0.1
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +111,11 @@ flutter:
       # special
       - assets/images/special/not_found.png
       - assets/images/special/not_found_e.png
+      - assets/images/special/green_reading_bunny.png
+      - assets/images/special/purple_reading_bunny.png
+
+      # Env
+      - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

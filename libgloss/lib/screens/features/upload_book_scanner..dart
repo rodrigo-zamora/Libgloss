@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
 import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -90,92 +92,7 @@ class UploadBookScanner extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 4,
             );
           }
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0))),
-                  //contentPadding: EdgeInsets.all(22.0),
-                  title: Text("Libro encontrado"),
-                  content: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Se encontró el libro con el nombre \n',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        Text(
-                          '${books[0]["title"]}',
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'por: ',
-                              style: TextStyle(fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              '${books[0]["authors"].join(', ')}',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: _blueColor,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height / 4,
-                          child: imageHolder,
-                        ),
-                        Text('\n¿Es este su libro?',
-                            style: TextStyle(
-                                fontSize: 16.0, fontStyle: FontStyle.italic)),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'Cancel');
-                        cameraController = new MobileScannerController();
-                        BlocProvider.of<BookIsbnBloc>(context)
-                            .add(ClearBookDetailsEvent());
-                      },
-                      child: Text("No lo es",
-                          style: TextStyle(color: _greenColor)),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'Cancel');
-                        // TODO: Go to book details to edit
-                        Navigator.pushNamed(
-                          context,
-                          LibglossRoutes.USED_BOOK_ADD,
-                          arguments: {
-                            "title": books[0]["title"],
-                            "authors": books[0]["authors"],
-                            "thumbnail": books[0]["thumbnail"],
-                            "vendedor": "NAME",
-                            "isbn": books[0]["isbn"],
-                            "precio": 0,
-                            "localizacion": "LOCATION",
-                            "contacto": "CONTACT",
-                          },
-                        );
-                      },
-                      child: Text("Sí lo es",
-                          style: TextStyle(color: _greenColor)),
-                    ),
-                  ],
-                );
-              });
+          _pop_up(context, books, imageHolder);
         }
       },
       builder: (context, state) {
@@ -188,5 +105,103 @@ class UploadBookScanner extends StatelessWidget {
         }
       },
     );
+  }
+
+  _pop_up(BuildContext context, List<dynamic> books, imageHolder) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            //contentPadding: EdgeInsets.all(22.0),
+            title: Text("Libro encontrado"),
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Se encontró el libro con el nombre \n',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  Text(
+                    '${books[0]["title"]}',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'por: ',
+                        style: TextStyle(fontSize: 16.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${books[0]["authors"].join(', ')}',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: _blueColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: imageHolder,
+                  ),
+                  Text('\n¿Es este su libro?',
+                      style: TextStyle(
+                          fontSize: 16.0, fontStyle: FontStyle.italic)),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                  cameraController = new MobileScannerController();
+                  BlocProvider.of<BookIsbnBloc>(context)
+                      .add(ClearBookDetailsEvent());
+                },
+                child: Text("No lo es", style: TextStyle(color: _greenColor)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  String phoneNumber = await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(UserAuthRepository.userInstance?.currentUser!.uid)
+                      .get()
+                      .then((value) => value.data()!['phoneNumber']);
+                  String zipCode = await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(UserAuthRepository.userInstance?.currentUser!.uid)
+                      .get()
+                      .then((value) => value.data()!['zipCode']);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pushNamed(
+                    context,
+                    LibglossRoutes.USED_BOOK_ADD,
+                    arguments: {
+                      "title": books[0]["title"],
+                      "authors": books[0]["authors"],
+                      "thumbnail": books[0]["thumbnail"],
+                      "vendedor": UserAuthRepository
+                          .userInstance?.currentUser!.displayName,
+                      "isbn": books[0]["isbn"],
+                      "precio": null,
+                      "localizacion": zipCode,
+                      "contacto": phoneNumber,
+                    },
+                  );
+                },
+                child: Text("Sí lo es", style: TextStyle(color: _greenColor)),
+              ),
+            ],
+          );
+        });
   }
 }

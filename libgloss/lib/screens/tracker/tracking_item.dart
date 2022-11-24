@@ -5,7 +5,7 @@ import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
 
 class TrackingItem extends StatefulWidget {
-  final Map<String, String> item;
+  final Map<String, dynamic> item;
 
   const TrackingItem({super.key, required this.item});
 
@@ -43,11 +43,11 @@ class _TrackingItemState extends State<TrackingItem> {
                   children: [
                     Column(
                       children: [
-                        SizedBox(
+                        Container(
                           width: 100,
                           height: 150,
                           child: OnlineImage(
-                            imageUrl: widget.item["image"]!,
+                            imageUrl: widget.item["thumbnail"]!,
                             height: 100,
                           ),
                         ),
@@ -56,26 +56,32 @@ class _TrackingItemState extends State<TrackingItem> {
                     Column(
                       children: [
                         Container(
+                          width: MediaQuery.of(context).size.width * 0.39,
                           padding: EdgeInsets.only(bottom: 12, left: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                widget.item["title"]!,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                style: TextStyle(
-                                  fontSize: 14,
+                              Container(
+                                child: Text(
+                                  widget.item["title"]!,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                widget.item["author"]!,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: _blueColor,
-                                  fontSize: 12,
+                              Container(
+                                child: Text(
+                                  widget.item["authors"].toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: _blueColor,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                             ],
@@ -111,7 +117,7 @@ class _TrackingItemState extends State<TrackingItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Plataforma: ${widget.item["plataforma"]}",
+                      "Plataforma: ${widget.item["store"] == "all" ? "Todas las plataformas" : widget.item["store"]}",
                       style: TextStyle(
                         fontSize: 12,
                       ),
@@ -122,7 +128,7 @@ class _TrackingItemState extends State<TrackingItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Precio deseado: \$${widget.item["precio"]}",
+                      "Precio deseado: \$${widget.item["price"]}",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 12,
@@ -134,7 +140,7 @@ class _TrackingItemState extends State<TrackingItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Tiempo: ${widget.item["tiempo"]}",
+                      "Tiempo: ${widget.item["time"]} meses",
                       style: TextStyle(
                         fontSize: 12,
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
@@ -36,10 +37,12 @@ class _HomeNewState extends State<HomeNew> {
           showMenuButton: true,
           showCameraButton: true,
           showSearchField: true,
+          route: LibglossRoutes.HOME_NEW,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
+        route: LibglossRoutes.HOME_NEW,
       ),
       body: _getBooks(context),
     );
@@ -71,34 +74,18 @@ class _HomeNewState extends State<HomeNew> {
       },
       builder: (context, state) {
         if (state is BooksLoading) {
-          return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: GridView(
-                padding: EdgeInsets.all(20),
-                scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 18,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height / 1.5),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: _secondaryColor,
+                  size: 64,
                 ),
-                children: List.generate(
-                  10,
-                  (index) => Container(
-                    color: Colors.teal[100],
-                    child: Column(
-                      children: [
-                        Container(
-                          height: (MediaQuery.of(context).size.height / 4.7),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ));
+              ),
+            ],
+          );
         } else if (state is BooksLoaded) {
           return _found(context, state.books);
         } else {
@@ -175,42 +162,37 @@ class _HomeNewState extends State<HomeNew> {
   }
 
   Widget _gender(BuildContext context, List<dynamic> books, int index) {
-    if (books[index]["categories"].length != 0){
+    if (books[index]["categories"].length != 0) {
       return SizedBox(
-        child: Stack(
-          fit: StackFit.expand, 
-          clipBehavior: Clip.none, 
-          children: [
-            _card(context, books, index),
-            Positioned(
-              left: MediaQuery.of(context).size.height * 0.01,
-              top: MediaQuery.of(context).size.height * 0.01,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.04,
-                width: MediaQuery.of(context).size.height * 0.09,
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: _secondaryColor,
-                  ),
-                  child: Text(
-                    "${books[index]["categories"][0]}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
-                  ),
+          child:
+              Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
+        _card(context, books, index),
+        Positioned(
+          left: MediaQuery.of(context).size.height * 0.01,
+          top: MediaQuery.of(context).size.height * 0.01,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.04,
+            width: MediaQuery.of(context).size.height * 0.09,
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                color: _secondaryColor,
+              ),
+              child: Text(
+                "${books[index]["categories"][0]}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
                 ),
               ),
             ),
-          ]
-        )
-      );
-    }
-    else {
+          ),
+        ),
+      ]));
+    } else {
       return _card(context, books, index);
     }
   }
@@ -241,13 +223,11 @@ class _HomeNewState extends State<HomeNew> {
               );
             },
             child: Container(
-              height:
-                  (MediaQuery.of(context).size.height / 5.5),
+              height: (MediaQuery.of(context).size.height / 5.5),
               child: OnlineImage(
                 imageUrl: books[index]["thumbnail"] ??
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/A_dictionary_of_the_Book_of_Mormon.pdf/page170-739px-A_dictionary_of_the_Book_of_Mormon.pdf.jpg",
-                height: MediaQuery.of(context).size.height /
-                    2.5, //100
+                height: MediaQuery.of(context).size.height / 2.5, //100
               ),
             ),
           ),

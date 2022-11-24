@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:share_plus/share_plus.dart';
+//import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../config/colors.dart';
@@ -61,7 +61,7 @@ class _WebViewPageState extends State<WebViewPage> {
         backgroundColor: _secondaryColor,
         onPressed: () async {
           final String url = _args["url"];
-          Share.share(url);
+          //Share.share(url);
         },
         child: const Icon(Icons.share),
       ),
