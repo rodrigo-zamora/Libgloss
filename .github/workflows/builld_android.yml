@@ -27,11 +27,13 @@ jobs:
           echo $DATA > google-services.json
 
       - name: Create build
+        env:
+          DATA: ${{ GOOGLE_API_KEY }}
         run: |
           cd libgloss
           flutter pub get
           flutter build apk
-          flutter build appbundle --dart-define=GOOGLE_API_KEY=${{ GOOGLE_API_KEY }}
+          flutter build appbundle --dart-define=GOOGLE_API_KEY=$DATA
 
       - name: Upload build
         uses: actions/upload-artifact@v3
