@@ -3,7 +3,8 @@ const router = express.Router();
 
 const { handleError } = require('../utils/hof');
 
-const booksController = require('../controllers/books.controller');
+const booksController = require('../controllers/book_controllers/books.controller');
+const notificationsController = require('../controllers/notifications_controller/notifications');
 
 router.get('/', handleError(async (req, res) => {
     const books = await booksController.getBooks(req.query.page_size, req.query.page);
@@ -28,6 +29,11 @@ router.get('/details', handleError(async (req, res) => {
     console.log('\tSaving book details in the database...');
     console.log('\t\tISBN:', req.query.isbn);
     await booksController.saveBooks(req.query.isbn, details);
+
+    // Notify users about the price change
+    console.log('\tNotifying users about the price change...');
+    await notificationsController.notifyUsers(req.query.isbn, details);
+
 }));
 
 router.get('/history', handleError(async (req, res) => {
