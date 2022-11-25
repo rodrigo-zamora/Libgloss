@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
+import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
 
 import '../blocs/bookPrice/bloc/book_price_bloc.dart';
 import '../blocs/search/bloc/search_bloc.dart';
@@ -29,6 +30,9 @@ class BlocSettings {
         ),
         BlocProvider<TrackingBloc>(
           create: (context) => TrackingBloc(),
+        ),
+        BlocProvider<UsedBooksBloc>(
+          create: (context) => UsedBooksBloc(),
         ),
       ],
       child: app,
