@@ -67,6 +67,7 @@ dependencies:
   image_picker: ^0.8.6
   flutter_rating_bar: ^4.0.1
   flutter_dotenv: ^5.0.2
+  jie_preview_image: ^1.0.1
 
 dev_dependencies:
   flutter_test:

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:jie_preview_image/jie_preview_image.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -202,16 +202,21 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
   }
 
   Container _image(List<dynamic>? image) {
-    print(image);
+    final List<String> _images = image!.cast<String>();
     return Container(
       width: MediaQuery.of(context).size.width / 2,
       height: MediaQuery.of(context).size.width / 2,
       child: ListView.builder(
-        itemCount: image!.length,
+        itemCount: image.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          return Container(
-            child: Image.network(image[index]),
+          return GestureDetector(
+            onTap: () {
+              previewImage(context, urls: _images);
+            },
+            child: Container(
+              child: Image.network(image[index]),
+            ),
           );
         },
       ),
