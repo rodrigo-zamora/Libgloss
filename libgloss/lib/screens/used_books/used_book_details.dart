@@ -204,15 +204,19 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
   Container _image(List<dynamic>? image) {
     final List<String> _images = image!.cast<String>();
     return Container(
-      width: MediaQuery.of(context).size.width / 2,
-      height: MediaQuery.of(context).size.width / 2,
+      width: MediaQuery.of(context).size.width / 1.5,
+      height: MediaQuery.of(context).size.width / 1.5,
       child: ListView.builder(
         itemCount: image.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              previewImage(context, urls: _images);
+              previewImage(
+                context,
+                urls: _images,
+                currentUrl: _images[index],
+              );
             },
             child: Container(
               child: Image.network(image[index]),
