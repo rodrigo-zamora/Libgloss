@@ -144,17 +144,56 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Text _text(String text, Color color, double size, FontWeight weight,
+  Widget _text(String text, Color color, double size, FontWeight weight,
       TextAlign align) {
-    return Text(
-      text,
-      textAlign: align,
-      style: TextStyle(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-      ),
-    );
+    var _isPrice = double.tryParse(text);
+    if (_isPrice == null) {
+      return Text(
+        text,
+        textAlign: align,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: weight,
+          color: color,
+        ),
+      );
+    } else {
+      double _price = double.parse(text);
+      int _priceInt = _price.toInt();
+      int _priceDec = ((_price - _priceInt) * 100).toInt();
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "\$$_priceInt",
+            textAlign: align,
+            style: TextStyle(
+              fontSize: size,
+              fontWeight: weight,
+              color: color,
+            ),
+          ),
+          Text(
+            ".",
+            textAlign: align,
+            style: TextStyle(
+              fontSize: size,
+              fontWeight: weight,
+              color: color,
+            ),
+          ),
+          Text(
+            _priceDec < 10 ? "0$_priceDec" : "$_priceDec",
+            textAlign: align,
+            style: TextStyle(
+              fontSize: size - 5,
+              fontWeight: weight,
+              color: color,
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   Container _image(String image) {
@@ -240,13 +279,13 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               return _loading();
             } else if (state is GonvillStoreLoaded) {
               final _result = state.props[0] as Map<String, dynamic>;
-              final _price = _result["libreria"] != null
-                  ? _result["libreria"]["price"].toString()
+              final _price = _result["gonvill"] != null
+                  ? _result["gonvill"]["price"].toString()
                   : "No disponible";
-              final String _url = _result["libreria"] != null
-                  ? _result["libreria"]["url"] as String
+              final String _url = _result["gonvill"] != null
+                  ? _result["gonvill"]["url"] as String
                   : "";
-              return _priceCard(_price, "Libreria", _url);
+              return _priceCard(_price, "Gonvill", _url);
             } else {
               return _error();
             }
