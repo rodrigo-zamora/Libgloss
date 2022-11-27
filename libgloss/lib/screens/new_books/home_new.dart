@@ -7,7 +7,6 @@ import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
 import '../../widgets/shared/search_appbar.dart';

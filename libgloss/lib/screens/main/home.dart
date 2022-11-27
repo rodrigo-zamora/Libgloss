@@ -1,3 +1,5 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -39,10 +41,19 @@ class _HomeState extends State<Home> {
   }
 
   void initialization() async {
-    // This is where you can initialize the resources needed by your app while
-    // the splash screen is displayed.  Remove the following example because
-    // delaying the user experience is a bad design practice!
-    // ignore_for_file: avoid_print
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      print("[Awesome Notifications] isAllowed: $isAllowed");
+      if (!isAllowed) {
+        // This is just a basic example. For real apps, you must show some
+        // friendly dialog box before call the request method.
+        // This is very important to not harm the user experience
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+
+    String firebaseToken =
+        await AwesomeNotificationsFcm().requestFirebaseAppToken();
+    print("[Awesome Notifications] Firebase Token: $firebaseToken");
 
     // Get the books for the home page
     BlocProvider.of<BooksBloc>(context).add(GetRandomBooksEvent(

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jie_preview_image/jie_preview_image.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -68,7 +71,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
               children: [
                 _text("vendido por:  ", _defaultColor, 14.0, FontWeight.normal,
                     TextAlign.center),
-                _text("${_args["vendedor"]}", _greenColor, 14.0,
+                _text("${_args["seller"]}", _greenColor, 14.0,
                     FontWeight.normal, TextAlign.center),
               ],
             ),
@@ -76,7 +79,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
             _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
             SizedBox(height: 20.0),
-            _image(_args["thumbnail"]),
+            _image(_args["images"]),
             SizedBox(height: 30.0),
             _text("Información", _defaultColor, 15.0, FontWeight.normal,
                 TextAlign.center),
@@ -115,7 +118,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                     children: [
                       _text("Precio", _defaultColor, 15.0, FontWeight.normal,
                           TextAlign.center),
-                      _text("\$${_args["precio"]}", _greenColor, 15.0,
+                      _text("\$${_args["price"]}", _greenColor, 15.0,
                           FontWeight.normal, TextAlign.center),
                     ],
                   ),
@@ -131,7 +134,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
                     children: [
                       _text("Contacto", _defaultColor, 15.0, FontWeight.normal,
                           TextAlign.center),
-                      _text("${_args["contacto"]}", _greenColor, 15.0,
+                      _text("${_args["phoneNumber"]}", _greenColor, 15.0,
                           FontWeight.normal, TextAlign.center),
                     ],
                   ),
@@ -139,9 +142,48 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
               ],
             ),
           ),
-          Image.network(
-              'https://www.mapsofindia.com/images2/india-map-2019.jpg'),
+          _googleMap(_args),
         ],
+      ),
+    );
+  }
+
+  Widget _googleMap(_args) {
+    Completer<GoogleMapController> _controller = Completer();
+    double _circleLat = _args["latitude"];
+    double _circleLng = _args["longitude"];
+    final CameraPosition _kGooglePlex = CameraPosition(
+      target: LatLng(_circleLat, _circleLng),
+      zoom: 11.5,
+    );
+    return Container(
+      height: MediaQuery.of(context).size.height / 3,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _kGooglePlex,
+        circles: Set.from(
+          [
+            Circle(
+              circleId: CircleId("1"),
+              center: LatLng(
+                _circleLat,
+                _circleLng,
+              ),
+              radius: 4000,
+              fillColor: _secondaryColor.withOpacity(0.25),
+              strokeWidth: 2,
+              strokeColor: _secondaryColor,
+            ),
+          ],
+        ),
+        onMapCreated: (GoogleMapController controller) {
+          controller.animateCamera(
+            CameraUpdate.newCameraPosition(
+              _kGooglePlex,
+            ),
+          );
+          _controller.complete(controller);
+        },
       ),
     );
   }
@@ -159,21 +201,30 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
     );
   }
 
-  Container _image(String? image) {
-    if (image == null) {
-      return Container(
-        child: Image.asset(
-          'assets/images/special/not_found.png',
-        ),
-      );
-    } else {
-      return Container(
-          height: (MediaQuery.of(context).size.height / 2.5),
-          child: OnlineImage(
-            imageUrl: image,
-            height: 100,
-          ));
-    }
+  Container _image(List<dynamic>? image) {
+    final List<String> _images = image!.cast<String>();
+    return Container(
+      width: MediaQuery.of(context).size.width / 1.5,
+      height: MediaQuery.of(context).size.width / 1.5,
+      child: ListView.builder(
+        itemCount: image.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              previewImage(
+                context,
+                urls: _images,
+                currentUrl: _images[index],
+              );
+            },
+            child: Container(
+              child: Image.network(image[index]),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   ElevatedButton _buttonSeller(

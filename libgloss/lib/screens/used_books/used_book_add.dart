@@ -160,6 +160,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               CircularProgressIndicator(
                 color: _secondaryColor,
               ),
+              // TODO: Add animated text
             ],
           ),
         ),
@@ -307,12 +308,9 @@ class _UsedBookAddState extends State<UsedBookAdd> {
       var url = Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?components=postal_code:$zipCode&sensor=false&&key=$GOOGLE_API_KEY");
       var response = await http.get(url);
-      print(response.body);
       var data = jsonDecode(response.body);
       _latitude = data["results"][0]["geometry"]["location"]["lat"];
       _longitude = data["results"][0]["geometry"]["location"]["lng"];
-      print("LATITUDE: $_latitude");
-      print("LONGITUDE: $_longitude");
       return {
         "latitude": _latitude,
         "longitude": _longitude,
@@ -354,7 +352,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               color: Colors.grey.withOpacity(0.6),
               spreadRadius: 7,
               blurRadius: 7,
-              offset: Offset(1, 5), // changes position of shadow
+              offset: Offset(1, 5),
             ),
           ],
         ),
@@ -487,6 +485,11 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             );
         } else {
           List<String> _imagesURL = [];
+          String _phoneNumber = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(_args["user"].uid)
+              .get()
+              .then((value) => value.data()!["phoneNumber"]);
           setState(() {});
           for (var i = 0; i < _imageFileList!.length; i++) {
             String _imageURL = await _uploadImage(_imageFileList![i]);
@@ -502,6 +505,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             "latitude": _lat,
             "longitude": _lng,
             "images": _imagesURL,
+            "phoneNumber": _phoneNumber,
           };
           print(_book);
           uploaded = await _addBook(_book);
@@ -545,8 +549,8 @@ class _UsedBookAddState extends State<UsedBookAdd> {
 
   Future<String> _uploadImage(XFile element) async {
     final _firebaseStorage = FirebaseStorage.instance;
-    final _storageReference =
-        _firebaseStorage.ref().child('books/${element.name}');
+    final String _path = "books/${element.name}${DateTime.now()}.png";
+    final _storageReference = _firebaseStorage.ref().child('$_path');
     final _uploadTask = _storageReference.putFile(File(element.path));
     final _snapshot = await _uploadTask.whenComplete(() => null);
     final _downloadURL = await _snapshot.ref.getDownloadURL();

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
 import 'package:libgloss/config/colors.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
@@ -11,7 +12,6 @@ import 'package:libgloss/widgets/shared/side_menu.dart';
 import '../../blocs/bookISBN/bloc/book_isbn_bloc.dart';
 import '../../widgets/shared/online_image.dart';
 import '../../widgets/shared/search_appbar.dart';
-//import 'pop_up.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -30,73 +30,8 @@ class _HomeUsedState extends State<HomeUsed> {
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
 
-  final List<Map<String, dynamic>> _listElements = [
-    {
-      "title": "Maze Runner",
-      "authors": ["James Dashner"],
-      "thumbnail": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
-      "vendedor": "Rodrigo Zamora",
-      "isbn": "978-6077547327",
-      "precio": 100,
-      "localizacion": "Guadalajara, Jalisco",
-      "contacto": "1111111111",
-    },
-    {
-      "title": "Bajo la Misma Estrella",
-      "authors": ["John Green"],
-      "thumbnail":
-          "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
-      "vendedor": "Lupita Gómez",
-      "isbn": "978-6073114233",
-      "precio": 95,
-      "localizacion": "Zapopan, Jalisco",
-      "contacto": "2222222222",
-    },
-    {
-      "title": "El niño de la pijama de rayas",
-      "authors": ["John Boyne"],
-      "thumbnail":
-          "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
-      "vendedor": "Julian Vico",
-      "isbn": "978-6073193320",
-      "precio": 70,
-      "localizacion": "Tlajomulco, Jalisco",
-      "contacto": "3333333333",
-    },
-    {
-      "title": "El Principito",
-      "authors": ["Antoine de Saint-Exupéry"],
-      "thumbnail":
-          "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
-      "vendedor": "Maria Lucia Perera",
-      "isbn": "978-6070730535",
-      "precio": 50,
-      "localizacion": "Tlaquepaque, Jalisco",
-      "contacto": "4444444444",
-    },
-    {
-      "title": "1984",
-      "authors": ["George Orwell"],
-      "thumbnail":
-          "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
-      "vendedor": "Roman Dominguez",
-      "isbn": "978-6073116336",
-      "precio": 80,
-      "localizacion": "El Salto, Jalisco",
-      "contacto": "5555555555",
-    },
-    {
-      "title": "El señor de las moscas",
-      "authors": ["William Golding"],
-      "thumbnail":
-          "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
-      "vendedor": "Maria Asuncion Perez",
-      "isbn": "978-8420674179",
-      "precio": 120,
-      "localizacion": "Tonalá, Jalisco",
-      "contacto": "6666666666",
-    },
-  ];
+  List<Map<String, dynamic>> _listElements = [];
+  Map<String, dynamic>? isSeller = {};
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +46,9 @@ class _HomeUsedState extends State<HomeUsed> {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
-            Map<String, dynamic>? data =
-                snapshot.data!.data() as Map<String, dynamic>?;
-            return _buildSellingPage(data);
+            BlocProvider.of<UsedBooksBloc>(context).add(GetUsedBooksEvent());
+            isSeller = snapshot.data!.data() as Map<String, dynamic>?;
+            return _getBooks(context);
           }
         }
         return _loadingPage();
@@ -142,7 +77,7 @@ class _HomeUsedState extends State<HomeUsed> {
     );
   }
 
-  Widget _buildSellingPage(Map<String, dynamic>? data) {
+  Widget _buildSellingPage() {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -159,15 +94,15 @@ class _HomeUsedState extends State<HomeUsed> {
         sideMenuColor: _primaryColor,
         route: LibglossRoutes.HOME_USED,
       ),
-      body: _add(context, data),
+      body: _add(context),
     );
   }
 
-  SizedBox _add(context, Map<String, dynamic>? data) {
+  SizedBox _add(context) {
     return SizedBox(
         child: Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
       _found(context),
-      data != null ? _button(data['isSeller']) : Container(),
+      isSeller != null ? _button(isSeller?['isSeller']) : Container(),
     ]));
   }
 
@@ -259,8 +194,8 @@ class _HomeUsedState extends State<HomeUsed> {
             child: Container(
               height: (MediaQuery.of(context).size.height / 5.5),
               child: OnlineImage(
-                imageUrl: "${_listElements[index]["thumbnail"]}",
-                height: 100,
+                imageUrl: _listElements[index]["images"][0],
+                height: (MediaQuery.of(context).size.height / 5.5),
               ),
             ),
           ),
@@ -304,7 +239,7 @@ class _HomeUsedState extends State<HomeUsed> {
             ),
           ),
           Text(
-            "${_listElements[index]["vendedor"]}",
+            "${_listElements[index]["seller"]}",
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -529,6 +464,26 @@ class _HomeUsedState extends State<HomeUsed> {
         "precio": 0,
         "localizacion": "LOCATION",
         "contacto": UserAuthRepository.userInstance?.currentUser!.phoneNumber,
+      },
+    );
+  }
+
+  BlocConsumer<UsedBooksBloc, UsedBooksState> _getBooks(BuildContext context) {
+    return BlocConsumer<UsedBooksBloc, UsedBooksState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state is UsedBooksLoaded) {
+          _listElements = state.usedBooks;
+          return _buildSellingPage();
+        } else if (state is UsedBooksError) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }

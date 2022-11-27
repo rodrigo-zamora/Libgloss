@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/stores/amazon/bloc/amazon_store_bloc.dart';
+import 'package:libgloss/blocs/stores/el_sotano/bloc/el_sotano_store_bloc.dart';
+import 'package:libgloss/blocs/stores/gandhi/bloc/gandhi_store_bloc.dart';
+import 'package:libgloss/blocs/stores/gonvill/bloc/gonvill_store_bloc.dart';
 
-import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 
@@ -41,8 +44,26 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-    BlocProvider.of<BookPriceBloc>(context).add(
-      GetBookPriceEvent(
+    BlocProvider.of<AmazonStoreBloc>(context).add(
+      AmazonPriceEvent(
+        bookId: _args["isbn"],
+      ),
+    );
+
+    BlocProvider.of<ElSotanoStoreBloc>(context).add(
+      ElSotanoPriceEvent(
+        bookId: _args["isbn"],
+      ),
+    );
+
+    BlocProvider.of<GandhiStoreBloc>(context).add(
+      GandhiPriceEvent(
+        bookId: _args["isbn"],
+      ),
+    );
+
+    BlocProvider.of<GonvillStoreBloc>(context).add(
+      GonvillPriceEvent(
         bookId: _args["isbn"],
       ),
     );
@@ -123,17 +144,56 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Text _text(String text, Color color, double size, FontWeight weight,
+  Widget _text(String text, Color color, double size, FontWeight weight,
       TextAlign align) {
-    return Text(
-      text,
-      textAlign: align,
-      style: TextStyle(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-      ),
-    );
+    var _isPrice = double.tryParse(text);
+    if (_isPrice == null) {
+      return Text(
+        text,
+        textAlign: align,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: weight,
+          color: color,
+        ),
+      );
+    } else {
+      double _price = double.parse(text);
+      int _priceInt = _price.toInt();
+      int _priceDec = ((_price - _priceInt) * 100).toInt();
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "\$$_priceInt",
+            textAlign: align,
+            style: TextStyle(
+              fontSize: size,
+              fontWeight: weight,
+              color: color,
+            ),
+          ),
+          Text(
+            ".",
+            textAlign: align,
+            style: TextStyle(
+              fontSize: size,
+              fontWeight: weight,
+              color: color,
+            ),
+          ),
+          Text(
+            _priceDec < 10 ? "0$_priceDec" : "$_priceDec",
+            textAlign: align,
+            style: TextStyle(
+              fontSize: size - 5,
+              fontWeight: weight,
+              color: color,
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   Container _image(String image) {
@@ -153,143 +213,94 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         arguments: _arguments);
   }
 
-  BlocConsumer<BookPriceBloc, BookPriceState> _getPrices() {
-    return BlocConsumer<BookPriceBloc, BookPriceState>(
-      listener: (context, state) {
-        if (state is BookPriceError) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text('Error al obtener precios'),
-              ),
-            );
-        }
-      },
-      builder: (context, state) {
-        double size = MediaQuery.of(context).size.height /
-            MediaQuery.of(context).size.width;
-        switch (state.runtimeType) {
-          case BookPriceError:
-            final Map<String, dynamic> books = {
-              "amazon": {
-                "price": null,
-              },
-              "gandhi": {
-                "price": null,
-              },
-              "el_sotano": {
-                "price": null,
-              },
-              "gonville": {
-                "price": null,
-              },
-            };
-            return GridView.count(
-              primary: false,
-              childAspectRatio: size,
-              //padding: EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              children: <Widget>[
-                for (var book in books.entries)
-                  _buildCard(book.key, book.value),
-              ],
-            );
-          case BookPriceLoaded:
-            final Map<String, dynamic> books = state.props[0];
-            print(books);
-            return GridView.count(
-              primary: false,
-              childAspectRatio: size,
-              //padding: EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              children: <Widget>[
-                for (var book in books.entries)
-                  _buildCard(book.key, book.value),
-              ],
-            );
-          case BookPriceLoading:
-            return GridView.count(
-              primary: false,
-              childAspectRatio: size,
-              //padding: EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              children: <Widget>[
-                for (var i = 0; i < 4; i++)
-                  Container(
-                    child: Card(
-                      elevation: 4, // the size of the shadow
-                      shadowColor: _greyColor, // shadow color
-                      color: _quaternaryColor, // the color of the card
-                      shape: RoundedRectangleBorder(
-                        // the shape of the card
-                        borderRadius: BorderRadius.all(Radius.circular(
-                            15)), // the radius of the border, made to be circular
-                      ),
-                      child: LoadingAnimationWidget.fourRotatingDots(
-                        color: _secondaryColor,
-                        size: size * 20,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          default:
-            return Center(child: CircularProgressIndicator());
-        }
-      },
+  Widget _getPrices() {
+    return GridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      childAspectRatio: 1.5,
+      children: [
+        BlocBuilder<AmazonStoreBloc, AmazonStoreState>(
+          builder: (context, state) {
+            if (state is AmazonStoreLoading) {
+              return _loading();
+            } else if (state is AmazonStoreLoaded) {
+              final _result = state.props[0] as Map<String, dynamic>;
+              final _price = _result["amazon"] != null
+                  ? _result["amazon"]["price"].toString()
+                  : "No disponible";
+              final String _url = _result["amazon"] != null
+                  ? _result["amazon"]["url"] as String
+                  : "";
+              return _priceCard(_price, "Amazon", _url);
+            } else {
+              return _error();
+            }
+          },
+        ),
+        BlocBuilder<ElSotanoStoreBloc, ElSotanoStoreState>(
+          builder: (context, state) {
+            if (state is ElSotanoStoreLoading) {
+              return _loading();
+            } else if (state is ElSotanoStoreLoaded) {
+              final _result = state.props[0] as Map<String, dynamic>;
+              final _price = _result["el_sotano"] != null
+                  ? _result["el_sotano"]["price"].toString()
+                  : "No disponible";
+              final String _url = _result["el_sotano"] != null
+                  ? _result["el_sotano"]["url"] as String
+                  : "";
+              return _priceCard(_price, "El Sotano", _url);
+            } else {
+              return _error();
+            }
+          },
+        ),
+        BlocBuilder<GandhiStoreBloc, GandhiStoreState>(
+          builder: (context, state) {
+            if (state is GandhiStoreLoading) {
+              return _loading();
+            } else if (state is GandhiStoreLoaded) {
+              final _result = state.props[0] as Map<String, dynamic>;
+              final _price = _result["gandhi"] != null
+                  ? _result["gandhi"]["price"].toString()
+                  : "No disponible";
+              final String _url = _result["gandhi"] != null
+                  ? _result["gandhi"]["url"] as String
+                  : "";
+              return _priceCard(_price, "Gandhi", _url);
+            } else {
+              return _error();
+            }
+          },
+        ),
+        BlocBuilder<GonvillStoreBloc, GonvillStoreState>(
+          builder: (context, state) {
+            if (state is GonvillStoreLoading) {
+              return _loading();
+            } else if (state is GonvillStoreLoaded) {
+              final _result = state.props[0] as Map<String, dynamic>;
+              final _price = _result["gonvill"] != null
+                  ? _result["gonvill"]["price"].toString()
+                  : "No disponible";
+              final String _url = _result["gonvill"] != null
+                  ? _result["gonvill"]["url"] as String
+                  : "";
+              return _priceCard(_price, "Gonvill", _url);
+            } else {
+              return _error();
+            }
+          },
+        ),
+      ],
     );
   }
 
-  _buildCard(String key, value) {
-    if (value == null) {
-      return _storeCard(key, _redColor, "No disponible", "");
-    } else {
-      return _storeCard(key, _blueColor, value["price"].toString(),
-          value["url"] != null ? value["url"] : "");
-    }
-  }
-
-  Widget _storeCard(String title, Color color, String value, String url) {
-    switch (title) {
-      case "amazon":
-        title = "Amazon";
-        break;
-      case "gandhi":
-        title = "Gandhi";
-        break;
-      case "gonvill":
-        title = "Gonvill";
-        break;
-      case "el_sotano":
-        title = "El Sótano";
-        break;
-      case "mercado_libre":
-        title = "Mercado Libre";
-        break;
-    }
+  Widget _priceCard(String price, String store, String url) {
     return Container(
       child: GestureDetector(
         onTap: () {
           if (url != "") {
             _launchURL(url);
-          } else {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text("No se encontró el libro en $title"),
-                ),
-              );
           }
         },
         child: Card(
@@ -309,13 +320,68 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               children: [
                 Container(
                   child: _text(
-                      title, color, 15.0, FontWeight.bold, TextAlign.center),
+                      store,
+                      price != "No disponible" ? _blueColor : _redColor,
+                      15.0,
+                      FontWeight.bold,
+                      TextAlign.center),
                 ),
                 SizedBox(height: 5),
-                _text(value, _defaultColor, 15.0, FontWeight.normal,
+                _text(price, _defaultColor, 15.0, FontWeight.normal,
                     TextAlign.center),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _loading() {
+    return Container(
+      child: Card(
+        elevation: 4, // the size of the shadow
+        shadowColor: _greyColor, // shadow color
+        color: _quaternaryColor, // the color of the card
+        shape: RoundedRectangleBorder(
+          // the shape of the card
+          borderRadius: BorderRadius.all(Radius.circular(
+              15)), // the radius of the border, made to be circular
+        ),
+        child: LoadingAnimationWidget.fourRotatingDots(
+          color: _secondaryColor,
+          size: MediaQuery.of(context).size.height /
+              MediaQuery.of(context).size.width *
+              20,
+        ),
+      ),
+    );
+  }
+
+  Widget _error() {
+    return Container(
+      child: Card(
+        elevation: 4, // the size of the shadow
+        shadowColor: _greyColor, // shadow color
+        color: _quaternaryColor, // the color of the card
+        shape: RoundedRectangleBorder(
+          // the shape of the card
+          borderRadius: BorderRadius.all(Radius.circular(
+              15)), // the radius of the border, made to be circular
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                child: _text("Error", _blueColor, 15.0, FontWeight.bold,
+                    TextAlign.center),
+              ),
+              SizedBox(height: 5),
+              _text("No se pudo cargar la información", _defaultColor, 15.0,
+                  FontWeight.normal, TextAlign.center),
+            ],
           ),
         ),
       ),
