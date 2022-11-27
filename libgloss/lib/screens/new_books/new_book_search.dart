@@ -1,8 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:libgloss/blocs/bookPrice/bloc/book_price_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
+
+import 'package:libgloss/blocs/stores/amazon/bloc/amazon_store_bloc.dart';
+import 'package:libgloss/blocs/stores/el_sotano/bloc/el_sotano_store_bloc.dart';
+import 'package:libgloss/blocs/stores/gandhi/bloc/gandhi_store_bloc.dart';
+import 'package:libgloss/blocs/stores/gonvill/bloc/gonvill_store_bloc.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -199,8 +203,26 @@ class _NewBookSearchState extends State<NewBookSearch> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      BlocProvider.of<BookPriceBloc>(context).add(
-                        GetBookPriceEvent(
+                      BlocProvider.of<AmazonStoreBloc>(context).add(
+                        AmazonPriceEvent(
+                          bookId: _books[index]["isbn"],
+                        ),
+                      );
+
+                      BlocProvider.of<ElSotanoStoreBloc>(context).add(
+                        ElSotanoPriceEvent(
+                          bookId: _books[index]["isbn"],
+                        ),
+                      );
+
+                      BlocProvider.of<GandhiStoreBloc>(context).add(
+                        GandhiPriceEvent(
+                          bookId: _books[index]["isbn"],
+                        ),
+                      );
+
+                      BlocProvider.of<GonvillStoreBloc>(context).add(
+                        GonvillPriceEvent(
                           bookId: _books[index]["isbn"],
                         ),
                       );

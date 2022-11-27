@@ -1,16 +1,16 @@
-part of 'book_price_bloc.dart';
+part of 'gandhi_store_bloc.dart';
 
 @immutable
-abstract class BookPriceEvent {
-  const BookPriceEvent();
+abstract class GandhiStoreEvent {
+  const GandhiStoreEvent();
 
   List<dynamic> get props => [];
 }
 
-class GetBookPriceEvent extends BookPriceEvent {
+class GandhiPriceEvent extends GandhiStoreEvent {
   final String bookId;
 
-  const GetBookPriceEvent({
+  const GandhiPriceEvent({
     required String this.bookId,
   });
 
