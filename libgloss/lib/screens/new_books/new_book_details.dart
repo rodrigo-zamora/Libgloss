@@ -147,7 +147,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   Widget _text(String text, Color color, double size, FontWeight weight,
       TextAlign align) {
     var _isPrice = double.tryParse(text);
-    if (_isPrice == null) {
+    if (_isPrice == null || _isPrice > 99999) {
       return Text(
         text,
         textAlign: align,

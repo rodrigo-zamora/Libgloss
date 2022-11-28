@@ -47,7 +47,9 @@ class _TrackingItemState extends State<TrackingItem> {
                           width: 100,
                           height: 150,
                           child: OnlineImage(
-                            imageUrl: widget.item["thumbnail"]!,
+                            imageUrl: widget.item["thumbnail"] != null
+                                ? widget.item["thumbnail"]
+                                : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
                             height: 100,
                           ),
                         ),

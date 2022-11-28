@@ -73,10 +73,7 @@ class UserAuthRepository {
             'isAdministrator': false,
           });
 
-          await FirebaseFirestore.instance
-              .collection('lists')
-              .doc(user.uid)
-              .set({
+          await FirebaseFirestore.instance.collection('lists').add({
             'useruid': user.uid,
             'tracking': [],
             'wish': [],

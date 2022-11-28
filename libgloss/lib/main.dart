@@ -71,8 +71,9 @@ class _LibglossState extends State<Libgloss> {
           message.notification!.body,
           NotificationDetails(
             android: AndroidNotificationDetails(
-              'book-tracker',
-              '',
+              'channel id',
+              'channel name',
+              channelDescription: 'channel description',
               importance: Importance.max,
               priority: Priority.high,
               ticker: 'ticker',

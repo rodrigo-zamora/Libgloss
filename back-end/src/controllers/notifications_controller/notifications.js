@@ -3,7 +3,8 @@ const googleController = require('../book_controllers/stores/google');
 
 const notification_options = {
     priority: "high",
-    timeToLive: 60 * 60 * 24
+    timeToLive: 60 * 60 * 24,
+    show_in_foreground: true
 };
 
 
