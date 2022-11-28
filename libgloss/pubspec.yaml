@@ -47,8 +47,8 @@ dependencies:
   geocode: ^1.0.2
 
   # Notifications
-  awesome_notifications: ^0.7.4+1
-  awesome_notifications_fcm: ^0.7.4+1
+  firebase_messaging: ^14.1.2
+  flutter_local_notifications: ^12.0.4
 
   # UI Widgets
   font_awesome_flutter: ^10.2.1

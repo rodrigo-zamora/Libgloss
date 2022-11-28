@@ -1,14 +1,15 @@
-import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/animations/slide_route.dart';
 
 import 'config/blocs.dart';
-import 'notification_controller.dart';
 
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -17,26 +18,6 @@ void main() async {
   await Firebase.initializeApp();
   // Run the initialization splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
-  AwesomeNotifications().initialize(
-    // set the icon to null if you want to use the default app icon
-    null,
-    [
-      NotificationChannel(
-        channelKey: 'basic_channel',
-        channelName: 'Basic notifications',
-        channelDescription: 'Notification channel for basic tests',
-        defaultColor: Color(0xFF9D50DD),
-        ledColor: Colors.white,
-      ),
-    ],
-  );
-
-  AwesomeNotificationsFcm().initialize(
-    onFcmTokenHandle: NotificationController.myFcmTokenHandle,
-    onNativeTokenHandle: NotificationController.myNativeTokenHandle,
-    onFcmSilentDataHandle: NotificationController.onFcmSilentDataHandle,
-  );
 
   // Run the app
   runApp(BlocSettings.getBlocProviders(Libgloss()));
@@ -51,19 +32,58 @@ class Libgloss extends StatefulWidget {
 }
 
 class _LibglossState extends State<Libgloss> {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  Future<void> saveUserToken() async {
+    var myToken = await messaging.getToken();
+    if (UserAuthRepository().isAuthenticated()) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(UserAuthRepository().getuid())
+          .update({'token': myToken});
+    }
+  }
+
   @override
   void initState() {
-    // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
-        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-        onNotificationCreatedMethod:
-            NotificationController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:
-            NotificationController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:
-            NotificationController.onDismissActionReceivedMethod);
-
     super.initState();
+    saveUserToken();
+
+    final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const initSettings = InitializationSettings(android: androidSetting);
+
+    _localNotificationsPlugin.initialize(initSettings).then((_) {
+      debugPrint('[Notifications] setupPlugin: setup success');
+    }).catchError((Object error) {
+      debugPrint('[Notifications] Error: $error');
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        print('[Notifications] Message on Foreground: ${message.toString()}');
+
+        _localNotificationsPlugin.show(
+          0,
+          message.notification!.title,
+          message.notification!.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'book-tracker',
+              '',
+              importance: Importance.max,
+              priority: Priority.high,
+              ticker: 'ticker',
+              styleInformation: BigTextStyleInformation(''),
+              largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+              playSound: true,
+            ),
+          ),
+        );
+      }
+    });
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserAuthRepository {
@@ -58,7 +59,10 @@ class UserAuthRepository {
         final List<DocumentSnapshot> documents = result.docs;
 
         if (documents.length == 0) {
-          FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .set({
             'id': user.uid,
             'username': user.displayName,
             'profilePicture': user.photoURL,
@@ -69,11 +73,20 @@ class UserAuthRepository {
             'isAdministrator': false,
           });
 
-          FirebaseFirestore.instance.collection('lists').doc(user.uid).set({
+          await FirebaseFirestore.instance
+              .collection('lists')
+              .doc(user.uid)
+              .set({
             'useruid': user.uid,
             'tracking': [],
             'wish': [],
           });
+
+          var myToken = await FirebaseMessaging.instance.getToken();
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .update({'token': myToken});
         }
       } else {
         throw Exception('Error signing in with Google: $user');

@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -506,6 +507,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             "longitude": _lng,
             "images": _imagesURL,
             "phoneNumber": _phoneNumber,
+            "sellerUid": UserAuthRepository().getuid(),
           };
           print(_book);
           uploaded = await _addBook(_book);
