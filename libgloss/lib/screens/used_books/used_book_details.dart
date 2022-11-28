@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jie_preview_image/jie_preview_image.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
+import '../../repositories/auth/user_auth_repository.dart';
 import '../../widgets/shared/search_appbar.dart';
 import '../../widgets/shared/side_menu.dart';
 
@@ -107,6 +111,7 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
       ),
       child: Column(
         children: [
+          _showSeller(context, _args),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 5.0),
             child: Row(
@@ -272,6 +277,98 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
       },
       child: _text("Contactar Vendedor", _defaultColor, 15.0, FontWeight.normal,
           TextAlign.center),
+    );
+  }
+
+  Widget _showSeller(BuildContext context, Map<String, dynamic> _args) {
+    Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore.instance.collection('users').where('username', isEqualTo: _args["seller"]).get();  
+    var isLoggedIn = UserAuthRepository().isAuthenticated();
+    print("IS LOOOGED $isLoggedIn");
+    if (isLoggedIn){
+      return FutureBuilder<DocumentSnapshot>(
+        future: result.then((value) => value.docs.first.reference.get()),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("Something went wrong");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              Map<String, dynamic>? data =
+                  snapshot.data!.data() as Map<String, dynamic>?;
+              if (data != null) return _buildUserOptions(data);
+            }
+          }
+          return _loadingUserOptions();
+        },
+      );
+    }
+    else {
+      return Container();
+    }
+  }
+
+  Widget _loadingUserOptions() {
+    return Center(
+      child: CircularProgressIndicator(
+        color: _secondaryColor,
+      ),
+    );
+  }
+
+  Widget _buildUserOptions(Map<String, dynamic>? data) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 15),
+          Text(
+            data?['username'],
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: _defaultColor,
+            ),
+          ),
+          SizedBox(height: 15),
+          _profilePicture(data),
+          SizedBox(height: 15),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _profilePicture(Map<String, dynamic>? data) {
+    return SizedBox(
+      height: 150,
+      width: 150,
+      child: Stack(
+        fit: StackFit.expand,
+        clipBehavior: Clip.none,
+        children: [
+          CachedNetworkImage(
+            placeholder: (context, url) {
+              return ClipOval(
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 100,
+                    color: Colors.grey[300],
+                  ),
+                ),
+              );
+            },
+            fit: BoxFit.contain,
+            imageUrl: data!['profilePicture'],
+            imageBuilder: (context, imageProvider) {
+              return CircleAvatar(
+                backgroundImage: imageProvider,
+              );
+            },
+          ),
+        ],
+      )
     );
   }
 }
