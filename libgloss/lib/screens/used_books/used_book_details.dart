@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jie_preview_image/jie_preview_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -268,16 +269,26 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       ),
       onPressed: () {
-        Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER,
+        /* Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER,
             arguments: {
               "vendedor": _args["vendedor"],
               "localizacion": _args["localizacion"],
               "contacto": _args["contacto"],
-            });
+            }); */
+        //TODO: call seller from phone
+        _makePhoneCall(_args["phoneNumber"]);
       },
       child: _text("Contactar Vendedor", _defaultColor, 15.0, FontWeight.normal,
           TextAlign.center),
     );
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 
   Widget _showSeller(BuildContext context, Map<String, dynamic> _args) {

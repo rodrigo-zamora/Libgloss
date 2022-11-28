@@ -101,28 +101,16 @@ class _TrackingItemState extends State<TrackingItem> {
               Positioned(
                 top: 0,
                 right: 0,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: _secondaryColor,
-                      ),
-                      onPressed: () {
-                        _openEdit();
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.delete_forever,
-                        color: _secondaryColor,
-                      ),
-                      onPressed: () {
-                        _delete();
-                      },
-                    ),
-                  ],
-                )
+                child: IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: _secondaryColor,
+                  ),
+                  onPressed: () {
+                    _openEdit();
+                  },
+                ),
+                
               ),
             ],
           ),
@@ -291,6 +279,15 @@ class _TrackingItemState extends State<TrackingItem> {
             ),
           ),
           actions: [
+            IconButton(
+              icon: Icon(
+                Icons.delete_forever,
+                color: _secondaryColor,
+              ),
+              onPressed: () {
+                _delete();
+              },
+            ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context, 'Cancel');
