@@ -219,7 +219,31 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
               );
             },
             child: Container(
-              child: Image.network(image[index]),
+              child: Row(
+                children: [
+                  Image.network(
+                    image[index],
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                            color: _secondaryColor,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  index != image.length - 1
+                      ? SizedBox(width: 10)
+                      : SizedBox(width: 0),
+                ],
+              ),
             ),
           );
         },

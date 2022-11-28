@@ -12,6 +12,7 @@ import '../screens/used_books/home_used.dart';
 import '../screens/used_books/used_book_details.dart';
 import '../screens/used_books/used_book_search.dart';
 import '../screens/used_books/used_book_seller.dart';
+import '../screens/user/notifications_page.dart';
 import '../screens/user/user_options.dart';
 import '../screens/log_in/login.dart';
 import '../screens/features/web_view.dart';
@@ -33,6 +34,7 @@ class LibglossRoutes {
   static const BOOK_TRACKER = "/book_tracker";
   // User
   static const OPTIONS = "/user_options";
+  static const NOTIFICATIONS = "/notifications";
   // Scanner
   static const SCANNER = "/scanner";
   static const USED_BOOK_SCANNER = "/used_book_scanner";
@@ -64,6 +66,7 @@ class LibglossRoutes {
     BOOK_TRACKER: (context) => BookTracker(),
     // User
     OPTIONS: (context) => UserOptions(),
+    NOTIFICATIONS: (context) => ConfigurationPage(),
     // Scanner
     SCANNER: (context) => Scanner(),
     USED_BOOK_SCANNER: (context) => UploadBookScanner(),

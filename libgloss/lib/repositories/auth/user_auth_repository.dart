@@ -71,6 +71,7 @@ class UserAuthRepository {
             'zipCode': null,
             'isSeller': false,
             'isAdministrator': false,
+            'notifications': true,
           });
 
           await FirebaseFirestore.instance.collection('lists').add({

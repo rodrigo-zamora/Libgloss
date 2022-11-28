@@ -164,7 +164,6 @@ class _HomeUsedState extends State<HomeUsed> {
 
   Container _card(int index, BuildContext context) {
     return Container(
-      //color: Colors.teal[100],
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey[200]!),
@@ -191,62 +190,66 @@ class _HomeUsedState extends State<HomeUsed> {
                 arguments: _listElements[index],
               );
             },
-            child: Container(
-              height: (MediaQuery.of(context).size.height / 5.5),
-              child: OnlineImage(
-                imageUrl: _listElements[index]["images"][0],
-                height: (MediaQuery.of(context).size.height / 5.5),
-              ),
+            child: Column(
+              children: [
+                Container(
+                  height: (MediaQuery.of(context).size.height / 5.5),
+                  child: OnlineImage(
+                    imageUrl: _listElements[index]["images"][0],
+                    height: (MediaQuery.of(context).size.height / 5.5),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Divider(
+                  color: Colors.grey[300],
+                  thickness: 1,
+                ),
+                Text(
+                  "${_listElements[index]["title"]}",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  //maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "${_listElements[index]["authors"].join(', ')}",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _blueColor,
+                    fontSize: 12,
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Vendido por",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  "${_listElements[index]["seller"]}",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _greenColor,
+                    fontSize: 12,
+                  ),
+                )
+              ],
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
-          Divider(
-            color: Colors.grey[300],
-            thickness: 1,
-          ),
-          Text(
-            "${_listElements[index]["title"]}",
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            //maxLines: 2,
-            style: TextStyle(
-              fontSize: 14,
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            "${_listElements[index]["authors"].join(', ')}",
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: _blueColor,
-              fontSize: 12,
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            "Vendido por",
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-            ),
-          ),
-          Text(
-            "${_listElements[index]["seller"]}",
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: _greenColor,
-              fontSize: 12,
-            ),
-          )
         ],
       ),
     );
@@ -447,23 +450,6 @@ class _HomeUsedState extends State<HomeUsed> {
         return Center(
           child: CircularProgressIndicator(),
         );
-      },
-    );
-  }
-
-  void _go_details(String code) {
-    Navigator.pushNamed(
-      context,
-      LibglossRoutes.USED_BOOK_ADD,
-      arguments: {
-        "title": "",
-        "authors": [],
-        "thumbnail": null,
-        "vendedor": UserAuthRepository.userInstance?.currentUser!.displayName,
-        "isbn": code,
-        "precio": 0,
-        "localizacion": "LOCATION",
-        "contacto": UserAuthRepository.userInstance?.currentUser!.phoneNumber,
       },
     );
   }

@@ -114,11 +114,14 @@ class _UserOptionsState extends State<UserOptions> {
               SizedBox(height: 20),
               _profilePicture(data),
               _sellerButton(data['isSeller']),
-              _followers(true),
+              //_followers(true),
               SizedBox(height: 10),
-              _lowButton(Icons.person_outlined, "Mi Cuenta", () {}, Icons.arrow_forward_ios),
+              _lowButton(Icons.person_outlined, "Mi cuenta", () {},
+                  Icons.arrow_forward_ios),
               _bookHistory(data['isSeller']),
-              _lowButton(Icons.help_outline, "Configuración", () {}, Icons.arrow_forward_ios),
+              _lowButton(Icons.help_outline, "Configuración", () {
+                Navigator.pushNamed(context, LibglossRoutes.NOTIFICATIONS);
+              }, Icons.arrow_forward_ios),
               _lowButton(Icons.logout_outlined, "Salir", () {
                 BlocProvider.of<AuthBloc>(context).add(
                   SignOutEvent(
@@ -133,14 +136,14 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Widget _bookHistory(bool isSeller){
-    if (isSeller){
-      return _lowButton(Icons.book_outlined, "Historial de ventas", () {}, Icons.arrow_forward_ios);
-    }
-    else {
+  Widget _bookHistory(bool isSeller) {
+    if (isSeller) {
+      return _lowButton(
+          Icons.book_outlined, "Mis libros", () {}, Icons.arrow_forward_ios);
+    } else {
       return Container();
     }
-  } 
+  }
 
   SizedBox _profilePicture(Map<String, dynamic>? data) {
     return SizedBox(
@@ -198,7 +201,8 @@ class _UserOptionsState extends State<UserOptions> {
         ));
   }
 
-  Padding _lowButton(IconData icon, String text, Function() onPressed, IconData? icon2) {
+  Padding _lowButton(
+      IconData icon, String text, Function() onPressed, IconData? icon2) {
     if (icon2 != null) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -242,43 +246,44 @@ class _UserOptionsState extends State<UserOptions> {
           ),
         ),
       );
-    } else return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      child: TextButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_tertiaryColor),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-          padding: MaterialStateProperty.all(
-            EdgeInsets.all(10),
-          ),
-          overlayColor:
-              MaterialStateColor.resolveWith((states) => _primaryColor),
-        ),
-        onPressed: onPressed,
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: _secondaryColor,
-              size: 22,
-            ),
-            SizedBox(width: 20),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: _iconColors,
-                ),
+    } else
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        child: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(_tertiaryColor),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
             ),
-          ],
+            padding: MaterialStateProperty.all(
+              EdgeInsets.all(10),
+            ),
+            overlayColor:
+                MaterialStateColor.resolveWith((states) => _primaryColor),
+          ),
+          onPressed: onPressed,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: _secondaryColor,
+                size: 22,
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: _iconColors,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 
   Padding _sellerButton(bool isSeller) {
