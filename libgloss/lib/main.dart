@@ -80,6 +80,7 @@ class _LibglossState extends State<Libgloss> {
               styleInformation: BigTextStyleInformation(''),
               largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
               playSound: true,
+              visibility: NotificationVisibility.public,
             ),
           ),
         );

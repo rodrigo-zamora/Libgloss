@@ -40,6 +40,8 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   double _lng = 0;
   bool uploaded = false;
 
+  double _progress = 0;
+
   TextEditingController _controller = TextEditingController();
 
   List<XFile>? _imageFileList;
@@ -158,10 +160,21 @@ class _UsedBookAddState extends State<UsedBookAdd> {
                 ),
               ),
               SizedBox(height: 24.0),
-              CircularProgressIndicator(
-                color: _secondaryColor,
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: Image.asset(
+                  'assets/images/loading/loading_bunny_green.gif',
+                ),
               ),
-              // TODO: Add animated text
+              SizedBox(height: 24.0),
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: LinearProgressIndicator(
+                  value: _progress / 100,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: AlwaysStoppedAnimation<Color>(_secondaryColor),
+                ),
+              ),
             ],
           ),
         ),
@@ -485,16 +498,22 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               ),
             );
         } else {
+          uploaded = true;
           List<String> _imagesURL = [];
           String _phoneNumber = await FirebaseFirestore.instance
               .collection("users")
-              .doc(_args["user"].uid)
+              .doc(UserAuthRepository().getuid())
               .get()
               .then((value) => value.data()!["phoneNumber"]);
           setState(() {});
+          _progress += 10;
+
+          double _totalProgressImages = 80;
           for (var i = 0; i < _imageFileList!.length; i++) {
             String _imageURL = await _uploadImage(_imageFileList![i]);
             _imagesURL.add(_imageURL);
+            _progress += _totalProgressImages / _imageFileList!.length;
+            setState(() {});
           }
           Map<String, dynamic> _book = {
             "title": _args["title"],
@@ -509,7 +528,8 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             "phoneNumber": _phoneNumber,
             "sellerUid": UserAuthRepository().getuid(),
           };
-          print(_book);
+          _progress = 100;
+          setState(() {});
           uploaded = await _addBook(_book);
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
