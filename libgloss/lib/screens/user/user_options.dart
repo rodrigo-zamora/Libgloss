@@ -116,17 +116,17 @@ class _UserOptionsState extends State<UserOptions> {
               _sellerButton(data['isSeller']),
               _followers(true),
               SizedBox(height: 10),
-              _lowButton(Icons.person_outlined, "Mi Cuenta", () {}),
+              _lowButton(Icons.person_outlined, "Mi Cuenta", () {}, Icons.arrow_forward_ios),
               _lowButton(Icons.notifications_outlined,
-                  "Notificaciones y mensajes", () {}),
-              _lowButton(Icons.help_outline, "Configuración", () {}),
+                  "Notificaciones", () {}, Icons.arrow_forward_ios),
+              _lowButton(Icons.help_outline, "Configuración", () {}, Icons.arrow_forward_ios),
               _lowButton(Icons.logout_outlined, "Salir", () {
                 BlocProvider.of<AuthBloc>(context).add(
                   SignOutEvent(
                     buildcontext: context,
                   ),
                 );
-              }),
+              }, null),
             ],
           ),
         ),
@@ -190,8 +190,51 @@ class _UserOptionsState extends State<UserOptions> {
         ));
   }
 
-  Padding _lowButton(IconData icon, String text, Function() onPressed) {
-    return Padding(
+  Padding _lowButton(IconData icon, String text, Function() onPressed, IconData? icon2) {
+    if (icon2 != null) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        child: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(_tertiaryColor),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            padding: MaterialStateProperty.all(
+              EdgeInsets.all(10),
+            ),
+            overlayColor:
+                MaterialStateColor.resolveWith((states) => _primaryColor),
+          ),
+          onPressed: onPressed,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: _secondaryColor,
+                size: 22,
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: _iconColors,
+                  ),
+                ),
+              ),
+              Icon(
+                icon2,
+                color: _secondaryColor,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: TextButton(
         style: ButtonStyle(
@@ -223,11 +266,6 @@ class _UserOptionsState extends State<UserOptions> {
                   color: _iconColors,
                 ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: _secondaryColor,
-              size: 20,
             ),
           ],
         ),

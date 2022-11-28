@@ -96,7 +96,6 @@ class _BookTrackerState extends State<BookTracker> {
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
-
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
               Map<String, dynamic>? data =
@@ -304,7 +303,7 @@ class _BookTrackerState extends State<BookTracker> {
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
                 return WishItem(
-                    item: data?["wish"][index % data["wish"].length]);
+                  item: data?["wish"][index % data["wish"].length]);
               },
             ),
           ),
