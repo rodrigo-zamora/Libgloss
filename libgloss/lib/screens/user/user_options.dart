@@ -117,8 +117,7 @@ class _UserOptionsState extends State<UserOptions> {
               _followers(true),
               SizedBox(height: 10),
               _lowButton(Icons.person_outlined, "Mi Cuenta", () {}, Icons.arrow_forward_ios),
-              _lowButton(Icons.notifications_outlined,
-                  "Notificaciones", () {}, Icons.arrow_forward_ios),
+              _bookHistory(data['isSeller']),
               _lowButton(Icons.help_outline, "Configuración", () {}, Icons.arrow_forward_ios),
               _lowButton(Icons.logout_outlined, "Salir", () {
                 BlocProvider.of<AuthBloc>(context).add(
@@ -133,6 +132,15 @@ class _UserOptionsState extends State<UserOptions> {
       ),
     );
   }
+
+  Widget _bookHistory(bool isSeller){
+    if (isSeller){
+      return _lowButton(Icons.book_outlined, "Historial de ventas", () {}, Icons.arrow_forward_ios);
+    }
+    else {
+      return Container();
+    }
+  } 
 
   SizedBox _profilePicture(Map<String, dynamic>? data) {
     return SizedBox(
