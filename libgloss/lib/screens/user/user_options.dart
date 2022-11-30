@@ -120,7 +120,7 @@ class _UserOptionsState extends State<UserOptions> {
                 Navigator.pushNamed(context, LibglossRoutes.ACCOUNT);
               }, Icons.arrow_forward_ios),
               _bookHistory(data['isSeller']),
-              _lowButton(Icons.help_outline, "Configuración", () {
+              _lowButton(Icons.help_outline, "Notifiaciones", () {
                 Navigator.pushNamed(context, LibglossRoutes.NOTIFICATIONS);
               }, Icons.arrow_forward_ios),
               _lowButton(Icons.logout_outlined, "Salir", () {
@@ -147,60 +147,33 @@ class _UserOptionsState extends State<UserOptions> {
     }
   }
 
-  SizedBox _profilePicture(Map<String, dynamic>? data) {
-    return SizedBox(
-        height: 110,
-        width: 110,
-        child: Stack(
-          fit: StackFit.expand,
-          clipBehavior: Clip.none,
-          children: [
-            CachedNetworkImage(
-              placeholder: (context, url) {
-                return ClipOval(
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      width: 100,
-                      color: Colors.grey[300],
-                    ),
-                  ),
-                );
-              },
-              fit: BoxFit.contain,
-              imageUrl: data!['profilePicture'],
-              imageBuilder: (context, imageProvider) {
-                return CircleAvatar(
-                  backgroundImage: imageProvider,
-                );
-              },
-            ),
-            Positioned(
-              bottom: 0,
-              right: -10,
-              child: SizedBox(
-                height: 40,
-                width: 40,
-                child: FloatingActionButton(
-                  heroTag: "btn1",
-                  backgroundColor: _primaryColor,
-                  splashColor: _secondaryColor,
-                  onPressed: () {
-                    print("Change profile picture");
-                    _show();
-                  },
-                  child: Icon(
-                    //Icons.photo_camera_outlined,
-                    Icons.edit_outlined,
-                    color: _iconColors,
-                    size: 22,
-                  ),
-                ),
+  Container _profilePicture(Map<String, dynamic>? data) {
+    return Container(
+      height: 110,
+      width: 110,
+      margin: EdgeInsets.only(bottom: 10),
+      child: CachedNetworkImage(
+        placeholder: (context, url) {
+          return ClipOval(
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 100,
+                color: Colors.grey[300],
               ),
-            )
-          ],
-        ));
+            ),
+          );
+        },
+        fit: BoxFit.contain,
+        imageUrl: data!['profilePicture'],
+        imageBuilder: (context, imageProvider) {
+          return CircleAvatar(
+            backgroundImage: imageProvider,
+          );
+        },
+      ),
+    );
   }
 
   Padding _lowButton(
