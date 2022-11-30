@@ -16,12 +16,19 @@ class UsedSearchBloc extends Bloc<UsedSearchEvent, UsedSearchState> {
 
     List<Map<String, dynamic>> books = [];
 
+    String search = event.query;
+
     try {
       final QuerySnapshot snapshot =
           await FirebaseFirestore.instance.collection('books').get();
 
+      print(snapshot.docs);
+
       snapshot.docs.forEach((doc) {
-        books.add(doc.data() as Map<String, dynamic>);
+        Map<String, dynamic> book = doc.data() as Map<String, dynamic>;
+        if (book['title'].toString().toLowerCase().contains(search)) {
+          books.add(book);
+        }
       });
 
       emit(UsedSearchLoaded(usedBooks: books));

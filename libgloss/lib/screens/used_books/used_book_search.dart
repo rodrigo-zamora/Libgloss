@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
 import '../../blocs/used_search_books/bloc/used_search_bloc.dart';
 import '../../config/colors.dart';
@@ -101,92 +100,123 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
   }
 
   Expanded _found(BuildContext context, List<Map<String, dynamic>> books) {
-    return Expanded(
-      child: SizedBox(
-        child: GridView.builder(
-          padding: EdgeInsets.all(20),
-          scrollDirection: Axis.vertical,
-          physics: ScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 18,
-            childAspectRatio: MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.height / 1.35),
+    if (books.length == 0) {
+      return Expanded(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'No hemos encontrado libros con ese nombre',
+                style: TextStyle(
+                  color: _greenColor,
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Intenta con otro nombre',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          itemCount: books.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              //color: Colors.teal[100],
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      print(books[index]["title"]);
-                      Navigator.pushNamed(
-                        context,
-                        LibglossRoutes.USED_BOOK_DETAILS,
-                        arguments: books[index],
-                      );
-                    },
-                    child: Container(
-                      height: (MediaQuery.of(context).size.height / 5.2),
-                      child: OnlineImage(
-                        imageUrl: "${books[index]["images"][0]}",
-                        height: 100,
+        ),
+      );
+    } else {
+      return Expanded(
+        child: SizedBox(
+          child: GridView.builder(
+            padding: EdgeInsets.all(20),
+            scrollDirection: Axis.vertical,
+            physics: ScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 18,
+              childAspectRatio: MediaQuery.of(context).size.width /
+                  (MediaQuery.of(context).size.height / 1.35),
+            ),
+            itemCount: books.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                //color: Colors.teal[100],
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        print(books[index]["title"]);
+                        Navigator.pushNamed(
+                          context,
+                          LibglossRoutes.USED_BOOK_DETAILS,
+                          arguments: books[index],
+                        );
+                      },
+                      child: Container(
+                        height: (MediaQuery.of(context).size.height / 5.2),
+                        child: OnlineImage(
+                          imageUrl: "${books[index]["images"][0]}",
+                          height: 100,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    "${books[index]["title"]}",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    //maxLines: 2,
-                    style: TextStyle(
-                      fontSize: 14,
+                    SizedBox(
+                      height: 8,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "${books[index]["authors"].join(", ")}",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: _blueColor,
-                      fontSize: 12,
+                    Text(
+                      "${books[index]["title"]}",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      //maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Vendido por",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
+                    SizedBox(
+                      height: 5,
                     ),
-                  ),
-                  Text(
-                    "${books[index]["seller"]}",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: _greenColor,
-                      fontSize: 12,
+                    Text(
+                      "${books[index]["authors"].join(", ")}",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: _blueColor,
+                        fontSize: 12,
+                      ),
                     ),
-                  )
-                ],
-              ),
-            );
-          },
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Vendido por",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      "${books[index]["seller"]}",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: _greenColor,
+                        fontSize: 12,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
