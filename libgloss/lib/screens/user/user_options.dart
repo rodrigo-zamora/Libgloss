@@ -116,8 +116,9 @@ class _UserOptionsState extends State<UserOptions> {
               _sellerButton(data['isSeller']),
               //_followers(true),
               SizedBox(height: 10),
-              _lowButton(Icons.person_outlined, "Mi cuenta", () {},
-                  Icons.arrow_forward_ios),
+              _lowButton(Icons.person_outlined, "Mi cuenta", () {
+                Navigator.pushNamed(context, LibglossRoutes.ACCOUNT);
+              }, Icons.arrow_forward_ios),
               _bookHistory(data['isSeller']),
               _lowButton(Icons.help_outline, "Configuración", () {
                 Navigator.pushNamed(context, LibglossRoutes.NOTIFICATIONS);
