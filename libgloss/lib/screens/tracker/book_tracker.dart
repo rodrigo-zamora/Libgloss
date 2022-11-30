@@ -182,6 +182,9 @@ class _BookTrackerState extends State<BookTracker> {
 
   Widget _trackingWidget(Map<String, dynamic>? data) {
     print('\x1B[32m[BookTracker] _trackingWidget: ${data}');
+    var physics = (data?["tracking"].length > 1)
+        ? BouncingScrollPhysics()
+        : NeverScrollableScrollPhysics();
     if (data?["tracking"].length == 0) {
       return Column(
         children: [
@@ -227,6 +230,7 @@ class _BookTrackerState extends State<BookTracker> {
             height: MediaQuery.of(context).size.height * 0.3, // 240
             child: PageView.builder(
               controller: controllerT,
+              physics: physics,
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
                 return TrackingItem(
@@ -255,6 +259,9 @@ class _BookTrackerState extends State<BookTracker> {
   }
 
   Widget _wishListWidget(Map<String, dynamic>? data) {
+    var physics = (data?["wish"].length > 1)
+        ? BouncingScrollPhysics()
+        : NeverScrollableScrollPhysics();
     if (data?["wish"].length == 0) {
       return Column(
         children: [
@@ -300,6 +307,7 @@ class _BookTrackerState extends State<BookTracker> {
             height: MediaQuery.of(context).size.height * 0.23, // 180
             child: PageView.builder(
               controller: controllerW,
+              physics: physics,
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
                 return WishItem(
