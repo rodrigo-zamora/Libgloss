@@ -21,7 +21,7 @@ class UsedSearchBloc extends Bloc<UsedSearchEvent, UsedSearchState> {
     Map<String, dynamic> filters = event.filters;
     print(filters);
 
-    if (filters == {}) {
+    if (filters.isEmpty) {
       try {
         final QuerySnapshot snapshot =
             await FirebaseFirestore.instance.collection('books').get();
