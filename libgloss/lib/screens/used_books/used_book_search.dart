@@ -141,7 +141,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
               crossAxisSpacing: 10,
               mainAxisSpacing: 18,
               childAspectRatio: MediaQuery.of(context).size.width /
-                  (MediaQuery.of(context).size.height / 1.35),
+                  (MediaQuery.of(context).size.height / 1.34),
             ),
             itemCount: books.length,
             itemBuilder: (BuildContext context, int index) {
