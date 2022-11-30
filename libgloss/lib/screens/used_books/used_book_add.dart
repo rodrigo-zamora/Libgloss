@@ -546,6 +546,7 @@ class _UsedBookAddState extends State<UsedBookAdd> {
               ),
             );
           if (uploaded) {
+            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
             Navigator.pushAndRemoveUntil(
                 context,
                 PageRouteBuilder(pageBuilder: (BuildContext context,
