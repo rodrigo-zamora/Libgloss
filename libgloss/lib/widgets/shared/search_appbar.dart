@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/config/routes.dart';
 
 import '../../blocs/search/bloc/search_bloc.dart';
+import '../../blocs/used_search_books/bloc/used_search_bloc.dart';
 
 class SearchAppBar extends StatelessWidget {
   SearchAppBar({
@@ -162,23 +163,26 @@ class SearchAppBar extends StatelessWidget {
               LibglossRoutes.SEARCH_NEW,
               arguments: filters,
             );
+
+            BlocProvider.of<SearchBloc>(context).add(
+              SearchBoookEvent(
+                query: value,
+                filters: filters,
+              ),
+            );
           }
 
-          print(_route == LibglossRoutes.HOME);
-          if (LibglossRoutes.CURRENT_ROUTE == LibglossRoutes.HOME_USED) {
+          if (_route == LibglossRoutes.HOME_USED) {
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_USED,
               arguments: filters,
             );
-          }
 
-          BlocProvider.of<SearchBloc>(context).add(
-            SearchBoookEvent(
-              query: value,
-              filters: filters,
-            ),
-          );
+            BlocProvider.of<UsedSearchBloc>(context).add(
+              SearchUsedBooksEvent(_textFieldController.text),
+            );
+          }
         },
         decoration: InputDecoration(
           hintText: "Buscar en Libgloss",

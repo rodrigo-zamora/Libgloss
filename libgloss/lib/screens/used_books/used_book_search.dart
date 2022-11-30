@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
 
+import '../../blocs/used_search_books/bloc/used_search_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
@@ -23,74 +24,6 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
       ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
   final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
-
-  final List<Map<String, dynamic>> _listElements = [
-    {
-      "title": "Maze Runner",
-      "author": "James Dashner",
-      "image": "https://m.media-amazon.com/images/I/81+462s7qWL.jpg",
-      "vendedor": "Ernesto Contreras",
-      "isbn": "978-6077547327",
-      "precio": 100,
-      "localizacion": "Guadalajara, Jalisco",
-      "contacto": "1111111111",
-    },
-    {
-      "title": "Bajo la Misma Estrella",
-      "author": "John Green",
-      "image":
-          "https://http2.mlstatic.com/D_NQ_NP_825774-MLM49787856481_042022-V.jpg",
-      "vendedor": "Lupita Gómez",
-      "isbn": "978-6073114233",
-      "precio": 95,
-      "localizacion": "Zapopan, Jalisco",
-      "contacto": "2222222222",
-    },
-    {
-      "title": "El niño de la pijama de rayas",
-      "author": "John Boyne",
-      "image":
-          "https://images.cdn3.buscalibre.com/fit-in/360x360/2d/84/2d845ff0cd78bb3fb398f879e3758df0.jpg",
-      "vendedor": "Julian Vico",
-      "isbn": "978-6073193320",
-      "precio": 70,
-      "localizacion": "Tlajomulco, Jalisco",
-      "contacto": "3333333333",
-    },
-    {
-      "title": "El Principito",
-      "author": "Antoine de Saint-Exupéry",
-      "image":
-          "https://madreditorial.com/wp-content/uploads/2021/07/9788417430993-ok.png",
-      "vendedor": "Maria Lucia Perera",
-      "isbn": "978-6070730535",
-      "precio": 50,
-      "localizacion": "Tlaquepaque, Jalisco",
-      "contacto": "4444444444",
-    },
-    {
-      "title": "1984",
-      "author": "George Orwell",
-      "image":
-          "https://images.cdn2.buscalibre.com/fit-in/360x360/3a/2c/3a2c227d11a1026b4aa3d45d33bad4f6.jpg",
-      "vendedor": "Roman Dominguez",
-      "isbn": "978-6073116336",
-      "precio": 80,
-      "localizacion": "El Salto, Jalisco",
-      "contacto": "5555555555",
-    },
-    {
-      "title": "El señor de las moscas",
-      "author": "William Golding",
-      "image":
-          "https://http2.mlstatic.com/D_NQ_NP_906011-MLM32761111866_112019-O.jpg",
-      "vendedor": "Maria Asuncion Perez",
-      "isbn": "978-8420674179",
-      "precio": 120,
-      "localizacion": "Tonalá, Jalisco",
-      "contacto": "6666666666",
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -114,15 +47,16 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
     );
   }
 
-  BlocConsumer<SearchBloc, SearchState> _searchBook(BuildContext context) {
-    return BlocConsumer<SearchBloc, SearchState>(
+  BlocConsumer<UsedSearchBloc, UsedSearchState> _searchBook(
+      BuildContext context) {
+    return BlocConsumer<UsedSearchBloc, UsedSearchState>(
       listener: (context, state) {},
       builder: (context, state) {
         if (kDebugMode)
           print(
               "\u001b[35m[SearchAppBar] Building SearchBar with state $state");
         switch (state.runtimeType) {
-          case SearchLoading:
+          case UsedSearchLoading:
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -134,9 +68,9 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 ],
               ),
             );
-          case SearchLoaded:
-            return _search(context);
-          case SearchInitial:
+          case UsedSearchLoaded:
+            print("\u001b[35m[SearchAppBar] Building books with state $state");
+            return _search(context, state.props[0]);
           default:
             return Container();
         }
@@ -144,7 +78,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
     );
   }
 
-  Column _search(BuildContext context) {
+  Column _search(BuildContext context, List<Map<String, dynamic>> books) {
     var left = MediaQuery.of(context).size.width * 0.70;
     return Column(
       children: [
@@ -156,10 +90,9 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 alignment: Alignment.center,
                 padding:
                     EdgeInsets.only(top: 10, bottom: 10, left: left, right: 10),
-                // TODO: Add filter button
               ),
               Divider(color: _greenColor, thickness: 1, height: 1),
-              _found(context),
+              _found(context, books),
             ],
           ),
         ),
@@ -167,7 +100,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
     );
   }
 
-  Expanded _found(BuildContext context) {
+  Expanded _found(BuildContext context, List<Map<String, dynamic>> books) {
     return Expanded(
       child: SizedBox(
         child: GridView.builder(
@@ -181,7 +114,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
             childAspectRatio: MediaQuery.of(context).size.width /
                 (MediaQuery.of(context).size.height / 1.5),
           ),
-          itemCount: _listElements.length,
+          itemCount: books.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
               //color: Colors.teal[100],
@@ -189,17 +122,17 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      print(_listElements[index]["title"]);
+                      print(books[index]["title"]);
                       Navigator.pushNamed(
                         context,
                         LibglossRoutes.USED_BOOK_DETAILS,
-                        arguments: _listElements[index],
+                        arguments: books[index],
                       );
                     },
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 5.2),
                       child: OnlineImage(
-                        imageUrl: "${_listElements[index]["image"]}",
+                        imageUrl: "${books[index]["images"][0]}",
                         height: 100,
                       ),
                     ),
@@ -208,7 +141,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                     height: 8,
                   ),
                   Text(
-                    "${_listElements[index]["title"]}",
+                    "${books[index]["title"]}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     //maxLines: 2,
@@ -220,7 +153,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                     height: 5,
                   ),
                   Text(
-                    "${_listElements[index]["author"]}",
+                    "${books[index]["authors"].join(", ")}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -240,7 +173,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                     ),
                   ),
                   Text(
-                    "${_listElements[index]["vendedor"]}",
+                    "${books[index]["seller"]}",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
