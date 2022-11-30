@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../config/colors.dart';
@@ -8,23 +12,32 @@ import '../../config/routes.dart';
 import '../../repositories/auth/user_auth_repository.dart';
 import '../../widgets/shared/search_appbar.dart';
 
-class Account extends StatelessWidget {
+class Account extends StatefulWidget {
   Account({super.key});
 
+  @override
+  State<Account> createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
   final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
+
   final Color _secondaryColor =
       ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
+
   final Color _tertiaryColor =
       ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
+
   final Color _iconColors = ColorSelector.getGrey();
 
   late TextEditingController _nameController = TextEditingController();
+
   late TextEditingController _phoneController = TextEditingController();
+
   late TextEditingController _zipController = TextEditingController();
 
-  bool _nameEditing = false;
-  bool _phoneEditing = false;
-  bool _zipEditing = false;
+  XFile? pickedImage;
+  bool hasImage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,151 +88,61 @@ class Account extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.only(top: 30),
-          child: Text(
-            "Editar mi foto de perfil",
-            style: TextStyle(
-              color: _secondaryColor,
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic
-            )
-          ),
+          child: Text("Foto de perfil",
+              style: TextStyle(
+                color: _secondaryColor,
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+              )),
         ),
         _profilePicture(data),
-        /* Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.only(bottom: 10),
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: TextField (
-                controller: _nameController,
-                enabled: _nameEditing,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: _secondaryColor),
-                  ),
-                  hintText: data['username'], 
-                ),
-              ),
-            ),
-            IconButton (
-              icon: Icon(Icons.edit),
-              color: _secondaryColor,
-              onPressed: () {
-                print("HI");
-                setState(() {
-                  _nameEditing = !_nameEditing;
-                });
-              },
-            ),
-          ],
-        ), */
-        /* StatefulBuilder(
-          builder: (context, setState) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(bottom: 10),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: TextField (
-                    controller: _nameController,
-                    enabled: _nameEditing,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: _secondaryColor),
-                      ),
-                      hintText: data['username'], 
-                    ),
-                  ),
-                ),
-                IconButton (
-                  icon: Icon(Icons.edit),
-                  color: _secondaryColor,
-                  onPressed: () {
-                    print("HI");
-                    setState(() {
-                      _nameEditing = !_nameEditing;
-                    });
-                  },
-                ),
-              ],
-            );
-          },
-        ), */
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
-          child: Text(
-            "Editar mi nombre",
-            style: TextStyle(
-              color: _secondaryColor,
-              fontSize: 17,
-              fontStyle: FontStyle.italic
-            )
-          ),
+          child: Text("Nombre de usuario",
+              style: TextStyle(
+                color: _secondaryColor,
+                fontSize: 17,
+              )),
         ),
-        _edit(context, data['username'] == null ? 
-          _nameController : _nameController = TextEditingController(text: data['username']), 
-          TextInputType.text, data['username'], _nameEditing),
+        _edit(
+            context,
+            data['username'] == null
+                ? _nameController
+                : _nameController =
+                    TextEditingController(text: data['username']),
+            TextInputType.text,
+            data['username']),
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
-          child: Text(
-            "Editar mi teléfono",
-            style: TextStyle(
-              color: _secondaryColor,
-              fontSize: 17,
-              fontStyle: FontStyle.italic
-            )
-          ),
+          child: Text("Número de teléfono",
+              style: TextStyle(
+                color: _secondaryColor,
+                fontSize: 17,
+              )),
         ),
-        _edit(context, data['phoneNumber'] == null ? 
-          _phoneController : _phoneController = TextEditingController(text: data['phoneNumber']), 
-          TextInputType.number, data['phoneNumber'], _phoneEditing),
+        _edit(
+            context,
+            data['phoneNumber'] == null
+                ? _phoneController
+                : _phoneController =
+                    TextEditingController(text: data['phoneNumber']),
+            TextInputType.number,
+            data['phoneNumber']),
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
-          child: Text(
-            "Editar mi código postal",
-            style: TextStyle(
-              color: _secondaryColor,
-              fontSize: 17,
-              fontStyle: FontStyle.italic
-            )
-          ),
+          child: Text("Código postal",
+              style: TextStyle(
+                color: _secondaryColor,
+                fontSize: 17,
+              )),
         ),
-        _edit(context, data['zipCode'] == null ? 
-          _zipController : _zipController = TextEditingController(text: data['zipCode']), 
-          TextInputType.number, data['zipCode'], _zipEditing),
-        /* Container(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                data['phoneNumber'],
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                data['zipCode'],
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ), */
+        _edit(
+            context,
+            data['zipCode'] == null
+                ? _zipController
+                : _zipController = TextEditingController(text: data['zipCode']),
+            TextInputType.number,
+            data['zipCode']),
         Container(
           padding: EdgeInsets.only(top: 35),
           child: ElevatedButton(
@@ -230,78 +153,122 @@ class Account extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            onPressed: () {
-              print("Save");
-              if (_phoneController.text != data['phoneNumber'] && _phoneController.text != "") {
-                  if (_phoneController.text.length == 10) {
-                    FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(data["id"])
-                      .update({
-                        'phoneNumber': _phoneController.text,
-                      });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("El teléfono debe tener 10 dígitos"),
-                      ),
-                    );
-                  }
-                }
-                if (_zipController.text != data['zipCode'] && _zipController.text != "") {
-                  if (_zipController.text.length == 5) {
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(data["id"])
-                        .update({
-                      'zipCode': _zipController.text,
-                    });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("El código postal debe tener 5 dígitos"),
-                      ),
-                    );
-                  }
-                }
-                if (_nameController.text != data['username'] && _nameController.text != "") {
-                  if (_nameController.text.length != 0) {
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(data["id"])
-                        .update({
-                      'username': _nameController.text,
-                    });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Debe de ingresar un nombre válido"),
-                      ),
-                    );
-                  }
-                }
-              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
-              Navigator.pushAndRemoveUntil(
-                context,
-                PageRouteBuilder(pageBuilder: (BuildContext context,
-                    Animation animation, Animation secondaryAnimation) {
-                  return LibglossRoutes.getRoute(LibglossRoutes.OPTIONS);
-                }, transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) {
-                  return new SlideTransition(
-                    position: new Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
+            onPressed: () async {
+              if (_phoneController.text == '' ||
+                  _phoneController.text.length != 10) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content:
+                          Text('El número de teléfono debe tener 10 dígitos'),
+                    ),
                   );
-                }),
-                (Route route) => false);
+                return;
+              }
+
+              if (_zipController.text == '' &&
+                  _zipController.text.length != 5) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text('El código postal debe tener 5 dígitos'),
+                    ),
+                  );
+                return;
+              }
+
+              if (_nameController.text == '') {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content:
+                          Text('El nombre de usuario no puede estar vacío'),
+                    ),
+                  );
+                return;
+              }
+
+              if (pickedImage != null) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text('Subiendo imagen...'),
+                    ),
+                  );
+                final URL = await _uploadImage(pickedImage!);
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(UserAuthRepository().getuid())
+                    .update({
+                  'profilePicture': URL,
+                });
+              }
+
+              try {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(UserAuthRepository().getuid())
+                    .update({
+                  'username': _nameController.text,
+                  'phoneNumber': _phoneController.text,
+                  'zipCode': _zipController.text,
+                });
+
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text('Perfil actualizado'),
+                    ),
+                  );
+
+                LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    PageRouteBuilder(pageBuilder: (BuildContext context,
+                        Animation animation, Animation secondaryAnimation) {
+                      return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+                    }, transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child) {
+                      return new SlideTransition(
+                        position: new Tween<Offset>(
+                          begin: const Offset(1.0, 0.0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      );
+                    }),
+                    (Route route) => false);
+
+                // Change all books published by the user
+                await FirebaseFirestore.instance
+                    .collection('books')
+                    .where('sellerUid',
+                        isEqualTo: UserAuthRepository().getuid())
+                    .get()
+                    .then((value) {
+                  value.docs.forEach((element) {
+                    FirebaseFirestore.instance
+                        .collection('books')
+                        .doc(element.id)
+                        .update({
+                      'seller': _nameController.text,
+                    });
+                  });
+                });
+              } catch (e) {
+                print(e);
+              }
             },
             child: Container(
-              padding: EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
+              padding:
+                  EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
               child: Text(
                 "Guardar cambios",
                 style: TextStyle(
@@ -319,68 +286,83 @@ class Account extends StatelessWidget {
 
   Container _profilePicture(Map<String, dynamic>? data) {
     return Container(
-      height: 110,
-      width: 110,
-      margin: EdgeInsets.only(top: 20, bottom: 10),
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.none,
-        children: [
-          CachedNetworkImage(
-            placeholder: (context, url) {
-              return ClipOval(
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: 100,
-                    color: Colors.grey[300],
+        height: 110,
+        width: 110,
+        margin: EdgeInsets.only(top: 20, bottom: 10),
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            hasImage == true
+                ? CircleAvatar(
+                    backgroundImage: FileImage(File(pickedImage!.path)),
+                  )
+                : CachedNetworkImage(
+                    placeholder: (context, url) {
+                      return ClipOval(
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            width: 100,
+                            color: Colors.grey[300],
+                          ),
+                        ),
+                      );
+                    },
+                    fit: BoxFit.contain,
+                    imageUrl: data!['profilePicture'],
+                    imageBuilder: (context, imageProvider) {
+                      return CircleAvatar(
+                        backgroundImage: imageProvider,
+                      );
+                    },
+                  ),
+            Positioned(
+              bottom: 0,
+              right: -10,
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: FloatingActionButton(
+                  heroTag: "btn1",
+                  backgroundColor: _primaryColor,
+                  splashColor: _secondaryColor,
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    pickedImage = await _picker.pickImage(
+                      source: ImageSource.gallery,
+                    );
+                    print(pickedImage!.path);
+                    setState(() {
+                      hasImage = true;
+                      data!["profilePicture"] = pickedImage!.path;
+                    });
+                  },
+                  child: Icon(
+                    Icons.edit_outlined,
+                    color: _iconColors,
+                    size: 22,
                   ),
                 ),
-              );
-            },
-            fit: BoxFit.contain,
-            imageUrl: data!['profilePicture'],
-            imageBuilder: (context, imageProvider) {
-              return CircleAvatar(
-                backgroundImage: imageProvider,
-              );
-            },
-          ),
-          Positioned(
-            bottom: 0,
-            right: -10,
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: FloatingActionButton(
-                heroTag: "btn1",
-                backgroundColor: _primaryColor,
-                splashColor: _secondaryColor,
-                onPressed: () {
-                  print("Change profile picture");
-                },
-                child: Icon(
-                  //Icons.photo_camera_outlined,
-                  Icons.edit_outlined,
-                  color: _iconColors,
-                  size: 22,
-                ),
               ),
-            ),
-          )
-        ],
-      )
-    );
+            )
+          ],
+        ));
   }
 
-  Widget _edit(
-    BuildContext context, 
-    TextEditingController controller, 
-    TextInputType type,
-    String data,
-    bool edit
-    ){
+  Future<String> _uploadImage(XFile element) async {
+    final _firebaseStorage = FirebaseStorage.instance;
+    final String _path = "books/${element.name}${DateTime.now()}.png";
+    final _storageReference = _firebaseStorage.ref().child('$_path');
+    final _uploadTask = _storageReference.putFile(File(element.path));
+    final _snapshot = await _uploadTask.whenComplete(() => null);
+    final _downloadURL = await _snapshot.ref.getDownloadURL();
+    return _downloadURL;
+  }
+
+  Widget _edit(BuildContext context, TextEditingController controller,
+      TextInputType type, String data) {
     return StatefulBuilder(
       builder: (context, setState) {
         return Row(
@@ -389,31 +371,17 @@ class Account extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(bottom: 10),
               width: MediaQuery.of(context).size.width * 0.7,
-              child: TextField (
+              child: TextField(
                 controller: controller,
-                enabled: edit,
+                enabled: true,
                 textAlign: TextAlign.center,
                 keyboardType: type,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(color: _secondaryColor),
                   ),
-                  hintText: data, 
+                  hintText: data,
                 ),
-              ),
-            ),
-            Container(
-              //color: Colors.blue,
-              width: MediaQuery.of(context).size.width * 0.075,
-              child: IconButton (
-                icon: Icon(Icons.edit),
-                color: _secondaryColor,
-                onPressed: () {
-                  print("edit ${controller.text}");
-                  setState(() {
-                    edit = !edit;
-                  });
-                },
               ),
             ),
           ],
