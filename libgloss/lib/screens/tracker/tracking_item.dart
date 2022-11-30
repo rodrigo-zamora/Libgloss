@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -20,10 +22,11 @@ class _TrackingItemState extends State<TrackingItem> {
       ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
   final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
 
-  late TextEditingController _priceController = TextEditingController(text: "${widget.item["price"]}");
+  late TextEditingController _priceController =
+      TextEditingController(text: "${widget.item["price"]}");
   late int _monthsTracking = widget.item["time"];
   late String _storeTracking = widget.item["store"];
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -110,7 +113,6 @@ class _TrackingItemState extends State<TrackingItem> {
                     _openEdit();
                   },
                 ),
-                
               ),
             ],
           ),
@@ -165,174 +167,178 @@ class _TrackingItemState extends State<TrackingItem> {
 
   void _openEdit() {
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          //contentPadding: EdgeInsets.all(22.0),
-          title: Text("Editar Seguimiento"),
-          content: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '¿Quiere editar del libro?\n',
-                  style: TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
-                ),
-                Text(
-                  '${widget.item["title"]!}',
-                  style:
-                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  '${widget.item["authors"].join(', ')}',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: _blueColor,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            //contentPadding: EdgeInsets.all(22.0),
+            title: Text("Editar Seguimiento"),
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '¿Quiere editar del libro?\n',
+                    style:
+                        TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: OnlineImage(
-                    imageUrl: widget.item["thumbnail"] != null
-                        ? widget.item["thumbnail"]
-                        : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
-                    height: 100,
+                  Text(
+                    '${widget.item["title"]!}',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _priceController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: "${widget.item["price"]}",
-                        ),
-                      ),
-                      DropdownButtonFormField(
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("Todas las tiendas"),
-                            value: "all",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Amazon"),
-                            value: "amazon",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Gandhi"),
-                            value: "gandhi",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Gonvill"),
-                            value: "gonvill",
-                          ),
-                          DropdownMenuItem(
-                            child: Text("El Sótano"),
-                            value: "el_sotano",
-                          ),
-                        ],
-                        onChanged: (value) {
-                          _storeTracking = value!;
-                        },
-                        decoration: InputDecoration(
-                          labelText: "${widget.item["store"] == "all" ? "Todas las plataformas" : widget.item["store"]}",
-                        ),
-                      ),
-                      DropdownButtonFormField(
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("1 mes"),
-                            value: 1,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("3 meses"),
-                            value: 3,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("6 meses"),
-                            value: 6,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("1 año"),
-                            value: 12,
-                          ),
-                        ],
-                        onChanged: (value) {
-                          _monthsTracking = value!;
-                        },
-                        decoration: InputDecoration(
-                          labelText: "${widget.item["time"]} meses",
-                        ),
-                      ),
-                    ],
+                  Text(
+                    '${widget.item["authors"].join(', ')}',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: _blueColor,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.delete_forever,
-                color: _secondaryColor,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: OnlineImage(
+                      imageUrl: widget.item["thumbnail"] != null
+                          ? widget.item["thumbnail"]
+                          : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
+                      height: 100,
+                    ),
+                  ),
+                  Form(
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _priceController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "${widget.item["price"]}",
+                          ),
+                        ),
+                        DropdownButtonFormField(
+                          items: [
+                            DropdownMenuItem(
+                              child: Text("Todas las tiendas"),
+                              value: "all",
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Amazon"),
+                              value: "amazon",
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Gandhi"),
+                              value: "gandhi",
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Gonvill"),
+                              value: "gonvill",
+                            ),
+                            DropdownMenuItem(
+                              child: Text("El Sótano"),
+                              value: "el_sotano",
+                            ),
+                          ],
+                          onChanged: (value) {
+                            _storeTracking = value!;
+                          },
+                          decoration: InputDecoration(
+                            labelText:
+                                "${widget.item["store"] == "all" ? "Todas las plataformas" : widget.item["store"]}",
+                          ),
+                        ),
+                        DropdownButtonFormField(
+                          items: [
+                            DropdownMenuItem(
+                              child: Text("1 mes"),
+                              value: 1,
+                            ),
+                            DropdownMenuItem(
+                              child: Text("3 meses"),
+                              value: 3,
+                            ),
+                            DropdownMenuItem(
+                              child: Text("6 meses"),
+                              value: 6,
+                            ),
+                            DropdownMenuItem(
+                              child: Text("1 año"),
+                              value: 12,
+                            ),
+                          ],
+                          onChanged: (value) {
+                            _monthsTracking = value!;
+                          },
+                          decoration: InputDecoration(
+                            labelText: "${widget.item["time"]} meses",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              onPressed: () {
-                _delete();
-              },
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-              child: Text("Cancelar", style: TextStyle(color: _secondaryColor)),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-              child: Text("Guardar", style: TextStyle(color: _secondaryColor)),
-            ),
-          ],
-        );
-      }
-    );
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.delete_forever,
+                  color: _secondaryColor,
+                ),
+                onPressed: () {
+                  _delete();
+                },
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+                child:
+                    Text("Cancelar", style: TextStyle(color: _secondaryColor)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                child:
+                    Text("Guardar", style: TextStyle(color: _secondaryColor)),
+              ),
+            ],
+          );
+        });
   }
 
   void _delete() {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Eliminar de lista"),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          contentPadding: EdgeInsets.all(22.0),
-          content: Text(
-              "¿Estás seguro que deseas eliminar este libro a tu lista de segumientos?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-              child: Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Eliminar"),
-            ),
-          ],
-        );
-      }
-    );
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Eliminar de lista"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            contentPadding: EdgeInsets.all(22.0),
+            content: Text(
+                "¿Estás seguro que deseas eliminar este libro a tu lista de segumientos?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+                child: Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  print(widget.item["id"]);
+                  // TODO: Delete from database
+                },
+                child: Text("Eliminar"),
+              ),
+            ],
+          );
+        });
   }
 }

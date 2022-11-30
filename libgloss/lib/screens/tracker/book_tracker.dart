@@ -303,7 +303,8 @@ class _BookTrackerState extends State<BookTracker> {
               itemBuilder: (_, index) {
                 //return pages[index % pages.length];
                 return WishItem(
-                  item: data?["wish"][index % data["wish"].length]);
+                  item: data?["wish"][index % data["wish"].length],
+                );
               },
             ),
           ),
@@ -327,14 +328,12 @@ class _BookTrackerState extends State<BookTracker> {
   }
 
   BlocConsumer<TrackingBloc, TrackingState> _update() {
-    print("UPDATING TRACKING");
     return BlocConsumer(
       builder: (context, state) {
         return Container();
       },
       listener: (context, state) {
         if (state is TrackingUpdated) {
-          print("UPDATING");
           setState(() {});
         }
       },

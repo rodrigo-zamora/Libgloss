@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 
+import '../../blocs/tracking/bloc/tracking_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/routes.dart';
 import '../../widgets/shared/online_image.dart';
@@ -99,7 +103,7 @@ class _WishItemState extends State<WishItem> {
                     color: _secondaryColor,
                   ),
                   onPressed: () {
-                    _delete();
+                    _delete(context);
                   },
                 ),
               ),
@@ -110,33 +114,60 @@ class _WishItemState extends State<WishItem> {
     );
   }
 
-  void _delete() {
+  void _delete(BuildContext _context) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Eliminar de lista"),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          contentPadding: EdgeInsets.all(22.0),
-          content: Text(
-              "¿Estás seguro que deseas eliminar este libro a tu lista de deseos?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-              child: Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Eliminar"),
-            ),
-          ],
-        );
-      }
-    );
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Eliminar de lista"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            contentPadding: EdgeInsets.all(22.0),
+            content: Text(
+                "¿Estás seguro que deseas eliminar este libro a tu lista de deseos?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+                child: Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  Map<String, dynamic> toRemove = widget.item;
+                  try {
+                    QuerySnapshot listDocument = await FirebaseFirestore
+                        .instance
+                        .collection('lists')
+                        .where('useruid',
+                            isEqualTo: UserAuthRepository().getuid())
+                        .get();
+                    String listuid = listDocument.docs[0].id;
+                    await FirebaseFirestore.instance
+                        .collection('lists')
+                        .doc(listuid)
+                        .update({
+                      'wish': FieldValue.arrayRemove([toRemove])
+                    });
+                    BlocProvider.of<TrackingBloc>(_context)
+                        .add(UpdateTracking());
+                    ScaffoldMessenger.of(_context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Libro eliminado de tu lista de deseos"),
+                        ),
+                      );
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+                child: Text("Eliminar"),
+              ),
+            ],
+          );
+        });
   }
 }
