@@ -37,7 +37,6 @@ class _WebViewPageState extends State<WebViewPage> {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
 
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -57,14 +56,6 @@ class _WebViewPageState extends State<WebViewPage> {
           _controller.complete(webViewController);
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: _secondaryColor,
-        onPressed: () async {
-          final String url = _args["url"];
-          //Share.share(url);
-        },
-        child: const Icon(Icons.share),
-      ),
     );
   }
 
@@ -83,20 +74,6 @@ class _WebViewPageState extends State<WebViewPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.12,
-                  child: IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    // TODO: Add to favorites
                   ),
                 ),
               ],

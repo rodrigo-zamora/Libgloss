@@ -138,8 +138,9 @@ class _UserOptionsState extends State<UserOptions> {
 
   Widget _bookHistory(bool isSeller) {
     if (isSeller) {
-      return _lowButton(
-          Icons.book_outlined, "Mis libros", () {}, Icons.arrow_forward_ios);
+      return _lowButton(Icons.book_outlined, "Mis libros", () {
+        Navigator.pushNamed(context, LibglossRoutes.MY_BOOKS);
+      }, Icons.arrow_forward_ios);
     } else {
       return Container();
     }

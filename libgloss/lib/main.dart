@@ -19,9 +19,38 @@ void main() async {
   // Run the initialization splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   // Run the app
   runApp(BlocSettings.getBlocProviders(Libgloss()));
   FlutterNativeSplash.remove();
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+
+  // Show a notification
+  final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  _localNotificationsPlugin.show(
+    0,
+    message.notification!.title,
+    message.notification!.body,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        'channel id',
+        'channel name',
+        channelDescription: 'channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker',
+        styleInformation: BigTextStyleInformation(''),
+        largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+        playSound: true,
+        visibility: NotificationVisibility.public,
+      ),
+    ),
+  );
 }
 
 class Libgloss extends StatefulWidget {
