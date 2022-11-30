@@ -382,7 +382,8 @@ class _AccountState extends State<Account> {
 
   Future<String> _uploadImage(XFile element) async {
     final _firebaseStorage = FirebaseStorage.instance;
-    final String _path = "books/${element.name}${DateTime.now()}.png";
+    final String _path =
+        "profile_pictures/${element.name}${DateTime.now()}.png";
     final _storageReference = _firebaseStorage.ref().child('$_path');
     final _uploadTask = _storageReference.putFile(File(element.path));
     final _snapshot = await _uploadTask.whenComplete(() => null);
