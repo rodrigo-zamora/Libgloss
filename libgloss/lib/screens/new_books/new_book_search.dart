@@ -208,19 +208,16 @@ class _NewBookSearchState extends State<NewBookSearch> {
                           bookId: _books[index]["isbn"],
                         ),
                       );
-
                       BlocProvider.of<ElSotanoStoreBloc>(context).add(
                         ElSotanoPriceEvent(
                           bookId: _books[index]["isbn"],
                         ),
                       );
-
                       BlocProvider.of<GandhiStoreBloc>(context).add(
                         GandhiPriceEvent(
                           bookId: _books[index]["isbn"],
                         ),
                       );
-
                       BlocProvider.of<GonvillStoreBloc>(context).add(
                         GonvillPriceEvent(
                           bookId: _books[index]["isbn"],
