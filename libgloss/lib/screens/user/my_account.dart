@@ -200,6 +200,16 @@ class _AccountState extends State<Account> {
                     ),
                   );
                 final URL = await _uploadImage(pickedImage!);
+
+                if (data['profilePicture'] != null &&
+                    data['profilePicture']
+                        .toString()
+                        .startsWith('https://firebasestorage.googleapis.com')) {
+                  await FirebaseStorage.instance
+                      .refFromURL(data['profilePicture'])
+                      .delete();
+                }
+
                 await FirebaseFirestore.instance
                     .collection('users')
                     .doc(UserAuthRepository().getuid())
@@ -246,22 +256,41 @@ class _AccountState extends State<Account> {
                     }),
                     (Route route) => false);
 
-                // Change all books published by the user
-                await FirebaseFirestore.instance
-                    .collection('books')
-                    .where('sellerUid',
-                        isEqualTo: UserAuthRepository().getuid())
-                    .get()
-                    .then((value) {
-                  value.docs.forEach((element) {
-                    FirebaseFirestore.instance
-                        .collection('books')
-                        .doc(element.id)
-                        .update({
-                      'seller': _nameController.text,
+                if (_nameController.text != data['username']) {
+                  await FirebaseFirestore.instance
+                      .collection('books')
+                      .where('sellerUid',
+                          isEqualTo: UserAuthRepository().getuid())
+                      .get()
+                      .then((value) {
+                    value.docs.forEach((element) {
+                      FirebaseFirestore.instance
+                          .collection('books')
+                          .doc(element.id)
+                          .update({
+                        'seller': _nameController.text,
+                      });
                     });
                   });
-                });
+                }
+
+                if (_phoneController.text != data['phoneNumber']) {
+                  await FirebaseFirestore.instance
+                      .collection('books')
+                      .where('sellerUid',
+                          isEqualTo: UserAuthRepository().getuid())
+                      .get()
+                      .then((value) {
+                    value.docs.forEach((element) {
+                      FirebaseFirestore.instance
+                          .collection('books')
+                          .doc(element.id)
+                          .update({
+                        'phoneNumber': _phoneController.text,
+                      });
+                    });
+                  });
+                }
               } catch (e) {
                 print(e);
               }
