@@ -18,22 +18,47 @@ class UsedSearchBloc extends Bloc<UsedSearchEvent, UsedSearchState> {
 
     String search = event.query;
 
-    try {
-      final QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('books').get();
+    Map<String, dynamic> filters = event.filters;
+    print(filters);
 
-      print(snapshot.docs);
+    if (filters == {}) {
+      try {
+        final QuerySnapshot snapshot =
+            await FirebaseFirestore.instance.collection('books').get();
 
-      snapshot.docs.forEach((doc) {
-        Map<String, dynamic> book = doc.data() as Map<String, dynamic>;
-        if (book['title'].toString().toLowerCase().contains(search)) {
+        print(snapshot.docs);
+
+        snapshot.docs.forEach((doc) {
+          Map<String, dynamic> book = doc.data() as Map<String, dynamic>;
+          if (book['title'].toString().toLowerCase().trim().contains(search)) {
+            books.add(book);
+          }
+        });
+
+        emit(UsedSearchLoaded(usedBooks: books));
+      } catch (e) {
+        emit(UsedSearchError(message: e.toString()));
+      }
+    } else {
+      try {
+        final QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('books')
+            .where('authors', arrayContains: filters['author'])
+            .where('categories', arrayContains: filters['category'])
+            .where('publisher', isEqualTo: filters['publisher'])
+            .get();
+
+        print(snapshot.docs);
+
+        snapshot.docs.forEach((doc) {
+          Map<String, dynamic> book = doc.data() as Map<String, dynamic>;
           books.add(book);
-        }
-      });
+        });
 
-      emit(UsedSearchLoaded(usedBooks: books));
-    } catch (e) {
-      emit(UsedSearchError(message: e.toString()));
+        emit(UsedSearchLoaded(usedBooks: books));
+      } catch (e) {
+        emit(UsedSearchError(message: e.toString()));
+      }
     }
   }
 }

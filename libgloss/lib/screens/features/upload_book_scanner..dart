@@ -195,6 +195,8 @@ class UploadBookScanner extends StatelessWidget {
                       "precio": null,
                       "localizacion": zipCode,
                       "contacto": phoneNumber,
+                      "categories": books[0]["categories"],
+                      "publisher": books[0]["publisher"],
                     },
                   );
                 },

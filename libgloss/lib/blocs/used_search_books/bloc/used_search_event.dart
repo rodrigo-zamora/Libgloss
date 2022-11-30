@@ -9,12 +9,16 @@ abstract class UsedSearchEvent {
 
 class SearchUsedBooksEvent extends UsedSearchEvent {
   final String query;
+  final Map<String, dynamic> filters;
 
-  const SearchUsedBooksEvent(this.query);
+  const SearchUsedBooksEvent({
+    required String this.query,
+    required Map<String, dynamic> this.filters,
+  });
 
   @override
   List<dynamic> get props => [query];
 
   @override
-  String toString() => 'SearchUsedBooksEvent { query: $query }';
+  String toString() => 'SearchUsedBooksEvent { query: $query  }';
 }

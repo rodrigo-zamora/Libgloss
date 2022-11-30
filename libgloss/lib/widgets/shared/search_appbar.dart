@@ -180,7 +180,10 @@ class SearchAppBar extends StatelessWidget {
             );
 
             BlocProvider.of<UsedSearchBloc>(context).add(
-              SearchUsedBooksEvent(_textFieldController.text),
+              SearchUsedBooksEvent(
+                query: _textFieldController.text,
+                filters: filters,
+              ),
             );
           }
         },

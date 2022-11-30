@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/used_search_books/bloc/used_search_bloc.dart';
 
 import '../../blocs/search/bloc/search_bloc.dart';
 import '../../config/routes.dart';
@@ -167,6 +168,12 @@ class _SideMenuState extends State<SideMenu> {
         Navigator.pop(context);
         switch (widget._route) {
           case LibglossRoutes.HOME_NEW:
+            BlocProvider.of<SearchBloc>(context).add(
+              SearchBoookEvent(
+                query: "",
+                filters: filters,
+              ),
+            );
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_NEW,
@@ -175,6 +182,12 @@ class _SideMenuState extends State<SideMenu> {
             LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_NEW;
             break;
           case LibglossRoutes.HOME_USED:
+            BlocProvider.of<UsedSearchBloc>(context).add(
+              SearchUsedBooksEvent(
+                query: "",
+                filters: filters,
+              ),
+            );
             Navigator.pushNamed(
               context,
               LibglossRoutes.SEARCH_USED,
@@ -184,6 +197,12 @@ class _SideMenuState extends State<SideMenu> {
             break;
           // Hide the side menu when the user is in the search page
           case LibglossRoutes.SEARCH_NEW:
+            BlocProvider.of<SearchBloc>(context).add(
+              SearchBoookEvent(
+                query: "",
+                filters: filters,
+              ),
+            );
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
@@ -192,6 +211,12 @@ class _SideMenuState extends State<SideMenu> {
             );
             break;
           case LibglossRoutes.SEARCH_USED:
+            BlocProvider.of<UsedSearchBloc>(context).add(
+              SearchUsedBooksEvent(
+                query: "",
+                filters: filters,
+              ),
+            );
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
@@ -202,12 +227,6 @@ class _SideMenuState extends State<SideMenu> {
           default:
             break;
         }
-        BlocProvider.of<SearchBloc>(context).add(
-          SearchBoookEvent(
-            query: "",
-            filters: filters,
-          ),
-        );
       },
     );
   }

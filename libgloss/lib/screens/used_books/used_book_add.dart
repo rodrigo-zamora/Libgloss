@@ -527,6 +527,9 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             "images": _imagesURL,
             "phoneNumber": _phoneNumber,
             "sellerUid": UserAuthRepository().getuid(),
+            "createdAt": DateTime.now(),
+            "categories": _args["categories"],
+            "publisher": _args["publisher"],
           };
           _progress = 100;
           setState(() {});
