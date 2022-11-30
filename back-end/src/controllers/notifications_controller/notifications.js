@@ -27,23 +27,30 @@ const NotificationsController = {
             let data = user.data();
             console.log('\t\t\tUser: ' + data.useruid);
 
-            for (let book of data.tracking) {
-                console.log('\t\t\t\tBook: ' + book.isbn);
+            hasNotifications = await admin.firestore().collection('users').doc(data.useruid).get().then((doc) => {
+                return doc.data().notifications;
+            });
+            console.log('\t\t\t\tUser has notifications enabled: ' + hasNotifications);
 
-                if (book.isbn == isbn) {
-                    console.log('\t\t\t\t\tBook found in tracking list');
-
-                    if (Object.values(details)[0].price <= book.price) {
-                        console.log('\t\t\t\t\t\tPrice is lower than the one in the tracking list');
-
-                        let stores = Object.keys(details);
-                        if (book.store == 'all' || stores.includes(book.store)) {
-                            console.log('\t\t\t\t\t\t\tStore is in the tracking list');
-
-                            let token = await NotificationsController.getToken(data.useruid);
-                            tokens.push(token);
-
-                            console.log('\t\t\t\t\t\t\t\tToken: ' + token);
+            if (hasNotifications) {
+                for (let book of data.tracking) {
+                    console.log('\t\t\t\tBook: ' + book.isbn);
+    
+                    if (book.isbn == isbn) {
+                        console.log('\t\t\t\t\tBook found in tracking list');
+    
+                        if (Object.values(details)[0].price <= book.price) {
+                            console.log('\t\t\t\t\t\tPrice is lower than the one in the tracking list');
+    
+                            let stores = Object.keys(details);
+                            if (book.store == 'all' || stores.includes(book.store)) {
+                                console.log('\t\t\t\t\t\t\tStore is in the tracking list');
+    
+                                let token = await NotificationsController.getToken(data.useruid);
+                                tokens.push(token);
+    
+                                console.log('\t\t\t\t\t\t\t\tToken: ' + token);
+                            }
                         }
                     }
                 }
