@@ -161,7 +161,7 @@ class Account extends StatelessWidget {
         ),
         _edit(context, data['username'] == null ? 
           _nameController : _nameController = TextEditingController(text: data['username']), 
-          data['username'], _nameEditing),
+          TextInputType.text, data['username'], _nameEditing),
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
           child: Text(
@@ -175,7 +175,7 @@ class Account extends StatelessWidget {
         ),
         _edit(context, data['phoneNumber'] == null ? 
           _phoneController : _phoneController = TextEditingController(text: data['phoneNumber']), 
-          data['phoneNumber'], _phoneEditing),
+          TextInputType.number, data['phoneNumber'], _phoneEditing),
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
           child: Text(
@@ -189,7 +189,7 @@ class Account extends StatelessWidget {
         ),
         _edit(context, data['zipCode'] == null ? 
           _zipController : _zipController = TextEditingController(text: data['zipCode']), 
-          data['zipCode'], _zipEditing),
+          TextInputType.number, data['zipCode'], _zipEditing),
         /* Container(
           padding: EdgeInsets.only(top: 20, bottom: 20),
           child: Row(
@@ -232,6 +232,73 @@ class Account extends StatelessWidget {
             ),
             onPressed: () {
               print("Save");
+              if (_phoneController.text != data['phoneNumber'] && _phoneController.text != "") {
+                  if (_phoneController.text.length == 10) {
+                    FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(data["id"])
+                      .update({
+                        'phoneNumber': _phoneController.text,
+                      });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("El teléfono debe tener 10 dígitos"),
+                      ),
+                    );
+                  }
+                }
+                if (_zipController.text != data['zipCode'] && _zipController.text != "") {
+                  if (_zipController.text.length == 5) {
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(data["id"])
+                        .update({
+                      'zipCode': _zipController.text,
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("El código postal debe tener 5 dígitos"),
+                      ),
+                    );
+                  }
+                }
+                if (_nameController.text != data['username'] && _nameController.text != "") {
+                  if (_nameController.text.length != 0) {
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(data["id"])
+                        .update({
+                      'username': _nameController.text,
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Debe de ingresar un nombre válido"),
+                      ),
+                    );
+                  }
+                }
+              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.OPTIONS;
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageRouteBuilder(pageBuilder: (BuildContext context,
+                    Animation animation, Animation secondaryAnimation) {
+                  return LibglossRoutes.getRoute(LibglossRoutes.OPTIONS);
+                }, transitionsBuilder: (BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child) {
+                  return new SlideTransition(
+                    position: new Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                }),
+                (Route route) => false);
             },
             child: Container(
               padding: EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
@@ -310,6 +377,7 @@ class Account extends StatelessWidget {
   Widget _edit(
     BuildContext context, 
     TextEditingController controller, 
+    TextInputType type,
     String data,
     bool edit
     ){
@@ -325,6 +393,7 @@ class Account extends StatelessWidget {
                 controller: controller,
                 enabled: edit,
                 textAlign: TextAlign.center,
+                keyboardType: type,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(color: _secondaryColor),
