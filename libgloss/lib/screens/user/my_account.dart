@@ -38,6 +38,9 @@ class _AccountState extends State<Account> {
 
   XFile? pickedImage;
   bool hasImage = false;
+  bool updating = false;
+
+  Map<String, dynamic> user = {};
 
   @override
   Widget build(BuildContext context) {
@@ -60,26 +63,32 @@ class _AccountState extends State<Account> {
   }
 
   Widget _main(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(UserAuthRepository().getuid()).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("Algo salió mal");
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            Map<String, dynamic> data =
-                snapshot.data!.data() as Map<String, dynamic>;
-            if (data != null) return _buildMyAccount(context, data);
+    if (user.isEmpty) {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      return FutureBuilder<DocumentSnapshot>(
+        future: users.doc(UserAuthRepository().getuid()).get(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Algo salió mal");
           }
-        }
-        return Center(
-            child: CircularProgressIndicator(
-          color: _secondaryColor,
-        ));
-      },
-    );
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              Map<String, dynamic> data =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              user = data;
+              return _buildMyAccount(context, data);
+            }
+          }
+          return Center(
+              child: CircularProgressIndicator(
+            color: _secondaryColor,
+          ));
+        },
+      );
+    } else {
+      return _buildMyAccount(context, user);
+    }
   }
 
   Widget _buildMyAccount(BuildContext context, Map<String, dynamic> data) {
@@ -143,174 +152,190 @@ class _AccountState extends State<Account> {
                 : _zipController = TextEditingController(text: data['zipCode']),
             TextInputType.number,
             data['zipCode']),
-        Container(
-          padding: EdgeInsets.only(top: 35),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _secondaryColor,
-              foregroundColor: _primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            onPressed: () async {
-              if (_phoneController.text == '' ||
-                  _phoneController.text.length != 10) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content:
-                          Text('El número de teléfono debe tener 10 dígitos'),
+        updating == true
+            ? Column(
+                children: [
+                  SizedBox(
+                    height: 32,
+                  ),
+                  CircularProgressIndicator(
+                    color: _secondaryColor,
+                  ),
+                ],
+              )
+            : Container(
+                padding: EdgeInsets.only(top: 35),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _secondaryColor,
+                    foregroundColor: _primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  );
-                return;
-              }
+                  ),
+                  onPressed: () async {
+                    if (_phoneController.text == '' ||
+                        _phoneController.text.length != 10) {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'El número de teléfono debe tener 10 dígitos'),
+                          ),
+                        );
+                      return;
+                    }
 
-              if (_zipController.text == '' &&
-                  _zipController.text.length != 5) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text('El código postal debe tener 5 dígitos'),
-                    ),
-                  );
-                return;
-              }
+                    if (_zipController.text == '' &&
+                        _zipController.text.length != 5) {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('El código postal debe tener 5 dígitos'),
+                          ),
+                        );
+                      return;
+                    }
 
-              if (_nameController.text == '') {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content:
-                          Text('El nombre de usuario no puede estar vacío'),
-                    ),
-                  );
-                return;
-              }
+                    if (_nameController.text == '') {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'El nombre de usuario no puede estar vacío'),
+                          ),
+                        );
+                      return;
+                    }
 
-              if (pickedImage != null) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text('Subiendo imagen...'),
-                    ),
-                  );
-                final URL = await _uploadImage(pickedImage!);
-
-                if (data['profilePicture'] != null &&
-                    data['profilePicture']
-                        .toString()
-                        .startsWith('https://firebasestorage.googleapis.com')) {
-                  await FirebaseStorage.instance
-                      .refFromURL(data['profilePicture'])
-                      .delete();
-                }
-
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(UserAuthRepository().getuid())
-                    .update({
-                  'profilePicture': URL,
-                });
-              }
-
-              try {
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(UserAuthRepository().getuid())
-                    .update({
-                  'username': _nameController.text,
-                  'phoneNumber': _phoneController.text,
-                  'zipCode': _zipController.text,
-                });
-
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text('Perfil actualizado'),
-                    ),
-                  );
-
-                LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    PageRouteBuilder(pageBuilder: (BuildContext context,
-                        Animation animation, Animation secondaryAnimation) {
-                      return LibglossRoutes.getRoute(LibglossRoutes.HOME);
-                    }, transitionsBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation,
-                        Widget child) {
-                      return new SlideTransition(
-                        position: new Tween<Offset>(
-                          begin: const Offset(1.0, 0.0),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child,
-                      );
-                    }),
-                    (Route route) => false);
-
-                if (_nameController.text != data['username']) {
-                  await FirebaseFirestore.instance
-                      .collection('books')
-                      .where('sellerUid',
-                          isEqualTo: UserAuthRepository().getuid())
-                      .get()
-                      .then((value) {
-                    value.docs.forEach((element) {
-                      FirebaseFirestore.instance
-                          .collection('books')
-                          .doc(element.id)
-                          .update({
-                        'seller': _nameController.text,
-                      });
+                    setState(() {
+                      _updateProfile(data);
+                      updating = true;
                     });
-                  });
-                }
-
-                if (_phoneController.text != data['phoneNumber']) {
-                  await FirebaseFirestore.instance
-                      .collection('books')
-                      .where('sellerUid',
-                          isEqualTo: UserAuthRepository().getuid())
-                      .get()
-                      .then((value) {
-                    value.docs.forEach((element) {
-                      FirebaseFirestore.instance
-                          .collection('books')
-                          .doc(element.id)
-                          .update({
-                        'phoneNumber': _phoneController.text,
-                      });
-                    });
-                  });
-                }
-              } catch (e) {
-                print(e);
-              }
-            },
-            child: Container(
-              padding:
-                  EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
-              child: Text(
-                "Guardar cambios",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: 13, bottom: 13, left: 10, right: 10),
+                    child: Text(
+                      "Guardar cambios",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
       ],
     );
+  }
+
+  void _updateProfile(Map<String, dynamic> data) async {
+    if (pickedImage != null) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('Subiendo imagen...'),
+          ),
+        );
+      final URL = await _uploadImage(pickedImage!);
+
+      if (data['profilePicture'] != null &&
+          data['profilePicture']
+              .toString()
+              .startsWith('https://firebasestorage.googleapis.com')) {
+        await FirebaseStorage.instance
+            .refFromURL(data['profilePicture'])
+            .delete();
+      }
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(UserAuthRepository().getuid())
+          .update({
+        'profilePicture': URL,
+      });
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(UserAuthRepository().getuid())
+          .update({
+        'username': _nameController.text,
+        'phoneNumber': _phoneController.text,
+        'zipCode': _zipController.text,
+      });
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('Perfil actualizado'),
+          ),
+        );
+
+      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+      Navigator.pushAndRemoveUntil(
+          context,
+          PageRouteBuilder(pageBuilder: (BuildContext context,
+              Animation animation, Animation secondaryAnimation) {
+            return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+          }, transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            return new SlideTransition(
+              position: new Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          }),
+          (Route route) => false);
+
+      if (_nameController.text != data['username']) {
+        await FirebaseFirestore.instance
+            .collection('books')
+            .where('sellerUid', isEqualTo: UserAuthRepository().getuid())
+            .get()
+            .then((value) {
+          value.docs.forEach((element) {
+            FirebaseFirestore.instance
+                .collection('books')
+                .doc(element.id)
+                .update({
+              'seller': _nameController.text,
+            });
+          });
+        });
+      }
+
+      if (_phoneController.text != data['phoneNumber']) {
+        await FirebaseFirestore.instance
+            .collection('books')
+            .where('sellerUid', isEqualTo: UserAuthRepository().getuid())
+            .get()
+            .then((value) {
+          value.docs.forEach((element) {
+            FirebaseFirestore.instance
+                .collection('books')
+                .doc(element.id)
+                .update({
+              'phoneNumber': _phoneController.text,
+            });
+          });
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Container _profilePicture(Map<String, dynamic>? data) {
