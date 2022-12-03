@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
 
 import '../../config/colors.dart';
 import '../../config/routes.dart';
@@ -77,12 +79,30 @@ class _MyBooksState extends State<MyBooks> {
   }
 
   Widget _buildMyBooks(List<Map<String, dynamic>> data, BuildContext _context) {
-    return ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        return _buildBook(data[index], _context);
-      },
-    );
+    if (data.length == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              'No tienes libros en venta',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return _buildBook(data[index], _context);
+        },
+      );
+    }
   }
 
   Widget _buildBook(Map<String, dynamic> data, BuildContext context) {
@@ -284,6 +304,8 @@ class _MyBooksState extends State<MyBooks> {
                       .collection('books')
                       .doc(id)
                       .delete();
+                  BlocProvider.of<UsedBooksBloc>(context)
+                      .add(GetUsedBooksEvent());
                 } catch (e) {
                   print(e);
                 }

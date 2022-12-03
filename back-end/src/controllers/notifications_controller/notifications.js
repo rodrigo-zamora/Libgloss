@@ -38,6 +38,9 @@ const NotificationsController = {
     
                     if (book.isbn == isbn) {
                         console.log('\t\t\t\t\tBook found in tracking list');
+                        console.table(book);
+
+                        console.table(details);
     
                         if (Object.values(details)[0].price <= book.price) {
                             console.log('\t\t\t\t\t\tPrice is lower than the one in the tracking list');
@@ -64,8 +67,6 @@ const NotificationsController = {
                 notification: {
                     title: 'Seguimiento de libros',
                     body: 'El libro ' + bookName + ' está disponible en ' + Object.keys(details).join(', ') + ' por ' + Object.values(details)[0].price + '$',
-                    imageUrl: "https://smallpetselect.com/wp-content/uploads/2016/09/rabbit-reading-book.jpg",
-
                 },
                 data: {
                     isbn: isbn,
@@ -80,9 +81,10 @@ const NotificationsController = {
                 admin.messaging().sendToDevice(token, payload, notification_options)
                 .then(response => {
                     console.log('\t\t\tSuccessfully sent message:', response);
+                    console.log(response.error);
                 })
                 .catch(error => {
-                    console.log('\t\t\tError sending message:', error);
+                    console.log('\t\t\tError sending message:', error.message);
                 });
             });
         }

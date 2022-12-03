@@ -48,7 +48,7 @@ class ConfigurationPage extends StatelessWidget {
           if (snapshot.hasData) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
-            if (data != null) return _buildNotifications(data);
+            return _buildNotifications(data);
           }
         }
         return Center(

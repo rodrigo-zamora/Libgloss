@@ -28,7 +28,7 @@ router.get('/details', handleError(async (req, res) => {
     // Save the books in the database, with the current price and date
     console.log('\tSaving book details in the database...');
     console.log('\t\tISBN:', req.query.isbn);
-    await booksController.saveBooks(req.query.isbn, details);
+    //await booksController.saveBooks(req.query.isbn, details);
 
     // Notify users about the price change
     console.log('\tNotifying users about the price change...');

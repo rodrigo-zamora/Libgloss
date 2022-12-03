@@ -29,10 +29,7 @@ void main() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 
-  // Show a notification
-  final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  _localNotificationsPlugin.show(
+  /*_localNotificationsPlugin.show(
     0,
     message.notification!.title,
     message.notification!.body,
@@ -50,7 +47,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         visibility: NotificationVisibility.public,
       ),
     ),
-  );
+  );*/
 }
 
 class Libgloss extends StatefulWidget {

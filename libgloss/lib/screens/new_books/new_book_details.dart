@@ -233,7 +233,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                   : "";
               return _priceCard(_price, "Amazon", _url);
             } else {
-              return _error();
+              return _priceCard("No disponible", "Amazon", "");
             }
           },
         ),
@@ -251,7 +251,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                   : "";
               return _priceCard(_price, "El Sotano", _url);
             } else {
-              return _error();
+              return _priceCard("No disponible", "El Sotano", "");
             }
           },
         ),
@@ -269,7 +269,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                   : "";
               return _priceCard(_price, "Gandhi", _url);
             } else {
-              return _error();
+              return _priceCard("No disponible", "Gandhi", "");
             }
           },
         ),
@@ -287,7 +287,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                   : "";
               return _priceCard(_price, "Gonvill", _url);
             } else {
-              return _error();
+              return _priceCard("No disponible", "Gonvill", "");
             }
           },
         ),
