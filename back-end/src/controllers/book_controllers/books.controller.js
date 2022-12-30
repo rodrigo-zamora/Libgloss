@@ -13,7 +13,6 @@ const booksController = {
     // Handle search requests, including title, category, and ISBN
     searchBooks: async (query) => {
 
-        console.log('Searching for books...');
         let books = [];
 
         // Search for books using google controller
@@ -24,9 +23,6 @@ const booksController = {
                 query.isbn ? query.isbn : null,
                 query.publisher ? query.publisher : null
         );
-
-        console.log('Found', books.length, 'books');
-        console.table(books);
 
         // If no books were found, return an empty array
         if (books.length == 0) return [];
@@ -49,7 +45,6 @@ const booksController = {
 
         // Get the title of the book
         let books = await booksController.searchBooks({ isbn: query.isbn });
-        console.log('\t\tBooks:', books);
         let title = books[0].title;
         title = title.replace(/ /g, '-');
 
@@ -139,12 +134,8 @@ const booksController = {
 
     // Get a list of all books in the database
     getBooks: async (page_size, page) => {
-        console.log('\tGetting books from the database...');
         if (!page_size) page_size = 10;
         if (!page) page = 1;
-
-        console.log('\t\tPage size:', page_size);
-        console.log('\t\tPage:', page);
 
         let books = await Book.find().skip(parseInt(page_size) * (parseInt(page) - 1)).limit(parseInt(page_size));
         return books;
@@ -152,10 +143,7 @@ const booksController = {
 
     // Get a list of random books in the database
     getRandomBooks: async (page_size) => {
-        console.log('\tGetting random books from the database...');
         if (!page_size) page_size = 10;
-
-        console.log('\t\tPage size:', page_size);
 
         let books = await Book.aggregate([{ $sample: { size: parseInt(page_size) } }]);
 
@@ -181,12 +169,9 @@ const booksController = {
         if (details) {
             // Check if the book is already in the database
             let bookInDb = await BookDetails.findOne({ isbn: isbn });
-            console.log('Creating new record for book:', isbn + '...');
-
 
             // If the book is not in the database, create a new record
             if (!bookInDb) {
-                console.log('Book not in database, creating new record...');
                 let bookDetails = {
                     isbn: isbn,
                     stores: {}
@@ -203,24 +188,12 @@ const booksController = {
                         price: price,
                         date: new Date()
                     };
-                    console.log('\tAdding price from', store, ':', price);
-                
+                    
                     // Check if the store is already in the database
                     if (bookInDb.stores[store]) {
-                        console.log('\tStore already in database, checking last price...');
                         let lastPrice = bookInDb.stores[store].data[bookInDb.stores[store].data.length - 1].price;
-
-                        if (lastPrice != price) {
-                            console.log('\tPrice changed, adding new record...');
-                            bookInDb.stores[store].data.push(storeData);
-                        } else {
-                            console.log('\tPrice did not change, not adding new record...');
-                        }
-
-                        
+                        if (lastPrice != price) bookInDb.stores[store].data.push(storeData);
                     } else {
-                        console.log('\tStore not in database, creating new record...');
-                        
                         bookInDb.stores[store] = {
                             data: [storeData]
                         };
@@ -232,9 +205,7 @@ const booksController = {
             // Save the book in the database
             bookInDb.markModified('stores');
             await bookInDb.save();
-
-            console.log(bookInDb);
-            console.log('Book saved successfully!');
+            
             }
     },
 

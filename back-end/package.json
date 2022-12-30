@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js -e js,yaml,json,mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:unit": "jasmine --config=unit-tests.json",
+    "test:integration": "jasmine --config=integration-tests.json",
+    "test:unit-coverage": "nyc npm run test:unit",
+    "test:integration-coverage": "nyc npm run test:integration"
   },
   "repository": {
     "type": "git",
@@ -25,10 +28,14 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "firebase-admin": "^11.2.1",
+    "jasmine": "^4.5.0",
     "mongodb": "^4.11.0",
-    "mongoose": "^6.6.7"
+    "mongoose": "^6.6.7",
+    "swagger-ui-express": "^4.6.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "nyc": "^15.1.0"
   }
 }

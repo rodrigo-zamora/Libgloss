@@ -1,5 +1,8 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const YAML = require('yamljs');
+const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
 const DB_NAME = process.env.DB_NAME || '';
 const DB_USERNAME = process.env.DB_USERNAME || '';
@@ -45,6 +48,10 @@ app.use(express.json());
 
 app.use('/api/books', require('./routes/books.route'));
 
+const swaggerDocument = YAML.load(path.resolve('./src/docs/swagger.yaml'));
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 const {
     NotFoundError,
     ConflictError,
@@ -62,7 +69,7 @@ app.use((err, req, res, next) => {
     if (err instanceof ForbiddenError) return res.status(403).send(err.message);
     if (err instanceof UnauthorizedError) return res.status(401).send(err.message);
 
-    res.status(503).send('Something went wrong, try again: ' + err.message);
+    res.status(503).send('Something went wrong: ' + err.message);
 });
 
 module.exports = app;

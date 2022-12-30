@@ -21,8 +21,6 @@ async function makeRequest(url, randomize) {
 
     if (response.items == undefined) throw new NotFoundError('No books found');
 
-    console.log('\t\tBooks:', response.items);
-
     response.items.forEach(book => {
         try {
 
@@ -41,7 +39,7 @@ async function makeRequest(url, randomize) {
                 description: book.volumeInfo.description,
             });
         } catch (error) {
-            console.log('\x1b[33mBook with title:', book.volumeInfo.title, 'has an error:' + error + '\x1b[0m');
+            console.log(error);
         }
     });
 
@@ -53,33 +51,22 @@ async function makeRequest(url, randomize) {
 
 const googleController = {
     searchTitle: async (title) => {
-        console.log('\tSearching for books with title', title);
-
         let url = `${BASE_URL}${title}`;
         return await makeRequest(url, false);
     },
     searchCategory: async (category) => {
-        console.log('\tSearching for books with category', category);
-
         let url = `${BASE_URL}subject:${category}`;
         return await makeRequest(url, true);
     },
     searchISBN: async (ISBN) => {
-        console.log('\tSearching for books with ISBN', ISBN);
-
         let url = `${BASE_URL}isbn:${ISBN}`;
         return await makeRequest(url, false);
     },
     searchByPublisher: async (publisher) => {
-        console.log('\tSearching for books with publisher', publisher);
-
         let url = `${BASE_URL}inpublisher:${publisher}`;
         return await makeRequest(url, false);
     },
     search: async (title, category, author, isbn, publisher) => {
-
-        console.log('Searching for books with query', { title, category, author, isbn, publisher });
-
         let query = '';
 
         // Switch category name from spanish to english
@@ -98,7 +85,6 @@ const googleController = {
 
         let url = `${BASE_URL}${query}`;
 
-        console.log('\tURL:', url);
         return await makeRequest(url, false);
     }
 }

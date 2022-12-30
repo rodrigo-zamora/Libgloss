@@ -1,0 +1,319 @@
+openapi: 3.0.0
+info:
+  title: Libgloss API
+  description: Libgloss API documentation
+  version: 1.0.0
+tags:
+  books:
+    name: Books
+    description: Contains all books related endpoints
+  book_details:
+    name: Book details
+    description: Contains all book price related endpoints
+paths:
+  /api/books:
+    get:
+      tags:
+        - books
+      summary: Get all books
+      description: Returns a list of books. Since the books are stored in a database, the list is paginated. The default page size is 10. You can change the page size by adding the `page_size` query parameter. You can also change the page by adding the `page` query parameter.
+      operationId: getBooks
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          default: 1
+          schema:
+            type: integer
+            format: int32
+        - name: page_size
+          in: query
+          description: Page size
+          required: false
+          default: 10
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /api/books/random:
+    get:
+      tags:
+        - books
+      summary: Get random books
+      description: Get a list of random books. The default page size is 10. You can change the page size by adding the `page_size` query parameter.
+      operationId: getRandomBooks
+      parameters:
+        - name: page_size
+          in: query
+          description: Page size
+          required: false
+          default: 10
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /api/books/search:
+    get:
+      tags:
+        - books
+      summary: Search books
+      description: Search books given a query, multiple parameters can be used at the same time
+      operationId: searchBooks
+      parameters:
+      - name: title
+        in: query
+        description: Query to search
+        required: false
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: Category to search
+        required: false
+        schema:
+          type: enum
+          enum: [Acción, Aventura, Ciencia Ficción, Fantasía, Misterio, Romance, Terror, Thriller]
+      - name: author
+        in: query
+        description: Author to search
+        required: false
+        schema:
+          type: string
+      - name: isbn
+        in: query
+        description: ISBN to search
+        required: false
+        schema:
+          type: string
+      - name: publisher
+        in: query
+        description: Publisher to search
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        404:
+          description: Not Found
+  /api/books/details:
+    get:
+      tags:
+        - book_details
+      summary: Get book details
+      description: Returns the price of a book in different online stores. If the book is not available in a store, or the store is not available, the price will be `null`.
+      operationId: getBookDetails
+      parameters:
+      - name: isbn
+        in: query
+        description: ISBN to search
+        required: true
+        schema:
+          type: string
+      - name: store
+        in: query
+        description: Store to search, if not specified, all stores will be searched
+        required: false
+        schema:
+          type: enum
+          enum: [amazon, mercado_libre, gandhi, gonvill, el_sotaon]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookPrice'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found         
+  /api/books/history:
+    get:
+      tags:
+        - book_details
+      summary: Get books history
+      description: Returns the price history of a book. The price history is stored in a database, so it will only be available for books that have been added to the wishlist, or books that have been searched by a user.
+      operationId: getBooksHistory
+      parameters:
+        - name: isbn
+          in: query
+          description: ISBN to search
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookPriceHistory'
+        404:
+          description: Not Found
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        title:
+          type: string
+          example: La razón de estar contigo
+        subtitle:
+          type: string
+          example: Una novela para humanos
+        rating:
+          type: float
+          example: 4.5
+        thumbnail:
+          type: string
+          example: http://books.google.com/books/content?id=1USRDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
+        language:
+          type: string
+          example: es
+        isbn:
+          type: string
+          example: 9788416867295
+        authors:
+          type: array
+          items:
+            type: string
+            example: [W. Bruce Cameron]
+        publisher:
+          type: string
+          example: Roca editorial
+        categories:
+          type: array
+          items:
+            type: string
+            example: [Fiction]
+        description:
+          type: string
+          example: «Adoro esta novela, no pude parar de leer. Me hizo pensar acerca de los propósitos de la vida. Al final, lloré y reí.» The New York Times «Una mezcla perfecta entre Marley y yo y Martes con mi viejo profesor.» Kirkus Reviews
+    BookPrice:
+      type: object
+      properties:
+        amazon:
+          type: object
+          properties:
+            price:
+              type: float
+              example: 314
+            url:
+              type: string
+              example: https://www.amazon.com.mx/raz%C3%B3n-estar-contigo-Bruce-Cameron/dp/8416867348/ref=sr_1_1?keywords=9788416867349&qid=1667062120&qu=eyJxc2MiOiIwLjAwIiwicXNhIjoiMC4wMCIsInFzcCI6IjAuMDAifQ%3D%3D&s=books&sr=1-1
+        gandhi:
+          type: object
+          properties:
+            price:
+              type: float
+              example: 334
+            url:
+              type: string
+              example: https://www.gandhi.com.mx/la-razon-de-estar-contigo
+        gonvill:
+          type: object
+          properties:
+            price:
+              type: float
+              example: 314.57
+            url:
+              type: string
+              example: https://www.gonvill.com.mx/libro/la-razon-de-estar-contigo_16350398
+        el_sotano:
+          type: object
+          properties:
+            price:
+              type: float
+              example: 379
+            url:
+              type: string
+              example: https://www.elsotano.com/libro/la-razon-de-estar-contigo_10500797
+    BookPriceHistory:
+      type: object
+      properties:
+        isbn:
+          type: string
+          example: 9788416867349
+        stores:
+          type: object
+          properties:
+            amazon:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        example: 2021-05-01
+                      price:
+                        type: float
+                        example: 314
+            gandhi:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        example: 2021-05-01
+                      price:
+                        type: float
+                        example: 334
+            gonvill:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        example: 2021-05-01
+                      price:
+                        type: float
+                        example: 314.57
+            el_sotano:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        example: 2021-05-01
+                      price:
+                        type: float
+                        example: 379
