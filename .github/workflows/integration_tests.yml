@@ -29,18 +29,20 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: ./back-end/package-lock.json
-        env:
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_CLUSTER: ${{ secrets.DB_CLUSTER }}
-          DB_DOMAIN_NAME: ${{ secrets.DB_DOMAIN_NAME }}
-          FIREBASE_ADMIN_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY_ID }}
-          FIREBASE_ADMIN_PRIVATE_KEY: ${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY }}
-          FIREBASE_ADMIN_CLIENT_EMAIL: ${{ secrets.FIREBASE_ADMIN_CLIENT_EMAIL }}
-          FIREBASE_ADMIN_CLIENT_ID: ${{ secrets.FIREBASE_ADMIN_CLIENT_ID }}
-          FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL }}
-          FIREBASE_ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.FIREBASE_ADMIN_CLIENT_X509_CERT_URL }}
+      - name: Create env file
+        run: |
+          touch .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_CLUSTER=${{ secrets.DB_CLUSTER }}" >> .env
+          echo "DB_DOMAIN_NAME=${{ secrets.DB_DOMAIN_NAME }}" >> .env
+          echo "FIREBASE_ADMIN_PRIVATE_KEY_ID=${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY_ID }}" >> .env
+          echo "FIREBASE_ADMIN_PRIVATE_KEY=${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY }}" >> .env
+          echo "FIREBASE_ADMIN_CLIENT_EMAIL=${{ secrets.FIREBASE_ADMIN_CLIENT_EMAIL }}" >> .env
+          echo "FIREBASE_ADMIN_CLIENT_ID=${{ secrets.FIREBASE_ADMIN_CLIENT_ID }}" >> .env
+          echo "FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL }}" >> .env
+          echo "FIREBASE_ADMIN_CLIENT_X509_CERT_URL=${{ secrets.FIREBASE_ADMIN_CLIENT_X509_CERT_URL }}" >> .env
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test:integration
