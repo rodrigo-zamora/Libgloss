@@ -1,4 +1,4 @@
-//const admin = require('firebase-admin');
+const admin = require('firebase-admin');
 
 const notification_options = {
     priority: "high",
@@ -16,8 +16,6 @@ const NotificationsController = {
 
         let tokens = [];
 
-        // Fix firebase admin key
-        /*
         // Get the document from book_notifications where the field bookISBN is equal to the isbn
         let book = await admin.firestore().collection('book_notifications').doc(isbn).get();
 
@@ -85,7 +83,6 @@ const NotificationsController = {
                 });
             });
         }
-        */
     },
 }
 
