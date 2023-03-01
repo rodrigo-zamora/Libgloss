@@ -35,7 +35,12 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_CLUSTER: ${{ secrets.DB_CLUSTER }}
           DB_DOMAIN_NAME: ${{ secrets.DB_DOMAIN_NAME }}
-          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+          FIREBASE_ADMIN_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY_ID }}
+          FIREBASE_ADMIN_PRIVATE_KEY: ${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY }}
+          FIREBASE_ADMIN_CLIENT_EMAIL: ${{ secrets.FIREBASE_ADMIN_CLIENT_EMAIL }}
+          FIREBASE_CLIENT_ID: ${{ secrets.FIREBASE_CLIENT_ID }}
+          FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL }}
+          FIRABSE_ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.FIRABSE_ADMIN_CLIENT_X509_CERT_URL }}
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test:integration
