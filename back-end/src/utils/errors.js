@@ -28,10 +28,24 @@ class UnauthorizedError extends Error {
     }
 }
 
+class ServerError extends Error {
+    constructor(message, options) {
+        super(`500 server error: ${message}`, options);
+    }
+}
+
+class NotImplementedError extends Error {
+    constructor(message, options) {
+        super(`501 not implemented: ${message}`, options);
+    }
+}
+
 module.exports = {
     NotFoundError,
     BadRequestError,
     ConflictError,
     ForbiddenError,
-    UnauthorizedError
+    UnauthorizedError,
+    ServerError,
+    NotImplementedError
 };

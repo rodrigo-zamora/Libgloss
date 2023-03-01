@@ -7,12 +7,12 @@ const booksController = require('../controllers/book_controllers/books.controlle
 const notificationsController = require('../controllers/notifications_controller/notifications');
 
 router.get('/', handleError(async (req, res) => {
-    const books = await booksController.getBooks(req.query.page_size, req.query.page);
+    const books = await booksController.getBooks(req.query);
     res.json(books);
 }));
 
 router.get('/random', handleError(async (req, res) => {
-    const book = await booksController.getRandomBooks(req.query.page_size);
+    const book = await booksController.getRandomBooks(req.query);
     res.json(book);
 }));
 
@@ -26,12 +26,9 @@ router.get('/details', handleError(async (req, res) => {
     res.json(details);
 
     // Save the books in the database, with the current price and date
-    console.log('\tSaving book details in the database...');
-    console.log('\t\tISBN:', req.query.isbn);
-    //await booksController.saveBooks(req.query.isbn, details);
+    await booksController.saveBooks(req.query.isbn, details);
 
     // Notify users about the price change
-    console.log('\tNotifying users about the price change...');
     await notificationsController.notifyUsers(req.query.isbn, details);
 
 }));

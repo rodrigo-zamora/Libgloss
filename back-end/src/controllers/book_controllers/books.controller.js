@@ -6,7 +6,7 @@ const elSotanoController = require('./stores/el_sotano.js');
 
 const Book = require('../../models/book');
 const BookDetails = require('../../models/book_details');
-const { NotFoundError, BadRequestError } = require('../../utils/errors.js');
+const { NotFoundError, BadRequestError, ServerError, NotImplementedError } = require('../../utils/errors.js');
 
 const booksController = {
 
@@ -17,11 +17,11 @@ const booksController = {
 
         // Search for books using google controller
         books = await googleController.search(
-                query.title ? query.title.replace(/ /g, '%20') : null,
-                query.category ? query.category : null,
-                query.author ? query.author.replace(/ /g, '%20') : null,
-                query.isbn ? query.isbn : null,
-                query.publisher ? query.publisher : null
+            query.title ? query.title.replace(/ /g, '%20') : null,
+            query.category ? query.category : null,
+            query.author ? query.author.replace(/ /g, '%20') : null,
+            query.isbn ? query.isbn : null,
+            query.publisher ? query.publisher : null
         );
 
         // If no books were found, return an empty array
@@ -42,6 +42,9 @@ const booksController = {
     // Get price and availability details for a book, given its ISBN
     getDetails: async (query) => {
         let details = {};
+
+        if (query.isbn == null) throw new BadRequestError('ISBN is required');
+        if (query.isbn.length != 13) throw new NotImplementedError('ISBN must be 13 digits long');
 
         // Get the title of the book
         let books = await booksController.searchBooks({ isbn: query.isbn });
@@ -133,17 +136,43 @@ const booksController = {
     },
 
     // Get a list of all books in the database
-    getBooks: async (page_size, page) => {
-        if (!page_size) page_size = 10;
-        if (!page) page = 1;
+    getBooks: async (query) => {
 
-        let books = await Book.find().skip(parseInt(page_size) * (parseInt(page) - 1)).limit(parseInt(page_size));
-        return books;
+        let page_size;
+        let page;
+
+        if (query.page_size) {
+            page_size = parseInt(query.page_size);
+            if (page_size > 100) throw new BadRequestError('Page size must be less than 100');
+            if (page_size < 1) throw new BadRequestError('Page size must be greater than 0');
+            if (isNaN(page_size)) throw new BadRequestError('Page size must be a number');
+        } else {
+            page_size = 10;
+        }
+
+        if (query.page) {
+            page = parseInt(query.page);
+            if (page < 1) throw new BadRequestError('Page must be greater than 0');
+        } else {
+            page = 1;
+        }
+
+        return await Book.find().skip(parseInt(page_size) * (parseInt(page) - 1)).limit(parseInt(page_size));
     },
 
     // Get a list of random books in the database
-    getRandomBooks: async (page_size) => {
-        if (!page_size) page_size = 10;
+    getRandomBooks: async (query) => {
+
+        let page_size;
+
+        if (query.page_size) {
+            page_size = parseInt(query.page_size);
+            if (page_size > 100) throw new BadRequestError('Page size must be less than 100');
+            if (page_size < 1) throw new BadRequestError('Page size must be greater than 0');
+            if (isNaN(page_size)) throw new BadRequestError('Page size must be a number');
+        } else {
+            page_size = 10;
+        }
 
         let books = await Book.aggregate([{ $sample: { size: parseInt(page_size) } }]);
 

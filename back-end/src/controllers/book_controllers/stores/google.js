@@ -1,5 +1,5 @@
 const bent = require('bent');
-const { NotFoundError } = require('../../../utils/errors.js');
+const { NotFoundError, ServerError, NotImplementedError } = require('../../../utils/errors.js');
 
 const BASE_URL = 'https://www.googleapis.com/books/v1/volumes?maxResults=20&q=';
 
@@ -25,6 +25,15 @@ async function makeRequest(url, randomize) {
         try {
 
             let thumbnail = book.volumeInfo.imageLinks;
+            let isbn;
+
+            if (book.volumeInfo.industryIdentifiers.find(id => id.type == 'ISBN_13') != undefined) {
+                isbn = book.volumeInfo.industryIdentifiers.find(id => id.type == 'ISBN_13').identifier;
+            } else {
+                return;
+            }
+
+            if (isbn == null) return;
 
             books.push({
                 title: book.volumeInfo.title,
@@ -32,14 +41,14 @@ async function makeRequest(url, randomize) {
                 rating: book.volumeInfo.averageRating,
                 thumbnail: thumbnail === undefined ? null : thumbnail.thumbnail,
                 language: book.volumeInfo.language,
-                isbn: book.volumeInfo.industryIdentifiers.find(id => id.type == 'ISBN_13').identifier,
+                isbn: isbn,
                 authors: book.volumeInfo.authors,
                 publisher: book.volumeInfo.publisher,
                 categories: book.volumeInfo.categories,
                 description: book.volumeInfo.description,
             });
         } catch (error) {
-            console.log(error);
+            throw new ServerError('Error parsing book: ' + error);
         }
     });
 
@@ -74,10 +83,14 @@ const googleController = {
             category = categories[category];
         }
 
+        if (isbn) {
+            if (isbn.length != 13) throw new NotImplementedError('ISBN must be 13 digits long');
+            query += `isbn:${isbn}+`;
+        }
+
         if (title) query += `intitle:${title}+`;
         if (category) query += `subject:${category}+`;
         if (author) query += `inauthor:${author}+`;
-        if (isbn) query += `isbn:${isbn}+`;
         if (publisher) query += `inpublisher:${publisher}+`;
 
         // Remove last '+' if present

@@ -3,7 +3,7 @@ function handleError(fn) {
         try {
             await fn(req, res, next);
         } catch (err) {
-            console.log('Something went wrong', err);
+            console.log('Something went wrong: ' + err);
             next(err);
         }
     }
