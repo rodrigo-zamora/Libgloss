@@ -15,46 +15,42 @@ const NotificationsController = {
     },
     notifyUsers: async (isbn, details) => {
 
-        // Get the name of the book
-        let books = await googleController.searchISBN(isbn);
-        let bookName = books[0].title;
-
-        // Get only user where the book is in the tracking list
-        let users = await admin.firestore().collection('lists').get();
         let tokens = [];
 
-        for (let user of users.docs) {
-            let data = user.data();
-            console.log('\t\t\tUser: ' + data.useruid);
+        // Get the document from book_notifications where the field bookISBN is equal to the isbn
+        let book = await admin.firestore().collection('book_notifications').doc(isbn).get();
 
-            hasNotifications = await admin.firestore().collection('users').doc(data.useruid).get().then((doc) => {
+        // If the document doesn't exist, no users are tracking this book
+        if (!book.exists) {
+            console.log('\t\tNo users are tracking this book');
+            return;
+        }
+
+        // Get the list of users that are tracking this book
+        let users = book.data().users;
+
+        // Get the token of each user and add it to the tokens array
+        for (let user of users) {
+            console.log('\t\t\tUser ' + user);
+
+            let hasNotifications = await admin.firestore().collection('users').doc(user).get().then((doc) => {
                 return doc.data().notifications;
             });
-            console.log('\t\t\t\tUser has notifications enabled: ' + hasNotifications);
 
             if (hasNotifications) {
-                for (let book of data.tracking) {
-                    console.log('\t\t\t\tBook: ' + book.isbn);
-    
-                    if (book.isbn == isbn) {
-                        console.log('\t\t\t\t\tBook found in tracking list');
-                        console.table(book);
+                let desiredPrice = await admin.firestore().collection('users').doc(user).collection('tracking').doc(isbn).get().then((doc) => {
+                    return doc.data().price;
+                });
 
-                        console.table(details);
-    
-                        if (Object.values(details)[0].price <= book.price) {
-                            console.log('\t\t\t\t\t\tPrice is lower than the one in the tracking list');
-    
-                            let stores = Object.keys(details);
-                            if (book.store == 'all' || stores.includes(book.store)) {
-                                console.log('\t\t\t\t\t\t\tStore is in the tracking list');
-    
-                                let token = await NotificationsController.getToken(data.useruid);
-                                tokens.push(token);
-    
-                                console.log('\t\t\t\t\t\t\t\tToken: ' + token);
-                            }
-                        }
+                if (Object.values(details)[0].price <= desiredPrice) {
+                    let stores = Object.keys(details);
+                    let desiredStore = await admin.firestore().collection('users').doc(user).collection('tracking').doc(isbn).get().then((doc) => {
+                        return doc.data().store;
+                    });
+
+                    if (desiredStore == 'all' || stores.includes(desiredStore)) {
+                        let token = await NotificationsController.getToken(user);
+                        tokens.push(token);
                     }
                 }
             }
