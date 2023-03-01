@@ -36,7 +36,7 @@ process.on('SIGINT', function () {
 });
 
 // Firebase connection
-const admin = require('firebase-admin');
+/*const admin = require('firebase-admin');
 const serviceAccount = {
     'type': 'service_account',
     'project_id': 'your-project-id',
@@ -53,7 +53,7 @@ const serviceAccount = {
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
-});
+});*/
 
 const express = require('express');
 
