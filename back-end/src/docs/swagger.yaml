@@ -4,13 +4,585 @@ info:
   description: Libgloss API documentation
   version: 1.0.0
 tags:
+  users:
+    name: Users
+    description: Contains all users related endpoints
+  lists:
+    name: Lists
+    description: Contains all lists related endpoints
   books:
     name: Books
     description: Contains all books related endpoints
   book_details:
     name: Book details
     description: Contains all book price related endpoints
+  user_books:
+    name: User books
+    description: Contains all books uploaded by users
 paths:
+  /api/users:
+    post:
+      tags:
+        - users
+      summary: Create user
+      description: Creates a new user
+      operationId: createUser
+      requestBody:
+        description: User to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+  /api/users/:query:
+    get:
+      tags:
+        - users
+      summary: Get user
+      description: Returns a user given a query. The query can be the user's email, username or id.
+      operationId: getUser
+      parameters:
+        - name: query
+          in: path
+          description: Query to search
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: Not Found
+    put:
+      tags:
+        - users
+      summary: Update user
+      description: Updates a user given a query. The query can be the user's email, username or id.
+      operationId: updateUser
+      parameters:
+        - name: query
+          in: path
+          description: Query to search
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: User to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    delete:
+      tags:
+        - users
+      summary: Delete user
+      description: Deletes a user given a query. The query can be the user's email, username or id.
+      operationId: deleteUser
+      parameters:
+        - name: query
+          in: path
+          description: Query to search
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
+  /api/lists/:useruid:
+    get:
+      tags:
+        - lists
+      summary: Get user lists
+      description: Returns a list of lists given a user uid.
+      operationId: getUserLists
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/List'
+        404:
+          description: Not Found
+  /api/lists/:useruid/tracking:
+    post:
+      tags:
+        - lists
+      summary: Create user tracking list
+      description: Creates a new user tracking list given a user uid.
+      operationId: createUserTrackingList
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/List'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    put:
+      tags:
+        - lists
+      summary: Update user tracking list
+      description: Updates a user tracking list given a user uid.
+      operationId: updateUserTrackingList
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/List'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+  /api/lists/:useruid/wish:
+    post:
+      tags:
+        - lists
+      summary: Create user wish list
+      description: Creates a new user wish list given a user uid.
+      operationId: createUserWishList
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/List'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    put:
+      tags:
+        - lists
+      summary: Update user wish list
+      description: Updates a user wish list given a user uid.
+      operationId: updateUserWishList
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/List'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+  /api/lists/:useruid/tracking/:listItemuid:
+    get:
+      tags:
+        - lists
+      summary: Get user tracking list item
+      description: Returns a user tracking list item given a user uid and a list item uid.
+      operationId: getUserTrackingListItem
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+        - name: listItemuid
+          in: path
+          description: List item uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        404:
+          description: Not Found
+    put:
+      tags:
+        - lists
+      summary: Update user tracking list item
+      description: Updates a user tracking list item given a user uid and a list item uid.
+      operationId: updateUserTrackingListItem
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+        - name: listItemuid
+          in: path
+          description: List item uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List item to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListItem'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    delete:
+      tags:
+        - lists
+      summary: Delete user tracking list item
+      description: Deletes a user tracking list item given a user uid and a list item uid.
+      operationId: deleteUserTrackingListItem
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+        - name: listItemuid
+          in: path
+          description: List item uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
+  /api/lists/:useruid/wish/:listItemuid:
+    get:
+      tags:
+        - lists
+      summary: Get user wish list item
+      description: Returns a user wish list item given a user uid and a list item uid.
+      operationId: getUserWishListItem
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+        - name: listItemuid
+          in: path
+          description: List item uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        404:
+          description: Not Found
+    put:
+      tags:
+        - lists
+      summary: Update user wish list item
+      description: Updates a user wish list item given a user uid and a list item uid.
+      operationId: updateUserWishListItem
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+        - name: listItemuid
+          in: path
+          description: List item uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List item to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListItem'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    delete:
+      tags:
+        - lists
+      summary: Delete user wish list item
+      description: Deletes a user wish list item given a user uid and a list item uid.
+      operationId: deleteUserWishListItem
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+        - name: listItemuid
+          in: path
+          description: List item uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
+  /api/userbooks:
+    get:
+      tags:
+        - userbooks
+      summary: Get all user books
+      description: Returns a list of user books. Since the user books are stored in a database, the list is paginated. The default page size is 10. You can change the page size by adding the `page_size` query parameter. You can also change the page by adding the `page` query parameter.
+      operationId: getUserBooks
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          default: 1
+          schema:
+            type: integer
+            format: int32
+        - name: page_size
+          in: query
+          description: Page size
+          required: false
+          default: 10
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserBook'
+  /api/userbooks/:useruid:
+    post:
+      tags:
+        - userbooks
+      summary: Add user book
+      description: Adds a user book given a user uid.
+      operationId: addUserBook
+      parameters:
+        - name: useruid
+          in: path
+          description: User uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: User book to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBook'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBook'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+  /api/userbooks/:bookuid:
+    get:
+      tags:
+        - userbooks
+      summary: Get user book
+      description: Returns a user book given a book uid.
+      operationId: getUserBook
+      parameters:
+        - name: bookuid
+          in: path
+          description: Book uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBook'
+        404:
+          description: Not Found
+    put:
+      tags:
+        - userbooks
+      summary: Update user book
+      description: Updates a user book given a book uid.
+      operationId: updateUserBook
+      parameters:
+        - name: bookuid
+          in: path
+          description: Book uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: User book to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBook'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBook'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    delete:
+      tags:
+        - userbooks
+      summary: Delete user book
+      description: Deletes a user book given a book uid.
+      operationId: deleteUserBook
+      parameters:
+        - name: bookuid
+          in: path
+          description: Book uid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
   /api/books:
     get:
       tags:
