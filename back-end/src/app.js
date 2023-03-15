@@ -66,6 +66,10 @@ const swaggerDocument = YAML.load(path.resolve('./src/docs/swagger.yaml'));
 // Routes
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/books', require('./routes/books.route'));
+app.use('/api/users', require('./routes/users.route'));
+app.use('/api/lists', require('./routes/lists.route'));
+app.use('/api/userbooks', require('./routes/userbooks.route'));
+
 
 // Error handling
 const {
