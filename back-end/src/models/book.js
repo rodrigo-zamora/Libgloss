@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
+const dynogels = require('dynogels');
 
-const bookSchema = new mongoose.Schema({
+/* const bookSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -43,6 +44,15 @@ const bookSchema = new mongoose.Schema({
     },
 }, { collection: 'books' });
 
-let Book = mongoose.model('Book', bookSchema);
+let Book = mongoose.model('Book', bookSchema); */
 
-module.exports = Book;
+/*
+- Books
+- UserBooks
+- Lists
+- TrackingListItem
+- WishListItem
+- Users
+*/
+
+//module.exports = Book;
