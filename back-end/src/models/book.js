@@ -1,48 +1,22 @@
-const mongoose = require('mongoose');
+const dynogels = require('../libs/dynogels');
+const Joi = require('joi');
 
-const bookSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    subtitle: {
-        type: String,
-        required: false
-    },
-    rating: {
-        type: Number,
-        required: false
-    },
-    thumbnail: {
-        type: String,
-        required: false
-    },
-    language: {
-        type: String,
-        required: false
-    },
-    isbn: {
-        type: String,
-        required: false
-    },
-    authors: {
-        type: [String],
-        required: false
-    },
-    publisher: {
-        type: String,
-        required: false
-    },
-    categories: {
-        type: [String],
-        required: false
-    },
-    description: {
-        type: String,
-        required: false
-    },
-}, { collection: 'books' });
+var Book = dynogels.define('Book', {
+    hashKey : 'id',
 
-let Book = mongoose.model('Book', bookSchema);
+    schema : {
+        id              : dynogels.types.uuid(),
+        title           : Joi.string(),
+        subtitle        : Joi.string(),
+        rating          : Joi.number(),
+        thumbnail       : Joi.string(),
+        language        : Joi.string(),
+        isbn            : Joi.string(),
+        authors         : Joi.array().items(Joi.string()),
+        publisher       : Joi.string(),
+        categories      : Joi.array().items(Joi.string()),
+        description     : Joi.string(),
+    }
+});
 
 module.exports = Book;

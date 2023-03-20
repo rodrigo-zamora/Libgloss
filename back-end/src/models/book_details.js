@@ -1,16 +1,13 @@
-const mongoose = require('mongoose');
+const Joi = require('joi');
+const dynogels = require('../libs/dynogels');
 
-const bookDetailsSchema = new mongoose.Schema({
-    isbn: {
-        type: String,
-        required: true
-    },
-    stores: {
-        type: Object,
-        required: true
+var BookDetails = dynogels.define('BookDetails', {
+    hashKey : 'id',
+    schema : {
+        id              : dynogels.types.uuid(),
+        isbn            : Joi.string(),
+        stores          : Joi.array().items(Joi.string()),
     }
-}, { collection: 'book_details' });
-
-let BookDetails = mongoose.model('BookDetails', bookDetailsSchema);
+});
 
 module.exports = BookDetails;
