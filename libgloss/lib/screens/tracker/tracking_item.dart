@@ -1,28 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
-
-import '../../blocs/tracking/bloc/tracking_bloc.dart';
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/shared/online_image.dart';
+import 'package:libgloss/blocs/tracking/bloc/tracking_bloc.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
 
 class TrackingItem extends StatefulWidget {
-  final Map<String, dynamic> item;
-
   const TrackingItem({super.key, required this.item});
+  final Map<String, dynamic> item;
 
   @override
   State<TrackingItem> createState() => _TrackingItemState();
 }
 
 class _TrackingItemState extends State<TrackingItem> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.bookTracker);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
 
   late TextEditingController _priceController =
       TextEditingController(text: "${widget.item["price"]}");
@@ -324,16 +318,10 @@ class _TrackingItemState extends State<TrackingItem> {
 
                     print("ID: ${widget.item["isbn"]}");
                     try {
-                      QuerySnapshot listDocument = await FirebaseFirestore
-                          .instance
-                          .collection('lists')
-                          .where('useruid',
-                              isEqualTo: UserAuthRepository().getuid())
-                          .get();
-                      String listuid = listDocument.docs[0].id;
+                      // TODO: Get the list from Amplify database
 
                       // Get the item tracking from the list
-                      List<dynamic> tracking = listDocument.docs[0]["tracking"];
+                      List<dynamic> tracking = [];
 
                       // Get the index of the item tracking
                       int index = tracking.indexWhere(
@@ -344,11 +332,7 @@ class _TrackingItemState extends State<TrackingItem> {
                       tracking[index]["time"] = _monthsTracking;
                       tracking[index]["store"] = _storeTracking;
 
-                      // Update the list
-                      await FirebaseFirestore.instance
-                          .collection('lists')
-                          .doc(listuid)
-                          .update({"tracking": tracking});
+                      // TODO: Update the list in Amplify database
 
                       BlocProvider.of<TrackingBloc>(_context)
                           .add(UpdateTracking());
@@ -396,16 +380,10 @@ class _TrackingItemState extends State<TrackingItem> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   try {
-                    QuerySnapshot listDocument = await FirebaseFirestore
-                        .instance
-                        .collection('lists')
-                        .where('useruid',
-                            isEqualTo: UserAuthRepository().getuid())
-                        .get();
-                    String listuid = listDocument.docs[0].id;
+                    // TODO: Get the list from Amplify database
 
                     // Get the item tracking from the list
-                    List<dynamic> tracking = listDocument.docs[0]["tracking"];
+                    List<dynamic> tracking = [];
 
                     // Get the index of the item tracking
                     int index = tracking.indexWhere(
@@ -414,11 +392,7 @@ class _TrackingItemState extends State<TrackingItem> {
                     // Remove the item tracking
                     tracking.removeAt(index);
 
-                    // Update the list
-                    await FirebaseFirestore.instance
-                        .collection('lists')
-                        .doc(listuid)
-                        .update({"tracking": tracking});
+                    // TODO: Update the list
 
                     BlocProvider.of<TrackingBloc>(_context)
                         .add(UpdateTracking());

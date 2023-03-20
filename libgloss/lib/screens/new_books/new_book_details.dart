@@ -1,142 +1,167 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/stores/amazon/bloc/amazon_store_bloc.dart';
 import 'package:libgloss/blocs/stores/el_sotano/bloc/el_sotano_store_bloc.dart';
 import 'package:libgloss/blocs/stores/gandhi/bloc/gandhi_store_bloc.dart';
 import 'package:libgloss/blocs/stores/gonvill/bloc/gonvill_store_bloc.dart';
-
-import 'package:libgloss/repositories/auth/user_auth_repository.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
-
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../blocs/tracking/bloc/tracking_bloc.dart';
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/shared/search_appbar.dart';
-import '../../widgets/shared/side_menu.dart';
-
 class NewBookDetails extends StatefulWidget {
-  NewBookDetails({
-    Key? key,
-  }) : super(key: key);
+  const NewBookDetails({
+    super.key,
+  });
 
   @override
   State<NewBookDetails> createState() => _NewBookDetailsState();
 }
 
 class _NewBookDetailsState extends State<NewBookDetails> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
-  final Color _quaternaryColor =
-      ColorSelector.getQuaternary(LibglossRoutes.HOME);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
-  final Color _redColor = ColorSelector.getRed();
-  final Color _defaultColor = ColorSelector.getBlack();
-  final Color _greyColor = ColorSelector.getGrey();
+  final Color _primaryColor = AppColor.getPrimary(Routes.home);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.home);
+  final Color _quaternaryColor = AppColor.getQuaternary(Routes.home);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
+  final Color _redColor = AppColor.red;
+  final Color _defaultColor = AppColor.black;
+  final Color _greyColor = AppColor.gray;
 
   final TextEditingController _priceController = TextEditingController();
   int _monthsTracking = 0;
   String _storeTracking = '';
 
+  @override
   Widget build(BuildContext context) {
-    final _args = ModalRoute.of(context)!.settings.arguments;
-    _args as Map<String, dynamic>;
+    final args = ModalRoute.of(context)!.settings.arguments;
+    args as Map<String, dynamic>;
 
     BlocProvider.of<AmazonStoreBloc>(context).add(
       AmazonPriceEvent(
-        bookId: _args["isbn"],
+        bookId: args["isbn"] as String,
       ),
     );
 
     BlocProvider.of<ElSotanoStoreBloc>(context).add(
       ElSotanoPriceEvent(
-        bookId: _args["isbn"],
+        bookId: args["isbn"] as String,
       ),
     );
 
     BlocProvider.of<GandhiStoreBloc>(context).add(
       GandhiPriceEvent(
-        bookId: _args["isbn"],
+        bookId: args["isbn"] as String,
       ),
     );
 
     BlocProvider.of<GonvillStoreBloc>(context).add(
       GonvillPriceEvent(
-        bookId: _args["isbn"],
+        bookId: args["isbn"] as String,
       ),
     );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(80),
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
-          showBackButton: true,
-          route: LibglossRoutes.HOME_NEW,
+          route: Routes.home,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
-        route: LibglossRoutes.HOME_NEW,
+        route: Routes.home,
       ),
-      body: _main(context, _args),
+      body: _main(context, args),
     );
   }
 
-  SingleChildScrollView _main(
-      BuildContext context, Map<String, dynamic> _args) {
+  SingleChildScrollView _main(BuildContext context, Map<String, dynamic> args) {
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding:
-            EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
+        padding: const EdgeInsets.only(
+          left: 30.0,
+          right: 30.0,
+          top: 15.0,
+          bottom: 15.0,
+        ),
         child: Column(
           //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _text("${_args["title"]}", _defaultColor, 20.0, FontWeight.bold,
-                TextAlign.center),
-            SizedBox(height: 5),
-            _text("${_args["authors"].join(', ')}", _blueColor, 15.0,
-                FontWeight.normal, TextAlign.center),
-            SizedBox(height: 5),
-            _text("${_args["isbn"]}", _defaultColor, 15.0, FontWeight.normal,
-                TextAlign.center),
-            SizedBox(height: 20.0),
-            _image(_args["thumbnail"] != null
-                ? _args["thumbnail"] as String
-                : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png"),
-            SizedBox(height: 20.0),
+            _text(
+              "${args["title"]}",
+              _defaultColor,
+              20.0,
+              FontWeight.bold,
+              TextAlign.center,
+            ),
+            const SizedBox(height: 5),
+            _text(
+              "${args["authors"].join(', ')}",
+              _blueColor,
+              15.0,
+              FontWeight.normal,
+              TextAlign.center,
+            ),
+            const SizedBox(height: 5),
+            _text(
+              "${args["isbn"]}",
+              _defaultColor,
+              15.0,
+              FontWeight.normal,
+              TextAlign.center,
+            ),
+            const SizedBox(height: 20.0),
+            _image(
+              args["thumbnail"] != null
+                  ? args["thumbnail"] as String
+                  : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
+            ),
+            const SizedBox(height: 20.0),
             Container(
               child: _getPrices(),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
-                _wish_list(context, _args);
+                _wishList(context, args);
               },
               child: Container(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  alignment: Alignment.topLeft,
-                  child: _text("Agregar a Lista de Deseos", _blueColor, 15.0,
-                      FontWeight.bold, TextAlign.left)),
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                alignment: Alignment.topLeft,
+                child: _text(
+                  "Agregar a Lista de Deseos",
+                  _blueColor,
+                  15.0,
+                  FontWeight.bold,
+                  TextAlign.left,
+                ),
+              ),
             ),
-            SizedBox(height: 15.0),
+            const SizedBox(height: 15.0),
             GestureDetector(
               onTap: () {
-                _tracking(context, _args);
+                _tracking(context, args);
               },
               child: Container(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  alignment: Alignment.topLeft,
-                  child: _text("Hacer Seguimiento de Libro", _blueColor, 15.0,
-                      FontWeight.bold, TextAlign.left)),
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                alignment: Alignment.topLeft,
+                child: _text(
+                  "Hacer Seguimiento de Libro",
+                  _blueColor,
+                  15.0,
+                  FontWeight.bold,
+                  TextAlign.left,
+                ),
+              ),
             ),
           ],
         ),
@@ -144,10 +169,15 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Widget _text(String text, Color color, double size, FontWeight weight,
-      TextAlign align) {
-    var _isPrice = double.tryParse(text);
-    if (_isPrice == null || _isPrice > 99999) {
+  Widget _text(
+    String text,
+    Color color,
+    double size,
+    FontWeight weight,
+    TextAlign align,
+  ) {
+    final isPrice = double.tryParse(text);
+    if (isPrice == null || isPrice > 99999) {
       return Text(
         text,
         textAlign: align,
@@ -158,14 +188,14 @@ class _NewBookDetailsState extends State<NewBookDetails> {
         ),
       );
     } else {
-      double _price = double.parse(text);
-      int _priceInt = _price.toInt();
-      int _priceDec = ((_price - _priceInt) * 100).toInt();
+      final double price = double.parse(text);
+      final int priceInt = price.toInt();
+      final int priceDec = ((price - priceInt) * 100).toInt();
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "\$$_priceInt",
+            "\$$priceInt",
             textAlign: align,
             style: TextStyle(
               fontSize: size,
@@ -183,7 +213,7 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             ),
           ),
           Text(
-            _priceDec < 10 ? "0$_priceDec" : "$_priceDec",
+            priceDec < 10 ? "0$priceDec" : "$priceDec",
             textAlign: align,
             style: TextStyle(
               fontSize: size - 5,
@@ -196,21 +226,21 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     }
   }
 
-  Container _image(String image) {
-    return Container(
-        height: (MediaQuery.of(context).size.height / 2.5),
-        child: OnlineImage(
-          imageUrl: image,
-          height: 100,
-        ));
+  SizedBox _image(String image) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2.5,
+      child: OnlineImage(
+        imageUrl: image,
+        height: 100,
+      ),
+    );
   }
 
-  void _launchURL(String _url) async {
-    var _arguments = {
-      "url": _url,
+  Future<void> _launchURL(String url) async {
+    final arguments = {
+      "url": url,
     };
-    Navigator.pushNamed(context, LibglossRoutes.WEB_VIEW,
-        arguments: _arguments);
+    Navigator.pushNamed(context, Routes.webViewScreen, arguments: arguments);
   }
 
   Widget _getPrices() {
@@ -224,14 +254,14 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             if (state is AmazonStoreLoading) {
               return _loading();
             } else if (state is AmazonStoreLoaded) {
-              final _result = state.props[0] as Map<String, dynamic>;
-              final _price = _result["amazon"] != null
-                  ? _result["amazon"]["price"].toString()
+              final result = state.props[0] as Map<String, dynamic>;
+              final price = result["amazon"] != null
+                  ? result["amazon"]["price"].toString()
                   : "No disponible";
-              final String _url = _result["amazon"] != null
-                  ? _result["amazon"]["url"] as String
+              final String url = result["amazon"] != null
+                  ? result["amazon"]["url"] as String
                   : "";
-              return _priceCard(_price, "Amazon", _url);
+              return _priceCard(price, "Amazon", url);
             } else {
               return _priceCard("No disponible", "Amazon", "");
             }
@@ -242,14 +272,14 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             if (state is ElSotanoStoreLoading) {
               return _loading();
             } else if (state is ElSotanoStoreLoaded) {
-              final _result = state.props[0] as Map<String, dynamic>;
-              final _price = _result["el_sotano"] != null
-                  ? _result["el_sotano"]["price"].toString()
+              final result = state.props[0] as Map<String, dynamic>;
+              final price = result["el_sotano"] != null
+                  ? result["el_sotano"]["price"].toString()
                   : "No disponible";
-              final String _url = _result["el_sotano"] != null
-                  ? _result["el_sotano"]["url"] as String
+              final String url = result["el_sotano"] != null
+                  ? result["el_sotano"]["url"] as String
                   : "";
-              return _priceCard(_price, "El Sotano", _url);
+              return _priceCard(price, "El Sotano", url);
             } else {
               return _priceCard("No disponible", "El Sotano", "");
             }
@@ -260,14 +290,14 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             if (state is GandhiStoreLoading) {
               return _loading();
             } else if (state is GandhiStoreLoaded) {
-              final _result = state.props[0] as Map<String, dynamic>;
-              final _price = _result["gandhi"] != null
-                  ? _result["gandhi"]["price"].toString()
+              final result = state.props[0] as Map<String, dynamic>;
+              final price = result["gandhi"] != null
+                  ? result["gandhi"]["price"].toString()
                   : "No disponible";
-              final String _url = _result["gandhi"] != null
-                  ? _result["gandhi"]["url"] as String
+              final String url = result["gandhi"] != null
+                  ? result["gandhi"]["url"] as String
                   : "";
-              return _priceCard(_price, "Gandhi", _url);
+              return _priceCard(price, "Gandhi", url);
             } else {
               return _priceCard("No disponible", "Gandhi", "");
             }
@@ -278,14 +308,14 @@ class _NewBookDetailsState extends State<NewBookDetails> {
             if (state is GonvillStoreLoading) {
               return _loading();
             } else if (state is GonvillStoreLoaded) {
-              final _result = state.props[0] as Map<String, dynamic>;
-              final _price = _result["gonvill"] != null
-                  ? _result["gonvill"]["price"].toString()
+              final result = state.props[0] as Map<String, dynamic>;
+              final price = result["gonvill"] != null
+                  ? result["gonvill"]["price"].toString()
                   : "No disponible";
-              final String _url = _result["gonvill"] != null
-                  ? _result["gonvill"]["url"] as String
+              final String url = result["gonvill"] != null
+                  ? result["gonvill"]["url"] as String
                   : "";
-              return _priceCard(_price, "Gonvill", _url);
+              return _priceCard(price, "Gonvill", url);
             } else {
               return _priceCard("No disponible", "Gonvill", "");
             }
@@ -296,91 +326,46 @@ class _NewBookDetailsState extends State<NewBookDetails> {
   }
 
   Widget _priceCard(String price, String store, String url) {
-    return Container(
-      child: GestureDetector(
-        onTap: () {
-          if (url != "") {
-            _launchURL(url);
-          }
-        },
-        child: Card(
-          elevation: 4, // the size of the shadow
-          shadowColor: _greyColor, // shadow color
-          color: _quaternaryColor, // the color of the card
-          shape: RoundedRectangleBorder(
-            // the shape of the card
-            borderRadius: BorderRadius.all(Radius.circular(
-                15)), // the radius of the border, made to be circular
-            side: BorderSide(color: _secondaryColor, width: 0.5),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  child: _text(
-                      store,
-                      price != "No disponible" ? _blueColor : _redColor,
-                      15.0,
-                      FontWeight.bold,
-                      TextAlign.center),
-                ),
-                SizedBox(height: 5),
-                _text(price, _defaultColor, 15.0, FontWeight.normal,
-                    TextAlign.center),
-              ],
+    return GestureDetector(
+      onTap: () {
+        if (url != "") {
+          _launchURL(url);
+        }
+      },
+      child: Card(
+        elevation: 4, // the size of the shadow
+        shadowColor: _greyColor, // shadow color
+        color: _quaternaryColor, // the color of the card
+        shape: RoundedRectangleBorder(
+          // the shape of the card
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              15,
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _loading() {
-    return Container(
-      child: Card(
-        elevation: 4, // the size of the shadow
-        shadowColor: _greyColor, // shadow color
-        color: _quaternaryColor, // the color of the card
-        shape: RoundedRectangleBorder(
-          // the shape of the card
-          borderRadius: BorderRadius.all(Radius.circular(
-              15)), // the radius of the border, made to be circular
-        ),
-        child: LoadingAnimationWidget.fourRotatingDots(
-          color: _secondaryColor,
-          size: MediaQuery.of(context).size.height /
-              MediaQuery.of(context).size.width *
-              20,
-        ),
-      ),
-    );
-  }
-
-  Widget _error() {
-    return Container(
-      child: Card(
-        elevation: 4, // the size of the shadow
-        shadowColor: _greyColor, // shadow color
-        color: _quaternaryColor, // the color of the card
-        shape: RoundedRectangleBorder(
-          // the shape of the card
-          borderRadius: BorderRadius.all(Radius.circular(
-              15)), // the radius of the border, made to be circular
+          ), // the radius of the border, made to be circular
+          side: BorderSide(color: _secondaryColor, width: 0.5),
         ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                child: _text("Error", _blueColor, 15.0, FontWeight.bold,
-                    TextAlign.center),
+                child: _text(
+                  store,
+                  price != "No disponible" ? _blueColor : _redColor,
+                  15.0,
+                  FontWeight.bold,
+                  TextAlign.center,
+                ),
               ),
-              SizedBox(height: 5),
-              _text("No se pudo cargar la información", _defaultColor, 15.0,
-                  FontWeight.normal, TextAlign.center),
+              const SizedBox(height: 5),
+              _text(
+                price,
+                _defaultColor,
+                15.0,
+                FontWeight.normal,
+                TextAlign.center,
+              ),
             ],
           ),
         ),
@@ -388,19 +373,42 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Future<dynamic> _tracking(BuildContext _context, Map<String, dynamic> _args) {
+  Widget _loading() {
+    return Card(
+      elevation: 4, // the size of the shadow
+      shadowColor: _greyColor, // shadow color
+      color: _quaternaryColor, // the color of the card
+      shape: const RoundedRectangleBorder(
+        // the shape of the card
+        borderRadius: BorderRadius.all(
+          Radius.circular(
+            15,
+          ),
+        ), // the radius of the border, made to be circular
+      ),
+      child: LoadingAnimationWidget.fourRotatingDots(
+        color: _secondaryColor,
+        size: MediaQuery.of(context).size.height /
+            MediaQuery.of(context).size.width *
+            20,
+      ),
+    );
+  }
+
+  Future<dynamic> _tracking(BuildContext context, Map<String, dynamic> args) {
     return showDialog(
-      context: _context,
+      context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Seguimiento del libro"),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          contentPadding: EdgeInsets.all(22.0),
+          title: const Text("Seguimiento del libro"),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
+          contentPadding: const EdgeInsets.all(22.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Agrega los siguientes datos para poder "
+              const Text("Agrega los siguientes datos para poder "
                   "seguir el libro"),
               Form(
                 child: Column(
@@ -408,63 +416,63 @@ class _NewBookDetailsState extends State<NewBookDetails> {
                     TextFormField(
                       controller: _priceController,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Precio",
                       ),
                     ),
                     DropdownButtonFormField(
-                      items: [
+                      items: const [
                         DropdownMenuItem(
-                          child: Text("Todas las tiendas"),
                           value: "all",
+                          child: Text("Todas las tiendas"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Amazon"),
                           value: "amazon",
+                          child: Text("Amazon"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Gandhi"),
                           value: "gandhi",
+                          child: Text("Gandhi"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Gonvill"),
                           value: "gonvill",
+                          child: Text("Gonvill"),
                         ),
                         DropdownMenuItem(
-                          child: Text("El Sótano"),
                           value: "el_sotano",
+                          child: Text("El Sótano"),
                         ),
                       ],
                       onChanged: (value) {
                         _storeTracking = value!;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Tienda",
                       ),
                     ),
                     DropdownButtonFormField(
-                      items: [
+                      items: const [
                         DropdownMenuItem(
-                          child: Text("1 mes"),
                           value: 1,
+                          child: Text("1 mes"),
                         ),
                         DropdownMenuItem(
-                          child: Text("3 meses"),
                           value: 3,
+                          child: Text("3 meses"),
                         ),
                         DropdownMenuItem(
-                          child: Text("6 meses"),
                           value: 6,
+                          child: Text("6 meses"),
                         ),
                         DropdownMenuItem(
-                          child: Text("1 año"),
                           value: 12,
+                          child: Text("1 año"),
                         ),
                       ],
                       onChanged: (value) {
                         _monthsTracking = value!;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Tiempo",
                       ),
                     ),
@@ -478,102 +486,15 @@ class _NewBookDetailsState extends State<NewBookDetails> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancelar"),
+              child: const Text("Cancelar"),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
 
-                var isLoggedIn =
-                    (await UserAuthRepository().getInstance().currentUser);
-                print("[TrackingList] Adding book to wish list");
-                print("[TrackingList] User uid: $isLoggedIn");
-
-                if (isLoggedIn == null) {
-                  print("[TrackingList] User not logged in");
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content: Text("Debes iniciar sesión para agregar "
-                            "libros a tu lista de seguimiento"),
-                      ),
-                    );
-                } else {
-                  print("[TrackingList] User logged in");
-                  String uid = isLoggedIn.uid;
-                  print("[TrackingList] User uid: $uid");
-
-                  print(
-                      "[TrackingList] Adding book to wish list: ${_args["isbn"]}");
-
-                  print(
-                      "[TrackingList] Checking if book is already in tracking list");
-
-                  String? useruid =
-                      UserAuthRepository.userInstance?.currentUser!.uid;
-
-                  var book = await FirebaseFirestore.instance
-                      .collection("lists")
-                      .where("useruid", isEqualTo: useruid)
-                      .get();
-                  List<DocumentSnapshot> booksList = book.docs;
-
-                  List<dynamic> books = booksList[0]["tracking"];
-                  print("[TrackingList] Books in tracking list: $books");
-
-                  bool isAlreadyInList = false;
-                  for (var book in books) {
-                    if (book["isbn"] == _args["isbn"]) {
-                      isAlreadyInList = true;
-                      print("[TrackingList] Book is already in tracking list");
-                      break;
-                    }
-                  }
-
-                  if (!isAlreadyInList) {
-                    print("[TrackingList] Adding book to tracking list");
-                    await FirebaseFirestore.instance
-                        .collection("lists")
-                        .doc(booksList[0].id)
-                        .update({
-                      "tracking": FieldValue.arrayUnion([
-                        {
-                          "isbn": _args["isbn"],
-                          "title": _args["title"],
-                          "authors": _args["authors"],
-                          "price": int.parse(_priceController.text),
-                          "time": _monthsTracking,
-                          "thumbnail": _args["thumbnail"],
-                          "store": _storeTracking,
-                        }
-                      ])
-                    });
-                    print("[TrackingList] Book added to tracking list");
-                    ScaffoldMessenger.of(_context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content:
-                              Text("Libro agregado a tu lista de seguimiento"),
-                        ),
-                      );
-                    BlocProvider.of<TrackingBloc>(_context)
-                        .add(UpdateTracking());
-                  } else {
-                    print("[TrackingList] Book is already in tracking list");
-                    ScaffoldMessenger.of(_context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text("El libro ya se encuentra en tu lista "
-                              "de seguimiento"),
-                        ),
-                      );
-                  }
-                }
+                // TODO: Add tracking using Amplify
               },
-              child: Text("Agregar"),
+              child: const Text("Agregar"),
             )
           ],
         );
@@ -581,129 +502,37 @@ class _NewBookDetailsState extends State<NewBookDetails> {
     );
   }
 
-  Future<dynamic> _wish_list(
-      BuildContext _context, Map<String, dynamic> _args) {
+  Future<dynamic> _wishList(BuildContext context, Map<String, dynamic> args) {
     return showDialog(
-        context: _context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Agregar a la lista de deseos"),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0))),
-            contentPadding: EdgeInsets.all(22.0),
-            content: Text(
-                "¿Estás seguro que deseas agregar este libro a tu lista de deseos?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Cancelar"),
-              ),
-              TextButton(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  var isLoggedIn =
-                      (await UserAuthRepository().getInstance().currentUser);
-                  print("[WishList] Adding book to wish list");
-                  print("[WishList] User uid: $isLoggedIn");
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Agregar a la lista de deseos"),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
+          contentPadding: const EdgeInsets.all(22.0),
+          content: const Text(
+            "¿Estás seguro que deseas agregar este libro a tu lista de deseos?",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
 
-                  if (isLoggedIn == null) {
-                    print("[WishList] User not logged in");
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text("Debes iniciar sesión para agregar "
-                              "libros a tu lista de deseos"),
-                        ),
-                      );
-                  } else {
-                    print("[WishList] User logged in");
-                    String uid = isLoggedIn.uid;
-                    print("[WishList] User uid: $uid");
-
-                    print(
-                        "[WishList] Adding book to wish list: ${_args["isbn"]}");
-
-                    print(
-                        "[WishList] Checking if book is already in wish list");
-                    String? useruid =
-                        UserAuthRepository.userInstance?.currentUser!.uid;
-                    var book = await FirebaseFirestore.instance
-                        .collection("lists")
-                        .where("useruid", isEqualTo: useruid)
-                        .get();
-                    List<DocumentSnapshot> bookList = book.docs;
-
-                    List<dynamic> books = bookList[0]["wish"];
-                    print("[WishList] Book list: $books");
-
-                    bool isBookInList = false;
-                    for (var book in books) {
-                      if (book["isbn"] == _args["isbn"]) {
-                        isBookInList = true;
-                        print("[WishList] Book is already in wish list");
-                        break;
-                      }
-                    }
-
-                    if (!isBookInList) {
-                      print("[WishList] Adding book to wish list");
-                      FirebaseFirestore.instance
-                          .collection("lists")
-                          .doc(bookList[0].id)
-                          .update({
-                        "wish": FieldValue.arrayUnion([
-                          {
-                            "isbn": _args["isbn"],
-                            "title": _args["title"],
-                            "authors": _args["authors"],
-                            "thumbnail": _args["thumbnail"],
-                          }
-                        ])
-                      }).then((value) {
-                        print("[WishList] Book added to wish list");
-                        ScaffoldMessenger.of(_context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text("Libro agregado a tu lista de deseos"),
-                            ),
-                          );
-                        BlocProvider.of<TrackingBloc>(_context)
-                            .add(UpdateTracking());
-                      }).catchError((error) {
-                        print("[WishList] Error adding book to wish list");
-                        print("[WishList] Error: $error");
-                        ScaffoldMessenger.of(_context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text("Error agregando libro a tu lista de "
-                                      "deseos"),
-                            ),
-                          );
-                      });
-                    } else {
-                      ScaffoldMessenger.of(_context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(
-                          SnackBar(
-                            content:
-                                Text("El libro ya se encuentra en tu lista "
-                                    "de deseos"),
-                          ),
-                        );
-                    }
-                  }
-                },
-                child: Text("Agregar"),
-              ),
-            ],
-          );
-        });
+                // TODO: Add to wish list using Amplify
+              },
+              child: const Text("Agregar"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

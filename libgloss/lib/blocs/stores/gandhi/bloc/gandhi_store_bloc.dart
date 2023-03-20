@@ -20,8 +20,8 @@ class GandhiStoreBloc extends Bloc<GandhiStoreEvent, GandhiStoreState> {
 
     String bookId = event.bookId;
 
-    final uri = Uri.parse(
-        LibglossRoutes.API + 'books/details?isbn=$bookId&store=gandhi');
+    final uri =
+        Uri.parse(Routes.api + 'books/details?isbn=$bookId&store=gandhi');
 
     try {
       if (kDebugMode) print('\u001b[33m[GandhiStoreBloc] uri: $uri');

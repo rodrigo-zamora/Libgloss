@@ -3,12 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-//import 'package:share_plus/share_plus.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../../config/colors.dart';
-import '../../config/routes.dart';
 
 class WebViewPage extends StatefulWidget {
   WebViewPage({super.key});
@@ -18,8 +15,8 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
+  final Color _primaryColor = AppColor.getPrimary(Routes.home);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.home);
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();

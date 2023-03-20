@@ -20,8 +20,8 @@ class GonvillStoreBloc extends Bloc<GonvillStoreEvent, GonvillStoreState> {
 
     String bookId = event.bookId;
 
-    final uri = Uri.parse(
-        LibglossRoutes.API + 'books/details?isbn=$bookId&store=gonvill');
+    final uri =
+        Uri.parse(Routes.api + 'books/details?isbn=$bookId&store=gonvill');
 
     try {
       if (kDebugMode) print('\u001b[33m[GonvillStoreBloc] uri: $uri');

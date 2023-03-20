@@ -20,8 +20,8 @@ class ElSotanoStoreBloc extends Bloc<ElSotanoStoreEvent, ElSotanoStoreState> {
 
     String bookId = event.bookId;
 
-    final uri = Uri.parse(
-        LibglossRoutes.API + 'books/details?isbn=$bookId&store=el_sotano');
+    final uri =
+        Uri.parse(Routes.api + 'books/details?isbn=$bookId&store=el_sotano');
 
     try {
       if (kDebugMode) print('\u001b[33m[ElSotanoStoreBloc] uri: $uri');

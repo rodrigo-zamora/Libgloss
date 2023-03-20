@@ -1,13 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
-
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../repositories/auth/user_auth_repository.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class MyBooks extends StatefulWidget {
   MyBooks({super.key});
@@ -17,15 +13,13 @@ class MyBooks extends StatefulWidget {
 }
 
 class _MyBooksState extends State<MyBooks> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
+  final Color _primaryColor = AppColor.getPrimary(Routes.options);
 
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.options);
 
-  final Color _tertiaryColor =
-      ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
+  final Color _tertiaryColor = AppColor.getQuaternary(Routes.options);
 
-  final Color _iconColors = ColorSelector.getGrey();
+  final Color _iconColors = AppColor.gray;
 
   @override
   Widget build(BuildContext context) {
@@ -48,34 +42,8 @@ class _MyBooksState extends State<MyBooks> {
   }
 
   Widget _main(BuildContext _context) {
-    CollectionReference books = FirebaseFirestore.instance.collection('books');
-    return FutureBuilder(
-      future: books
-          .where('sellerUid', isEqualTo: UserAuthRepository().getuid())
-          .get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("Algo salió mal");
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            List<Map<String, dynamic>> data = [];
-            snapshot.data?.docs.forEach((doc) {
-              Map<String, dynamic> bookData = {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>
-              };
-              data.add(bookData);
-            });
-            return _buildMyBooks(data, _context);
-          }
-        }
-        return Center(
-            child: CircularProgressIndicator(
-          color: _secondaryColor,
-        ));
-      },
-    );
+    // TODO: Get all books from the user
+    return CircularProgressIndicator();
   }
 
   Widget _buildMyBooks(List<Map<String, dynamic>> data, BuildContext _context) {
@@ -271,10 +239,7 @@ class _MyBooksState extends State<MyBooks> {
   _updateBook(
       Map<String, dynamic> data, String price, BuildContext context) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('books')
-          .doc(data['id'])
-          .update({'price': int.parse(price)});
+      // TODO: Update book in Amplify
     } catch (e) {
       print(e);
     }
@@ -300,10 +265,7 @@ class _MyBooksState extends State<MyBooks> {
               onPressed: () async {
                 List<dynamic> images = _images;
                 try {
-                  await FirebaseFirestore.instance
-                      .collection('books')
-                      .doc(id)
-                      .delete();
+                  // TODO: Delete book in Amplify
                   BlocProvider.of<UsedBooksBloc>(context)
                       .add(GetUsedBooksEvent());
                 } catch (e) {
@@ -313,7 +275,7 @@ class _MyBooksState extends State<MyBooks> {
                 Navigator.pop(context);
                 for (String image in images) {
                   try {
-                    await FirebaseStorage.instance.refFromURL(image).delete();
+                    // TODO: Delete image in Amplify
                   } catch (e) {
                     print(e);
                   }

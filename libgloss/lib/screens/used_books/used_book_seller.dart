@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../config/colors.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class UsedBookSeller extends StatefulWidget {
   UsedBookSeller({
@@ -16,34 +15,18 @@ class UsedBookSeller extends StatefulWidget {
 }
 
 class _UsedBookSellerState extends State<UsedBookSeller> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _defaultColor = ColorSelector.getBlack();
+  final Color _primaryColor = AppColor.getPrimary(Routes.usedBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.usedBooks);
+  final Color _defaultColor = AppColor.black;
 
   @override
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
     _args as Map<String, dynamic>;
-    Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore.instance.collection('users').where('username', isEqualTo: _args['vendedor']).get();  
-    return FutureBuilder<DocumentSnapshot>(
-      future: result.then((value) => value.docs.first.reference.get()),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            Map<String, dynamic>? data =
-                snapshot.data!.data() as Map<String, dynamic>?;
-            if (data != null) return _buildUserOptions(data);
-          }
-        }
-        return _loadingUserOptions();
-      },
-    );
+
+    // TODO: Get seller data from Amplify database
+
+    return _loadingUserOptions();
   }
 
   Widget _loadingUserOptions() {
@@ -145,7 +128,7 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {}, 
+                      onPressed: () {},
                       icon: Icon(Icons.message),
                     ),
                   ],
@@ -163,7 +146,8 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width / 1.2,
-                  child: Image.network('https://blogs.iteso.mx/comollegar/wp-content/uploads/sites/84/2016/03/Ruta-salida-del-ITESO.jpg'),
+                  child: Image.network(
+                      'https://blogs.iteso.mx/comollegar/wp-content/uploads/sites/84/2016/03/Ruta-salida-del-ITESO.jpg'),
                 ),
               ],
             ),
@@ -175,36 +159,35 @@ class _UsedBookSellerState extends State<UsedBookSeller> {
 
   SizedBox _profilePicture(Map<String, dynamic>? data) {
     return SizedBox(
-      height: 150,
-      width: 150,
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.none,
-        children: [
-          CachedNetworkImage(
-            placeholder: (context, url) {
-              return ClipOval(
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: 100,
-                    color: Colors.grey[300],
+        height: 150,
+        width: 150,
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            CachedNetworkImage(
+              placeholder: (context, url) {
+                return ClipOval(
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 100,
+                      color: Colors.grey[300],
+                    ),
                   ),
-                ),
-              );
-            },
-            fit: BoxFit.contain,
-            imageUrl: data!['profilePicture'],
-            imageBuilder: (context, imageProvider) {
-              return CircleAvatar(
-                backgroundImage: imageProvider,
-              );
-            },
-          ),
-        ],
-      )
-    );
+                );
+              },
+              fit: BoxFit.contain,
+              imageUrl: data!['profilePicture'],
+              imageBuilder: (context, imageProvider) {
+                return CircleAvatar(
+                  backgroundImage: imageProvider,
+                );
+              },
+            ),
+          ],
+        ));
   }
 
   Widget _show() {

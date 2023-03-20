@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../config/colors.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class UserOptions extends StatefulWidget {
   UserOptions({super.key});
@@ -17,33 +15,15 @@ class UserOptions extends StatefulWidget {
 }
 
 class _UserOptionsState extends State<UserOptions> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
-  final Color _tertiaryColor =
-      ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
-  final Color _iconColors = ColorSelector.getGrey();
+  final Color _primaryColor = AppColor.getPrimary(Routes.options);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.options);
+  final Color _tertiaryColor = AppColor.getQuaternary(Routes.options);
+  final Color _iconColors = AppColor.gray;
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference user = FirebaseFirestore.instance.collection('users');
-    return FutureBuilder<DocumentSnapshot>(
-      future: user.doc(UserAuthRepository().getuid()).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            Map<String, dynamic>? data =
-                snapshot.data!.data() as Map<String, dynamic>?;
-            if (data != null) return _buildUserOptions(data);
-          }
-        }
-        return _loadingUserOptions();
-      },
-    );
+    // TODO: Get the user data from Amplify
+    return CircularProgressIndicator();
   }
 
   Widget _loadingUserOptions() {
@@ -117,11 +97,11 @@ class _UserOptionsState extends State<UserOptions> {
               //_followers(true),
               SizedBox(height: 10),
               _lowButton(Icons.person_outlined, "Mi cuenta", () {
-                Navigator.pushNamed(context, LibglossRoutes.ACCOUNT);
+                Navigator.pushNamed(context, Routes.myAccount);
               }, Icons.arrow_forward_ios),
               _bookHistory(data['isSeller']),
               _lowButton(Icons.help_outline, "Notifiaciones", () {
-                Navigator.pushNamed(context, LibglossRoutes.NOTIFICATIONS);
+                Navigator.pushNamed(context, Routes.notifications);
               }, Icons.arrow_forward_ios),
               _lowButton(Icons.logout_outlined, "Salir", () {
                 BlocProvider.of<AuthBloc>(context).add(
@@ -140,7 +120,7 @@ class _UserOptionsState extends State<UserOptions> {
   Widget _bookHistory(bool isSeller) {
     if (isSeller) {
       return _lowButton(Icons.book_outlined, "Mis libros", () {
-        Navigator.pushNamed(context, LibglossRoutes.MY_BOOKS);
+        Navigator.pushNamed(context, Routes.myBooks);
       }, Icons.arrow_forward_ios);
     } else {
       return Container();
@@ -281,18 +261,12 @@ class _UserOptionsState extends State<UserOptions> {
         onPressed: () {
           if (!isSeller)
             _showSellerDialog(
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .where('id', isEqualTo: UserAuthRepository().getuid())
-                    .get(),
-                isSeller);
+              isSeller,
+            );
           else {
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(UserAuthRepository().getuid())
-                .update({'isSeller': !isSeller});
+            // TODO: Update seller field in Amplify database
             Navigator.pushNamedAndRemoveUntil(
-                context, LibglossRoutes.HOME, (route) => false);
+                context, Routes.home, (route) => false);
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -302,7 +276,7 @@ class _UserOptionsState extends State<UserOptions> {
                   ),
                 ),
               );
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+            Routes.currentRoute = Routes.home;
           }
         },
         child: Row(
@@ -437,8 +411,9 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  _showSellerDialog(Future<QuerySnapshot> future, bool isSeller) async {
-    List<DocumentSnapshot> user = (await future).docs;
+  _showSellerDialog(bool isSeller) async {
+    // TODO: Fix this using Amplify and less arguments
+    final user = {};
     TextEditingController _phoneController = TextEditingController();
     TextEditingController _zpController = TextEditingController();
     showDialog(
@@ -514,12 +489,7 @@ class _UserOptionsState extends State<UserOptions> {
                 Navigator.of(context).pop();
                 if (user[0]['phoneNumber'] == null) {
                   if (_phoneController.text.length == 10) {
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user[0].id)
-                        .update({
-                      'phoneNumber': _phoneController.text,
-                    });
+                    // TODO: Update user phone number in Amplify database
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -530,12 +500,8 @@ class _UserOptionsState extends State<UserOptions> {
                 }
                 if (user[0]['zipCode'] == null) {
                   if (_zpController.text.length == 5) {
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user[0].id)
-                        .update({
-                      'zipCode': _zpController.text,
-                    });
+                    // TODO: Update user zip code in Amplify database
+                    // TODO: Use user's current address to get coordinates
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -546,13 +512,9 @@ class _UserOptionsState extends State<UserOptions> {
                 }
                 if (_zpController.text.length == 5 &&
                     _phoneController.text.length == 10) {
-                  FirebaseFirestore.instance
-                      .collection('users')
-                      //.doc(UserAuthRepository().getuid())
-                      .doc(user[0].id)
-                      .update({'isSeller': !isSeller});
+                  // TODO: Update user isSeller value in Amplify database
                   Navigator.pushNamedAndRemoveUntil(
-                      context, LibglossRoutes.HOME, (route) => false);
+                      context, Routes.home, (route) => false);
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
@@ -564,7 +526,7 @@ class _UserOptionsState extends State<UserOptions> {
                         ),
                       ),
                     );
-                  LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+                  Routes.currentRoute = Routes.newBooks;
                 }
               },
               child: Text("Aceptar"),

@@ -1,18 +1,16 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jie_preview_image/jie_preview_image.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../repositories/auth/user_auth_repository.dart';
-import '../../widgets/shared/search_appbar.dart';
-import '../../widgets/shared/side_menu.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
 class UsedBookDetails extends StatefulWidget {
   UsedBookDetails({
@@ -24,13 +22,11 @@ class UsedBookDetails extends StatefulWidget {
 }
 
 class _UsedBookDetailsState extends State<UsedBookDetails> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
-  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
-  final Color _defaultColor = ColorSelector.getBlack();
+  final Color _primaryColor = AppColor.getPrimary(Routes.usedBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.usedBooks);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
+  final Color _greenColor = AppColor.getTertiary(Routes.usedBooks);
+  final Color _defaultColor = AppColor.black;
 
   Widget build(BuildContext context) {
     final _args = ModalRoute.of(context)!.settings.arguments;
@@ -44,12 +40,12 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
-          route: LibglossRoutes.HOME_USED,
+          route: Routes.usedBooks,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
-        route: LibglossRoutes.HOME_USED,
+        route: Routes.usedBooks,
       ),
       body: _main(context, _args),
     );
@@ -269,13 +265,6 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       ),
       onPressed: () {
-        /* Navigator.pushNamed(context, LibglossRoutes.USED_BOOK_SELLER,
-            arguments: {
-              "vendedor": _args["vendedor"],
-              "localizacion": _args["localizacion"],
-              "contacto": _args["contacto"],
-            }); */
-        //TODO: call seller from phone
         _makePhoneCall(_args["phoneNumber"]);
       },
       child: _text("Contactar Vendedor", _defaultColor, 15.0, FontWeight.normal,
@@ -292,31 +281,9 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
   }
 
   Widget _showSeller(BuildContext context, Map<String, dynamic> _args) {
-    Future<QuerySnapshot<Map<String, dynamic>>> result = FirebaseFirestore.instance.collection('users').where('username', isEqualTo: _args["seller"]).get();  
-    var isLoggedIn = UserAuthRepository().isAuthenticated();
-    print("IS LOOOGED $isLoggedIn");
-    if (isLoggedIn){
-      return FutureBuilder<DocumentSnapshot>(
-        future: result.then((value) => value.docs.first.reference.get()),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              Map<String, dynamic>? data =
-                  snapshot.data!.data() as Map<String, dynamic>?;
-              if (data != null) return _buildUserOptions(data);
-            }
-          }
-          return _loadingUserOptions();
-        },
-      );
-    }
-    else {
-      return Container();
-    }
+    // TODO: Get seller data from Amplify, and if the user is logged in, show the options to contact the seller
+
+    return Container();
   }
 
   Widget _loadingUserOptions() {
@@ -351,35 +318,34 @@ class _UsedBookDetailsState extends State<UsedBookDetails> {
 
   SizedBox _profilePicture(Map<String, dynamic>? data) {
     return SizedBox(
-      height: 150,
-      width: 150,
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.none,
-        children: [
-          CachedNetworkImage(
-            placeholder: (context, url) {
-              return ClipOval(
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: 100,
-                    color: Colors.grey[300],
+        height: 150,
+        width: 150,
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            CachedNetworkImage(
+              placeholder: (context, url) {
+                return ClipOval(
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 100,
+                      color: Colors.grey[300],
+                    ),
                   ),
-                ),
-              );
-            },
-            fit: BoxFit.contain,
-            imageUrl: data!['profilePicture'],
-            imageBuilder: (context, imageProvider) {
-              return CircleAvatar(
-                backgroundImage: imageProvider,
-              );
-            },
-          ),
-        ],
-      )
-    );
+                );
+              },
+              fit: BoxFit.contain,
+              imageUrl: data!['profilePicture'],
+              imageBuilder: (context, imageProvider) {
+                return CircleAvatar(
+                  backgroundImage: imageProvider,
+                );
+              },
+            ),
+          ],
+        ));
   }
 }

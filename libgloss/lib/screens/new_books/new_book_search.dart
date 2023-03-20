@@ -1,21 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
-
 import 'package:libgloss/blocs/stores/amazon/bloc/amazon_store_bloc.dart';
 import 'package:libgloss/blocs/stores/el_sotano/bloc/el_sotano_store_bloc.dart';
 import 'package:libgloss/blocs/stores/gandhi/bloc/gandhi_store_bloc.dart';
 import 'package:libgloss/blocs/stores/gonvill/bloc/gonvill_store_bloc.dart';
-
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/animations/loading_animation.dart';
-import '../../widgets/shared/online_image.dart';
-import '../../widgets/shared/search_appbar.dart';
-import '../../widgets/shared/side_menu.dart';
-
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/animations/loading_animation.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
 class NewBookSearch extends StatefulWidget {
   const NewBookSearch({super.key});
@@ -25,9 +21,9 @@ class NewBookSearch extends StatefulWidget {
 }
 
 class _NewBookSearchState extends State<NewBookSearch> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _primaryColor = AppColor.getPrimary(Routes.home);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.home);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
 
   String _initialFilter = 'Más relevantes';
 
@@ -35,20 +31,19 @@ class _NewBookSearchState extends State<NewBookSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(80),
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
           showMenuButton: false,
           showCameraButton: true,
           showSearchField: true,
-          showBackButton: true,
-          route: LibglossRoutes.HOME_NEW,
+          route: Routes.home,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
-        route: LibglossRoutes.HOME_NEW,
+        route: Routes.home,
       ),
       body: _searchBook(context),
     );
@@ -68,9 +63,6 @@ class _NewBookSearchState extends State<NewBookSearch> {
         }
       },
       builder: (context, state) {
-        if (kDebugMode)
-          print(
-              "\u001b[35m[SearchAppBar] Building SearchBar with state $state");
         switch (state.runtimeType) {
           case SearchInitial:
             return Container();
@@ -87,7 +79,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
               ),
             );
           case SearchLoaded:
-            return _search(context, state.props[0]);
+            return _search(context, state.props[0] as List<dynamic>);
           default:
             return Container();
         }
@@ -112,14 +104,13 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       color: _blueColor,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   DropdownButton<String>(
                     value: _initialFilter,
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 24,
+                    icon: const Icon(Icons.arrow_drop_down),
                     elevation: 16,
                     borderRadius: BorderRadius.circular(10),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w300,
@@ -144,7 +135,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       );
                     }).toList(),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                 ],
               ),
               Divider(color: _blueColor, thickness: 1, height: 1),
@@ -159,35 +150,27 @@ class _NewBookSearchState extends State<NewBookSearch> {
   Expanded _found(BuildContext context, List<dynamic> books) {
     List<dynamic> _books = [...books];
 
-    print("\u001b[32m[Filter] Selected filter: $_initialFilter");
     switch (_initialFilter) {
       case "Mejor calificación":
-        print("\u001b[32m[Filter] Sorting by best rating");
-        // Sort by best rating, from highest to lowest, nulls last
         _books.sort((a, b) => (b['rating'] ?? 0).compareTo(a['rating'] ?? 0));
         break;
       case "Peor calificación":
         print("\u001b[32m[Filter] Sorting by worst rating");
-        _books.sort((a, b) => (a["rating"] == null)
-            ? 1
-            : (b["rating"] == null)
-                ? -1
-                : a["rating"]!.compareTo(b["rating"]!));
-        break;
-      default:
-        print("\u001b[32m[Filter] Sorting by relevance");
+        _books.sort(
+          (a, b) => (a["rating"] == null)
+              ? 1
+              : (b["rating"] == null)
+                  ? -1
+                  : a["rating"]!.compareTo(b["rating"]!),
+        );
         break;
     }
-
-    print("\u001b[32m[Filter] Books before sorting: $books");
-    print("\u001b[32m[Filter] Books after sorting: $_books");
 
     return Expanded(
       child: SizedBox(
         child: GridView.builder(
-          padding: EdgeInsets.all(20),
-          scrollDirection: Axis.vertical,
-          physics: ScrollPhysics(),
+          padding: const EdgeInsets.all(20),
+          physics: const ScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
@@ -225,20 +208,21 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       );
                       Navigator.pushNamed(
                         context,
-                        LibglossRoutes.NEW_BOOK_DETAILS,
+                        Routes.newBookDetails,
                         arguments: _books[index],
                       );
                     },
                     child: Container(
                       height: (MediaQuery.of(context).size.height / 6),
                       child: OnlineImage(
-                          imageUrl: _books[index]["thumbnail"] != null
-                              ? _books[index]["thumbnail"]
-                              : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
-                          height: MediaQuery.of(context).size.height / 3.5),
+                        imageUrl: _books[index]["thumbnail"] != null
+                            ? _books[index]["thumbnail"]
+                            : "https://vip12.hachette.co.uk/wp-content/uploads/2018/07/missingbook.png",
+                        height: MediaQuery.of(context).size.height / 3.5,
+                      ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Text(
@@ -246,11 +230,11 @@ class _NewBookSearchState extends State<NewBookSearch> {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     maxLines: 2,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
@@ -262,7 +246,7 @@ class _NewBookSearchState extends State<NewBookSearch> {
                       fontSize: 12,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Row(
@@ -273,17 +257,15 @@ class _NewBookSearchState extends State<NewBookSearch> {
                         RatingBarIndicator(
                           rating: _books[index]["rating"]!.toDouble(),
                           itemBuilder: (context, index) {
-                            return Icon(
+                            return const Icon(
                               Icons.star,
                               color: Color.fromARGB(255, 213, 131, 22),
                             );
                           },
-                          itemCount: 5,
                           itemSize: 24.0,
-                          direction: Axis.horizontal,
                         ),
                       if (_books[index]["rating"] == null)
-                        Text(
+                        const Text(
                           "Sin calificación",
                           style: TextStyle(
                             color: Colors.black87,

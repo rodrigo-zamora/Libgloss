@@ -167,7 +167,7 @@ class _SideMenuState extends State<SideMenu> {
         }
         Navigator.pop(context);
         switch (widget._route) {
-          case LibglossRoutes.HOME_NEW:
+          case Routes.newBooks:
             BlocProvider.of<SearchBloc>(context).add(
               SearchBoookEvent(
                 query: "",
@@ -176,12 +176,12 @@ class _SideMenuState extends State<SideMenu> {
             );
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_NEW,
+              Routes.searchNewBooks,
               arguments: filters,
             );
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_NEW;
+            Routes.currentRoute = Routes.searchNewBooks;
             break;
-          case LibglossRoutes.HOME_USED:
+          case Routes.usedBooks:
             BlocProvider.of<UsedSearchBloc>(context).add(
               SearchUsedBooksEvent(
                 query: "",
@@ -190,13 +190,13 @@ class _SideMenuState extends State<SideMenu> {
             );
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_USED,
+              Routes.searchUsedBooks,
               arguments: filters,
             );
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.SEARCH_USED;
+            Routes.currentRoute = Routes.searchUsedBooks;
             break;
           // Hide the side menu when the user is in the search page
-          case LibglossRoutes.SEARCH_NEW:
+          case Routes.searchNewBooks:
             BlocProvider.of<SearchBloc>(context).add(
               SearchBoookEvent(
                 query: "",
@@ -206,11 +206,11 @@ class _SideMenuState extends State<SideMenu> {
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_NEW,
+              Routes.searchNewBooks,
               arguments: filters,
             );
             break;
-          case LibglossRoutes.SEARCH_USED:
+          case Routes.searchUsedBooks:
             BlocProvider.of<UsedSearchBloc>(context).add(
               SearchUsedBooksEvent(
                 query: "",
@@ -220,7 +220,7 @@ class _SideMenuState extends State<SideMenu> {
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_USED,
+              Routes.searchUsedBooks,
               arguments: filters,
             );
             break;

@@ -1,28 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
-
-import '../../blocs/tracking/bloc/tracking_bloc.dart';
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/shared/online_image.dart';
+import 'package:libgloss/blocs/tracking/bloc/tracking_bloc.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
 
 class WishItem extends StatefulWidget {
-  final Map<String, dynamic> item;
-
   const WishItem({super.key, required this.item});
+  final Map<String, dynamic> item;
 
   @override
   State<WishItem> createState() => _WishItemState();
 }
 
 class _WishItemState extends State<WishItem> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.bookTracker);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
 
   @override
   Widget build(BuildContext context) {
@@ -137,19 +131,7 @@ class _WishItemState extends State<WishItem> {
                   Navigator.pop(context);
                   Map<String, dynamic> toRemove = widget.item;
                   try {
-                    QuerySnapshot listDocument = await FirebaseFirestore
-                        .instance
-                        .collection('lists')
-                        .where('useruid',
-                            isEqualTo: UserAuthRepository().getuid())
-                        .get();
-                    String listuid = listDocument.docs[0].id;
-                    await FirebaseFirestore.instance
-                        .collection('lists')
-                        .doc(listuid)
-                        .update({
-                      'wish': FieldValue.arrayRemove([toRemove])
-                    });
+                    // TODO: Remove from list of books in Amplify
                     BlocProvider.of<TrackingBloc>(_context)
                         .add(UpdateTracking());
                     ScaffoldMessenger.of(_context)

@@ -20,7 +20,7 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     if (kDebugMode) print('\u001b[33m[BooksBloc] ${event}');
     emit(BooksLoading());
 
-    final uri = Uri.parse(LibglossRoutes.API +
+    final uri = Uri.parse(Routes.api +
         'books?page_size=' +
         event.page_size.toString() +
         '&page=' +
@@ -42,9 +42,8 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     if (kDebugMode) print('\u001b[33m[BooksBloc] ${event}');
     emit(BooksLoading());
 
-    final uri = Uri.parse(LibglossRoutes.API +
-        'books/random?page_size=' +
-        event.page_size.toString());
+    final uri = Uri.parse(
+        Routes.api + 'books/random?page_size=' + event.page_size.toString());
 
     try {
       if (kDebugMode) print('\u001b[33m[BooksBloc] uri: $uri');
