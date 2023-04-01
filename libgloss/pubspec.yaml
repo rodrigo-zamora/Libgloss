@@ -67,7 +67,11 @@ dependencies:
   jie_preview_image: ^1.0.1
 
   # AWS Amplify
-  amplify_flutter: ^0.5.1
+  amplify_flutter: ^0.6.0
+  amplify_datastore: ^0.6.0
+  amplify_core:
+  amplify_auth_cognito:
+  amplify_analytics_pinpoint:
 
 dev_dependencies:
   flutter_test:
