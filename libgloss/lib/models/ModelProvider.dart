@@ -42,24 +42,15 @@ class ModelProvider implements ModelProviderInterface {
   @override
   String version = "16cf37dc9fddf53401c7cff54d805e40";
   @override
-  List<ModelSchema> modelSchemas = [
-    Book.schema,
-    List.schema,
-    Seller.schema,
-    Settings.schema,
-    TrackingListItem.schema,
-    UserBooks.schema,
-    Users.schema,
-    WishListItem.schema
-  ];
+  List<ModelSchema> modelSchemas = [Book.schema, List.schema, Seller.schema, Settings.schema, TrackingListItem.schema, UserBooks.schema, Users.schema, WishListItem.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
 
   static ModelProvider get instance => _instance;
-
+  
   ModelType getModelTypeByModelName(String modelName) {
-    switch (modelName) {
+    switch(modelName) {
       case "Book":
         return Book.classType;
       case "List":
@@ -77,9 +68,7 @@ class ModelProvider implements ModelProviderInterface {
       case "WishListItem":
         return WishListItem.classType;
       default:
-        throw Exception(
-            "Failed to find model in model provider for model name: " +
-                modelName);
+        throw Exception("Failed to find model in model provider for model name: " + modelName);
     }
   }
 }

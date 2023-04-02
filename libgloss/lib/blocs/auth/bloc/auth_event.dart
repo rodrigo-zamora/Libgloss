@@ -17,6 +17,12 @@ class GoogleAuthEvent extends AuthEvent {
   GoogleAuthEvent({required this.buildcontext});
 }
 
+class FacebookAuthEvent extends AuthEvent {
+  final BuildContext buildcontext;
+
+  FacebookAuthEvent({required this.buildcontext});
+}
+
 class SignOutEvent extends AuthEvent {
   final BuildContext buildcontext;
 

@@ -4,6 +4,7 @@ import 'package:libgloss/config/app_color.dart';
 
 import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/screens/log_in/components/social_log_f.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
 import 'components/have_account.dart';
 import 'components/or_line.dart';
@@ -211,6 +212,17 @@ class _LogInFormState extends State<LogInForm> {
                   action: () {
                     BlocProvider.of<AuthBloc>(context).add(
                       GoogleAuthEvent(
+                        buildcontext: context,
+                      ),
+                    );
+                  },
+                ),
+                SocialLogF(
+                  logo: _tertiaryColor,
+                  splash: _primaryColor,
+                  action: () {
+                    BlocProvider.of<AuthBloc>(context).add(
+                      FacebookAuthEvent(
                         buildcontext: context,
                       ),
                     );

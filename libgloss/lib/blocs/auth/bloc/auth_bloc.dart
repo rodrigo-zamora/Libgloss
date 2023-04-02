@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<VerifyAuthEvent>(_authVerfication);
     on<GoogleAuthEvent>(_authUser);
+    on<FacebookAuthEvent>(_authFacebook);
     on<SignOutEvent>(_signOut);
   }
 
@@ -75,7 +76,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthAwaitingState());
     try {
       // TODO: Implement auth here
+      await _authRepo.signInWithGoogle();
+      ScaffoldMessenger.of(event.buildcontext)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('Has iniciado sesión'),
+          ),
+        );
 
+      Routes.currentRoute = Routes.newBooks;
+
+      Navigator.pushAndRemoveUntil(
+          event.buildcontext,
+          PageRouteBuilder(pageBuilder: (BuildContext context,
+              Animation animation, Animation secondaryAnimation) {
+            return Routes.getRoute(Routes.newBooks);
+          }, transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            return new SlideTransition(
+              position: new Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          }),
+          (Route route) => false);
+
+      emit(AuthSuccessState());
+    } catch (e) {
+      ScaffoldMessenger.of(event.buildcontext)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Error al iniciar sesión: $e'),
+          ),
+        );
+      emit(AuthErrorState(message: e.toString()));
+    }
+  }
+
+  FutureOr<void> _authFacebook(event, emit) async {
+    emit(AuthAwaitingState());
+    try {
+      // TODO: Implement auth here
+      await _authRepo.signInWithFacebook();
       ScaffoldMessenger.of(event.buildcontext)
         ..hideCurrentSnackBar()
         ..showSnackBar(

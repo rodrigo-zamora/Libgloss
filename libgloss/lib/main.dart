@@ -1,5 +1,8 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:libgloss/amplifyconfiguration.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/blocs.dart';
 import 'package:libgloss/config/routes.dart';
@@ -11,6 +14,8 @@ void main() async {
 
   // Run the initialization splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  await configureAmplify();
 
   // Run the app with the BlocProviders
   runApp(BlocSettings.getBlocProviders(const Libgloss()));
@@ -26,7 +31,14 @@ class Libgloss extends StatefulWidget {
   State<Libgloss> createState() => _LibglossState();
 }
 
+Future<void> configureAmplify() async {
+  await Amplify.addPlugins([AmplifyAuthCognito()]);
+  await Amplify.configure(amplifyconfig);
+}
+
 class _LibglossState extends State<Libgloss> {
+  bool amplifyConfigured = false;
+
   Future<void> saveUserToken() async {
     // TODO: Get the user token and save it to the database
   }

@@ -23,6 +23,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
+
 /** This is an auto generated class representing the List type in your schema. */
 @immutable
 class List extends Model {
@@ -35,169 +36,153 @@ class List extends Model {
 
   @override
   getInstanceType() => classType;
-
-  @Deprecated(
-      '[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+  
+  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
   String getId() => id;
-
+  
   ListModelIdentifier get modelIdentifier {
-    return ListModelIdentifier(id: id);
+      return ListModelIdentifier(
+        id: id
+      );
   }
-
+  
   List<String>? get Tracking {
     return _Tracking;
   }
-
+  
   String? get Wish {
     return _Wish;
   }
-
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
-
+  
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-
-  const List._internal({required this.id, Tracking, Wish, createdAt, updatedAt})
-      : _Tracking = Tracking,
-        _Wish = Wish,
-        _createdAt = createdAt,
-        _updatedAt = updatedAt;
-
+  
+  const List._internal({required this.id, Tracking, Wish, createdAt, updatedAt}): _Tracking = Tracking, _Wish = Wish, _createdAt = createdAt, _updatedAt = updatedAt;
+  
   factory List({String? id, List<String>? Tracking, String? Wish}) {
     return List._internal(
-        id: id == null ? UUID.getUUID() : id,
-        Tracking:
-            Tracking != null ? List<String>.unmodifiable(Tracking) : Tracking,
-        Wish: Wish);
+      id: id == null ? UUID.getUUID() : id,
+      Tracking: Tracking != null ? List<String>.unmodifiable(Tracking) : Tracking,
+      Wish: Wish);
   }
-
+  
   bool equals(Object other) {
     return this == other;
   }
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is List &&
-        id == other.id &&
-        DeepCollectionEquality().equals(_Tracking, other._Tracking) &&
-        _Wish == other._Wish;
+      id == other.id &&
+      DeepCollectionEquality().equals(_Tracking, other._Tracking) &&
+      _Wish == other._Wish;
   }
-
+  
   @override
   int get hashCode => toString().hashCode;
-
+  
   @override
   String toString() {
     var buffer = new StringBuffer();
-
+    
     buffer.write("List {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("Tracking=" +
-        (_Tracking != null ? _Tracking!.toString() : "null") +
-        ", ");
+    buffer.write("Tracking=" + (_Tracking != null ? _Tracking!.toString() : "null") + ", ");
     buffer.write("Wish=" + "$_Wish" + ", ");
-    buffer.write("createdAt=" +
-        (_createdAt != null ? _createdAt!.format() : "null") +
-        ", ");
-    buffer.write(
-        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-
+    
     return buffer.toString();
   }
-
+  
   List copyWith({List<String>? Tracking, String? Wish}) {
     return List._internal(
-        id: id, Tracking: Tracking ?? this.Tracking, Wish: Wish ?? this.Wish);
+      id: id,
+      Tracking: Tracking ?? this.Tracking,
+      Wish: Wish ?? this.Wish);
   }
-
-  List.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        _Tracking = json['Tracking']?.cast<String>(),
-        _Wish = json['Wish'],
-        _createdAt = json['createdAt'] != null
-            ? TemporalDateTime.fromString(json['createdAt'])
-            : null,
-        _updatedAt = json['updatedAt'] != null
-            ? TemporalDateTime.fromString(json['updatedAt'])
-            : null;
-
+  
+  List.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _Tracking = json['Tracking']?.cast<String>(),
+      _Wish = json['Wish'],
+      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
+  
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'Tracking': _Tracking,
-        'Wish': _Wish,
-        'createdAt': _createdAt?.format(),
-        'updatedAt': _updatedAt?.format()
-      };
-
+    'id': id, 'Tracking': _Tracking, 'Wish': _Wish, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+  };
+  
   Map<String, Object?> toMap() => {
-        'id': id,
-        'Tracking': _Tracking,
-        'Wish': _Wish,
-        'createdAt': _createdAt,
-        'updatedAt': _updatedAt
-      };
+    'id': id, 'Tracking': _Tracking, 'Wish': _Wish, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+  };
 
-  static final QueryModelIdentifier<ListModelIdentifier> MODEL_IDENTIFIER =
-      QueryModelIdentifier<ListModelIdentifier>();
+  static final QueryModelIdentifier<ListModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ListModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField TRACKING = QueryField(fieldName: "Tracking");
   static final QueryField WISH = QueryField(fieldName: "Wish");
-  static var schema =
-      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "List";
     modelSchemaDefinition.pluralName = "Lists";
-
+    
     modelSchemaDefinition.authRules = [
-      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
-        ModelOperation.CREATE,
-        ModelOperation.UPDATE,
-        ModelOperation.DELETE,
-        ModelOperation.READ
-      ])
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
     ];
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: List.TRACKING,
-        isRequired: false,
-        isArray: true,
-        ofType: ModelFieldType(ModelFieldTypeEnum.collection,
-            ofModelName: describeEnum(ModelFieldTypeEnum.string))));
-
+      key: List.TRACKING,
+      isRequired: false,
+      isArray: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: List.WISH,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: List.WISH,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-        fieldName: 'createdAt',
-        isRequired: false,
-        isReadOnly: true,
-        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
-
+      fieldName: 'createdAt',
+      isRequired: false,
+      isReadOnly: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-        fieldName: 'updatedAt',
-        isRequired: false,
-        isReadOnly: true,
-        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
+      fieldName: 'updatedAt',
+      isRequired: false,
+      isReadOnly: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
   });
 }
 
 class _ListModelType extends ModelType<List> {
   const _ListModelType();
-
+  
   @override
   List fromJson(Map<String, dynamic> jsonData) {
     return List.fromJson(jsonData);
   }
-
+  
   @override
   String modelName() {
     return 'List';
@@ -213,32 +198,37 @@ class ListModelIdentifier implements ModelIdentifier<List> {
   final String id;
 
   /** Create an instance of ListModelIdentifier using [id] the primary key. */
-  const ListModelIdentifier({required this.id});
-
+  const ListModelIdentifier({
+    required this.id});
+  
   @override
-  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
-
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
+    'id': id
+  });
+  
   @override
   List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
-      .entries
-      .map((entry) => (<String, dynamic>{entry.key: entry.value}))
-      .toList();
-
+    .entries
+    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
+    .toList();
+  
   @override
   String serializeAsString() => serializeAsMap().values.join('#');
-
+  
   @override
   String toString() => 'ListModelIdentifier(id: $id)';
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-
-    return other is ListModelIdentifier && id == other.id;
+    
+    return other is ListModelIdentifier &&
+      id == other.id;
   }
-
+  
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode =>
+    id.hashCode;
 }

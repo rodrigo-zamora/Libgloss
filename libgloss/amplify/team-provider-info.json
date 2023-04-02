@@ -10,6 +10,14 @@
       "StackName": "amplify-libgloss-staging-131649",
       "StackId": "arn:aws:cloudformation:us-east-1:130346828958:stack/amplify-libgloss-staging-131649/cfc3e450-c3fc-11ed-a228-0afa86b2b25d",
       "AmplifyAppId": "d10yx0r8ukg5xc"
+    },
+    "categories": {
+      "api": {
+        "Libgloss": {}
+      },
+      "auth": {
+        "libgloss11eee6a1": {}
+      }
     }
   }
 }
