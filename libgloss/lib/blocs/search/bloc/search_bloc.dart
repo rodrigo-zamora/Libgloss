@@ -33,10 +33,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     var uri;
 
     if (query == '') {
-      uri = Uri.parse(LibglossRoutes.API + 'books/search?$filterQuery');
+      uri = Uri.parse(Routes.api + 'books/search?$filterQuery');
     } else {
-      uri = Uri.parse(
-          LibglossRoutes.API + 'books/search?title=$query' + filterQuery);
+      uri = Uri.parse(Routes.api + 'books/search?title=$query' + filterQuery);
     }
 
     try {
@@ -62,7 +61,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     String bookId = (event as BookDetailsEvent).bookId;
 
-    final uri = Uri.parse(LibglossRoutes.API + 'books/$bookId');
+    final uri = Uri.parse(Routes.api + 'books/$bookId');
 
     try {
       if (kDebugMode) print('\x1B[32m[SearchBloc] uri: $uri');

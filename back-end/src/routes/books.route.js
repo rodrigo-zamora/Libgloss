@@ -19,6 +19,10 @@ router.get('/random', handleError(async (req, res) => {
 router.get('/search', handleError(async (req, res) => {
     let books = await booksController.searchBooks(req.query);
     res.json(books);
+
+    // Save the books in the database
+    await booksController.saveNewBooks(books);
+    
 }));
 
 router.get('/details', handleError(async (req, res) => {

@@ -1,61 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
-import 'package:libgloss/config/routes.dart';
-import 'package:libgloss/widgets/shared/online_image.dart';
-import 'package:libgloss/widgets/shared/side_menu.dart';
-
-import '../../config/colors.dart';
-import '../../widgets/shared/search_appbar.dart';
-
 class HomeNew extends StatefulWidget {
-  HomeNew({
-    Key? key,
-  }) : super(key: key);
+  const HomeNew({
+    super.key,
+  });
 
   @override
   State<HomeNew> createState() => _HomeNewState();
 }
 
 class _HomeNewState extends State<HomeNew> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME);
-  final Color _secondaryColor = ColorSelector.getSecondary(LibglossRoutes.HOME);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _primaryColor = AppColor.getPrimary(Routes.home);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.home);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(80),
         child: SearchAppBar(
           primaryColor: _primaryColor,
           secondaryColor: _secondaryColor,
           showMenuButton: true,
           showCameraButton: true,
           showSearchField: true,
-          route: LibglossRoutes.HOME_NEW,
+          route: Routes.home,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
-        route: LibglossRoutes.HOME_NEW,
+        route: Routes.home,
       ),
       body: _getBooks(context),
     );
   }
 
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  final RefreshController _refreshController = RefreshController();
 
-  void _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
+  Future<void> _onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
 
-    BlocProvider.of<BooksBloc>(context).add(GetRandomBooksEvent(
-      page_size: 16,
-    ));
+    BlocProvider.of<BooksBloc>(context).add(
+      const GetRandomBooksEvent(
+        page_size: 16,
+      ),
+    );
 
     _refreshController.refreshCompleted();
   }
@@ -75,7 +74,6 @@ class _HomeNewState extends State<HomeNew> {
         if (state is BooksLoading) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: LoadingAnimationWidget.staggeredDotsWave(
@@ -88,7 +86,7 @@ class _HomeNewState extends State<HomeNew> {
         } else if (state is BooksLoaded) {
           return _found(context, state.books);
         } else {
-          return Center(
+          return const Center(
             child: Text("No books found"),
           );
         }
@@ -107,27 +105,24 @@ class _HomeNewState extends State<HomeNew> {
                 return true;
               },
               child: SmartRefresher(
-                enablePullUp: false,
-                enablePullDown: true,
                 header: WaterDropMaterialHeader(
                   backgroundColor: _secondaryColor,
-                  color: Colors.white,
                 ),
                 footer: CustomFooter(
                   builder: (BuildContext context, LoadStatus? mode) {
                     Widget body;
                     if (mode == LoadStatus.idle) {
-                      body = Text("pull up load");
+                      body = const Text("pull up load");
                     } else if (mode == LoadStatus.loading) {
-                      body = CircularProgressIndicator();
+                      body = const CircularProgressIndicator();
                     } else if (mode == LoadStatus.failed) {
-                      body = Text("Load Failed!Click retry!");
+                      body = const Text("Load Failed!Click retry!");
                     } else if (mode == LoadStatus.canLoading) {
-                      body = Text("release to load more");
+                      body = const Text("release to load more");
                     } else {
-                      body = Text("No more Data");
+                      body = const Text("No more Data");
                     }
-                    return Container(
+                    return SizedBox(
                       height: 55.0,
                       child: Center(child: body),
                     );
@@ -136,9 +131,8 @@ class _HomeNewState extends State<HomeNew> {
                 controller: _refreshController,
                 onRefresh: _onRefresh,
                 child: GridView.builder(
-                  padding: EdgeInsets.all(20),
-                  scrollDirection: Axis.vertical,
-                  physics: ScrollPhysics(),
+                  padding: const EdgeInsets.all(20),
+                  physics: const ScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 15,
@@ -148,7 +142,6 @@ class _HomeNewState extends State<HomeNew> {
                   ),
                   itemCount: books.length,
                   itemBuilder: (BuildContext context, int index) {
-                    print("$index = ${books[index]["categories"]}");
                     return _gender(context, books, index);
                   },
                 ),
@@ -163,34 +156,38 @@ class _HomeNewState extends State<HomeNew> {
   Widget _gender(BuildContext context, List<dynamic> books, int index) {
     if (books[index]["categories"].length != 0) {
       return SizedBox(
-          child:
-              Stack(fit: StackFit.expand, clipBehavior: Clip.none, children: [
-        _card(context, books, index),
-        Positioned(
-          left: MediaQuery.of(context).size.height * 0.01,
-          top: MediaQuery.of(context).size.height * 0.01,
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.04,
-            width: MediaQuery.of(context).size.height * 0.09,
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: _secondaryColor,
-              ),
-              child: Text(
-                "${books[index]["categories"][0]}",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            _card(context, books, index),
+            Positioned(
+              left: MediaQuery.of(context).size.height * 0.01,
+              top: MediaQuery.of(context).size.height * 0.01,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.04,
+                width: MediaQuery.of(context).size.height * 0.09,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    color: _secondaryColor,
+                  ),
+                  child: Text(
+                    "${books[index]["categories"][0]}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
-      ]));
+      );
     } else {
       return _card(context, books, index);
     }
@@ -201,7 +198,7 @@ class _HomeNewState extends State<HomeNew> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey[200]!),
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -210,14 +207,14 @@ class _HomeNewState extends State<HomeNew> {
           ),
         ],
       ),
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       child: Column(
         children: [
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(
                 context,
-                LibglossRoutes.NEW_BOOK_DETAILS,
+                Routes.newBookDetails,
                 arguments: books[index],
               );
             },
@@ -230,7 +227,7 @@ class _HomeNewState extends State<HomeNew> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Divider(
@@ -242,11 +239,11 @@ class _HomeNewState extends State<HomeNew> {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(

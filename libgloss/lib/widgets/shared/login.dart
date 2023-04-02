@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:libgloss/config/app_color.dart';
 
-import '../../config/colors.dart';
-import '../../config/routes.dart';
+import 'package:libgloss/config/routes.dart';
 import 'search_appbar.dart';
 
 class LogInForm extends StatefulWidget {
@@ -12,15 +12,12 @@ class LogInForm extends StatefulWidget {
 }
 
 class _LogInFormState extends State<LogInForm> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.CURRENT_ROUTE);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE);
-  final Color _tertiaryColor =
-      ColorSelector.getTertiary(LibglossRoutes.CURRENT_ROUTE);
-  final Color _iconColors = ColorSelector.getGrey();
-  final AssetImage _logo =
-      ColorSelector.getBackground(LibglossRoutes.CURRENT_ROUTE);
+  final Color _primaryColor = AppColor.getPrimary(Routes.currentRoute);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.currentRoute);
+  final Color _tertiaryColor = AppColor.getTertiary(Routes.currentRoute);
+  final AssetImage _logo = Routes.currentRoute == Routes.login
+      ? AssetImage('assets/images/login/logo.png')
+      : AssetImage('assets/images/login/logo.png');
 
   @override
   Widget build(BuildContext context) {

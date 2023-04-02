@@ -1,24 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
-import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/online_image.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../config/routes.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class UploadBookScanner extends StatelessWidget {
   UploadBookScanner({super.key});
 
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _primaryColor = AppColor.getPrimary(Routes.usedBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.usedBooks);
+  final Color _greenColor = AppColor.getTertiary(Routes.usedBooks);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
   MobileScannerController cameraController = MobileScannerController();
 
   @override
@@ -170,33 +167,15 @@ class UploadBookScanner extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  String phoneNumber = await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(UserAuthRepository.userInstance?.currentUser!.uid)
-                      .get()
-                      .then((value) => value.data()!['phoneNumber']);
-                  String zipCode = await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(UserAuthRepository.userInstance?.currentUser!.uid)
-                      .get()
-                      .then((value) => value.data()!['zipCode']);
+                  // TODO: Add the book to the database
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pushNamed(
                     context,
-                    LibglossRoutes.USED_BOOK_ADD,
+                    Routes.createUsedBook,
                     arguments: {
                       "title": books[0]["title"],
-                      "authors": books[0]["authors"],
-                      "thumbnail": books[0]["thumbnail"],
-                      "vendedor": UserAuthRepository
-                          .userInstance?.currentUser!.displayName,
-                      "isbn": books[0]["isbn"],
-                      "precio": null,
-                      "localizacion": zipCode,
-                      "contacto": phoneNumber,
-                      "categories": books[0]["categories"],
-                      "publisher": books[0]["publisher"],
+                      // TODO: Update with actual book model
                     },
                   );
                 },

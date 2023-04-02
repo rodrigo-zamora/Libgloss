@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 part 'used_books_event.dart';
@@ -17,12 +16,7 @@ class UsedBooksBloc extends Bloc<UsedBooksEvent, UsedBooksState> {
       List<Map<String, dynamic>> books = [];
 
       try {
-        final QuerySnapshot snapshot =
-            await FirebaseFirestore.instance.collection('books').get();
-
-        snapshot.docs.forEach((doc) {
-          books.add(doc.data() as Map<String, dynamic>);
-        });
+        // TODO: Get all used books from Amplify database
 
         emit(UsedBooksLoaded(usedBooks: books));
       } catch (e) {

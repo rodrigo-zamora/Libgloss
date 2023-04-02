@@ -1,13 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
-
-import '../../blocs/books/bloc/books_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,18 +17,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  List<Widget> _pagesList = UserAuthRepository().isAuthenticated() == true
+  final List<Widget> _pagesList = UserAuthRepository().isAuthenticated() == true
       ? [
-          LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW),
-          LibglossRoutes.getRoute(LibglossRoutes.HOME_USED),
-          LibglossRoutes.getRoute(LibglossRoutes.BOOK_TRACKER),
-          LibglossRoutes.getRoute(LibglossRoutes.OPTIONS),
+          Routes.getRoute(Routes.newBooks),
+          Routes.getRoute(Routes.usedBooks),
+          Routes.getRoute(Routes.bookTracker),
+          Routes.getRoute(Routes.options),
         ]
       : [
-          LibglossRoutes.getRoute(LibglossRoutes.HOME_NEW),
-          LibglossRoutes.getRoute(LibglossRoutes.HOME_USED),
-          LibglossRoutes.getRoute(LibglossRoutes.BOOK_TRACKER),
-          LibglossRoutes.getRoute(LibglossRoutes.LOGIN),
+          Routes.getRoute(Routes.newBooks),
+          Routes.getRoute(Routes.usedBooks),
+          Routes.getRoute(Routes.bookTracker),
+          Routes.getRoute(Routes.login),
         ];
 
   @override
@@ -39,12 +37,13 @@ class _HomeState extends State<Home> {
     initialization();
   }
 
-  void initialization() async {
-
+  Future<void> initialization() async {
     // Get the books for the home page
-    BlocProvider.of<BooksBloc>(context).add(GetRandomBooksEvent(
-      page_size: 16,
-    ));
+    BlocProvider.of<BooksBloc>(context).add(
+      const GetRandomBooksEvent(
+        page_size: 16,
+      ),
+    );
 
     FlutterNativeSplash.remove();
   }
@@ -59,33 +58,34 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor:
-            ColorSelector.getSecondary(LibglossRoutes.CURRENT_ROUTE),
+        selectedItemColor: AppColor.getSecondary(Routes.currentRoute),
         items: [
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.book),
             label: 'Nuevos',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.userGroup),
             label: 'Usados',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.solidBookmark),
             label: 'Seguimiento',
           ),
           BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.userGear),
+            icon: const FaIcon(FontAwesomeIcons.userGear),
             label: UserAuthRepository().isAuthenticated()
                 ? 'Mi perfil'
                 : 'Iniciar sesión',
           ),
         ],
         onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-            LibglossRoutes.CURRENT_ROUTE = _pagesList[index].toString();
-          });
+          setState(
+            () {
+              _selectedIndex = index;
+              Routes.currentRoute = _pagesList[index].toString();
+            },
+          );
         },
       ),
     );

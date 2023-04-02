@@ -1,16 +1,11 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../repositories/auth/user_auth_repository.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class Account extends StatefulWidget {
   Account({super.key});
@@ -20,15 +15,11 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
+  final Color _primaryColor = AppColor.getPrimary(Routes.options);
 
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.options);
 
-  final Color _tertiaryColor =
-      ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
-
-  final Color _iconColors = ColorSelector.getGrey();
+  final Color _iconColors = AppColor.gray;
 
   late TextEditingController _nameController = TextEditingController();
 
@@ -63,32 +54,9 @@ class _AccountState extends State<Account> {
   }
 
   Widget _main(BuildContext context) {
-    if (user.isEmpty) {
-      CollectionReference users =
-          FirebaseFirestore.instance.collection('users');
-      return FutureBuilder<DocumentSnapshot>(
-        future: users.doc(UserAuthRepository().getuid()).get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text("Algo salió mal");
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              Map<String, dynamic> data =
-                  snapshot.data!.data() as Map<String, dynamic>;
-              user = data;
-              return _buildMyAccount(context, data);
-            }
-          }
-          return Center(
-              child: CircularProgressIndicator(
-            color: _secondaryColor,
-          ));
-        },
-      );
-    } else {
-      return _buildMyAccount(context, user);
-    }
+    // TODO: Get user data from Amplify database and show it in the screen
+
+    return _buildMyAccount(context, {});
   }
 
   Widget _buildMyAccount(BuildContext context, Map<String, dynamic> data) {
@@ -245,32 +213,12 @@ class _AccountState extends State<Account> {
         );
       final URL = await _uploadImage(pickedImage!);
 
-      if (data['profilePicture'] != null &&
-          data['profilePicture']
-              .toString()
-              .startsWith('https://firebasestorage.googleapis.com')) {
-        await FirebaseStorage.instance
-            .refFromURL(data['profilePicture'])
-            .delete();
-      }
+      // TODO: Delete old image from Amplify storage and update the URL in the database
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(UserAuthRepository().getuid())
-          .update({
-        'profilePicture': URL,
-      });
     }
 
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(UserAuthRepository().getuid())
-          .update({
-        'username': _nameController.text,
-        'phoneNumber': _phoneController.text,
-        'zipCode': _zipController.text,
-      });
+      // TODO: Update user data in Amplify database
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -280,12 +228,12 @@ class _AccountState extends State<Account> {
           ),
         );
 
-      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+      Routes.currentRoute = Routes.home;
       Navigator.pushAndRemoveUntil(
           context,
           PageRouteBuilder(pageBuilder: (BuildContext context,
               Animation animation, Animation secondaryAnimation) {
-            return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+            return Routes.getRoute(Routes.home);
           }, transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
@@ -299,40 +247,6 @@ class _AccountState extends State<Account> {
             );
           }),
           (Route route) => false);
-
-      if (_nameController.text != data['username']) {
-        await FirebaseFirestore.instance
-            .collection('books')
-            .where('sellerUid', isEqualTo: UserAuthRepository().getuid())
-            .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            FirebaseFirestore.instance
-                .collection('books')
-                .doc(element.id)
-                .update({
-              'seller': _nameController.text,
-            });
-          });
-        });
-      }
-
-      if (_phoneController.text != data['phoneNumber']) {
-        await FirebaseFirestore.instance
-            .collection('books')
-            .where('sellerUid', isEqualTo: UserAuthRepository().getuid())
-            .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            FirebaseFirestore.instance
-                .collection('books')
-                .doc(element.id)
-                .update({
-              'phoneNumber': _phoneController.text,
-            });
-          });
-        });
-      }
     } catch (e) {
       print(e);
     }
@@ -406,14 +320,8 @@ class _AccountState extends State<Account> {
   }
 
   Future<String> _uploadImage(XFile element) async {
-    final _firebaseStorage = FirebaseStorage.instance;
-    final String _path =
-        "profile_pictures/${element.name}${DateTime.now()}.png";
-    final _storageReference = _firebaseStorage.ref().child('$_path');
-    final _uploadTask = _storageReference.putFile(File(element.path));
-    final _snapshot = await _uploadTask.whenComplete(() => null);
-    final _downloadURL = await _snapshot.ref.getDownloadURL();
-    return _downloadURL;
+    // TODO: Upload image to Amplify storage
+    return "";
   }
 
   Widget _edit(BuildContext context, TextEditingController controller,

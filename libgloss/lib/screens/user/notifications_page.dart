@@ -1,20 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
-
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class ConfigurationPage extends StatelessWidget {
   ConfigurationPage({super.key});
 
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.OPTIONS);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.OPTIONS);
-  final Color _tertiaryColor =
-      ColorSelector.getQuaternary(LibglossRoutes.OPTIONS);
-  final Color _iconColors = ColorSelector.getGrey();
+  final Color _primaryColor = AppColor.getPrimary(Routes.options);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.options);
+  final Color _tertiaryColor = AppColor.getQuaternary(Routes.options);
+  final Color _iconColors = AppColor.gray;
 
   @override
   Widget build(BuildContext context) {
@@ -37,26 +33,8 @@ class ConfigurationPage extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(UserAuthRepository().getuid()).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("Algo salió mal");
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            Map<String, dynamic> data =
-                snapshot.data!.data() as Map<String, dynamic>;
-            return _buildNotifications(data);
-          }
-        }
-        return Center(
-            child: CircularProgressIndicator(
-          color: _secondaryColor,
-        ));
-      },
-    );
+    // TODO: Get options from the user
+    return CircularProgressIndicator();
   }
 
   Widget _buildNotifications(Map<String, dynamic> data) {
@@ -88,10 +66,7 @@ class ConfigurationPage extends StatelessWidget {
                     onChanged: (value) {
                       setState(() {
                         data['notifications'] = value;
-                        FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(UserAuthRepository().getuid())
-                            .update({'notifications': value});
+                        // TODO: Update the user's options in the database
                       });
                     },
                     activeTrackColor: _tertiaryColor,

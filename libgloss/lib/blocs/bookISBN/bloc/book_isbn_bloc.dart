@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-
-import '../../../config/routes.dart';
+import 'package:libgloss/config/routes.dart';
 
 part 'book_isbn_event.dart';
 part 'book_isbn_state.dart';
@@ -22,7 +21,7 @@ class BookIsbnBloc extends Bloc<BookIsbnEvent, BookIsbnState> {
 
     String isbn = (event as GetBookDetailsEvent).isbn;
 
-    final uri = Uri.parse(LibglossRoutes.API + 'books/search?isbn=$isbn');
+    final uri = Uri.parse(Routes.api + 'books/search?isbn=$isbn');
 
     try {
       if (kDebugMode) print('\x1B[32m[BookISBNBloc] uri: $uri');

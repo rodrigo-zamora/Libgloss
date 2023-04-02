@@ -20,8 +20,8 @@ class AmazonStoreBloc extends Bloc<AmazonStoreEvent, AmazonStoreState> {
 
     String bookId = event.bookId;
 
-    final uri = Uri.parse(
-        LibglossRoutes.API + 'books/details?isbn=$bookId&store=amazon');
+    final uri =
+        Uri.parse(Routes.api + 'books/details?isbn=$bookId&store=amazon');
 
     try {
       if (kDebugMode) print('\u001b[33m[AmazonStoreBloc] uri: $uri');

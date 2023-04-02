@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 part 'used_search_event.dart';
@@ -23,17 +22,7 @@ class UsedSearchBloc extends Bloc<UsedSearchEvent, UsedSearchState> {
 
     if (filters.isEmpty) {
       try {
-        final QuerySnapshot snapshot =
-            await FirebaseFirestore.instance.collection('books').get();
-
-        print(snapshot.docs);
-
-        snapshot.docs.forEach((doc) {
-          Map<String, dynamic> book = doc.data() as Map<String, dynamic>;
-          if (book['title'].toString().toLowerCase().trim().contains(search)) {
-            books.add(book);
-          }
-        });
+        // TODO: Get all used books from Amplify database using empty filters
 
         emit(UsedSearchLoaded(usedBooks: books));
       } catch (e) {
@@ -41,19 +30,7 @@ class UsedSearchBloc extends Bloc<UsedSearchEvent, UsedSearchState> {
       }
     } else {
       try {
-        final QuerySnapshot snapshot = await FirebaseFirestore.instance
-            .collection('books')
-            .where('authors', arrayContains: filters['author'])
-            .where('categories', arrayContains: filters['category'])
-            .where('publisher', isEqualTo: filters['publisher'])
-            .get();
-
-        print(snapshot.docs);
-
-        snapshot.docs.forEach((doc) {
-          Map<String, dynamic> book = doc.data() as Map<String, dynamic>;
-          books.add(book);
-        });
+        // TODO: Get all used books from Amplify database using filters
 
         emit(UsedSearchLoaded(usedBooks: books));
       } catch (e) {

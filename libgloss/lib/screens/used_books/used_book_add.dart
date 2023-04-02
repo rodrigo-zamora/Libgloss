@@ -3,20 +3,19 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:libgloss/repositories/auth/user_auth_repository.dart';
+import 'package:libgloss/config/app_color.dart';
 
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/shared/search_appbar.dart';
-import '../../widgets/shared/side_menu.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+
+// TODO: Fix google maps so it only loads once
 
 class UsedBookAdd extends StatefulWidget {
   UsedBookAdd({
@@ -28,13 +27,11 @@ class UsedBookAdd extends StatefulWidget {
 }
 
 class _UsedBookAddState extends State<UsedBookAdd> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
-  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
-  final Color _defaultColor = ColorSelector.getBlack();
+  final Color _primaryColor = AppColor.getPrimary(Routes.usedBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.usedBooks);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
+  final Color _greenColor = AppColor.getTertiary(Routes.usedBooks);
+  final Color _defaultColor = AppColor.black;
 
   double _lat = 0;
   double _lng = 0;
@@ -500,72 +497,9 @@ class _UsedBookAddState extends State<UsedBookAdd> {
         } else {
           uploaded = true;
           List<String> _imagesURL = [];
-          String _phoneNumber = await FirebaseFirestore.instance
-              .collection("users")
-              .doc(UserAuthRepository().getuid())
-              .get()
-              .then((value) => value.data()!["phoneNumber"]);
-          setState(() {});
-          _progress += 10;
 
-          double _totalProgressImages = 80;
-          for (var i = 0; i < _imageFileList!.length; i++) {
-            String _imageURL = await _uploadImage(_imageFileList![i]);
-            _imagesURL.add(_imageURL);
-            _progress += _totalProgressImages / _imageFileList!.length;
-            setState(() {});
-          }
-          Map<String, dynamic> _book = {
-            "title": _args["title"],
-            "authors": _args["authors"],
-            "seller": _args["vendedor"],
-            "isbn": _args["isbn"],
-            "thumbnail": _args["thumbnail"],
-            "price": _price,
-            "latitude": _lat,
-            "longitude": _lng,
-            "images": _imagesURL,
-            "phoneNumber": _phoneNumber,
-            "sellerUid": UserAuthRepository().getuid(),
-            "createdAt": DateTime.now(),
-            "categories": _args["categories"],
-            "publisher": _args["publisher"],
-          };
-          _progress = 100;
-          setState(() {});
-          uploaded = await _addBook(_book);
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(
-                  uploaded
-                      ? "Libro agregado correctamente"
-                      : "Hubo un error al agregar el libro",
-                ),
-              ),
-            );
-          if (uploaded) {
-            LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
-            Navigator.pushAndRemoveUntil(
-                context,
-                PageRouteBuilder(pageBuilder: (BuildContext context,
-                    Animation animation, Animation secondaryAnimation) {
-                  return LibglossRoutes.getRoute(LibglossRoutes.HOME);
-                }, transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) {
-                  return new SlideTransition(
-                    position: new Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
-                  );
-                }),
-                (Route route) => false);
-          }
+          // TODO: Add used book to Amplify database and show the progress
+
         }
       },
       child: _text("Guardar libro", _defaultColor, 15.0, FontWeight.normal,
@@ -574,22 +508,13 @@ class _UsedBookAddState extends State<UsedBookAdd> {
   }
 
   Future<String> _uploadImage(XFile element) async {
-    final _firebaseStorage = FirebaseStorage.instance;
-    final String _path = "books/${element.name}${DateTime.now()}.png";
-    final _storageReference = _firebaseStorage.ref().child('$_path');
-    final _uploadTask = _storageReference.putFile(File(element.path));
-    final _snapshot = await _uploadTask.whenComplete(() => null);
-    final _downloadURL = await _snapshot.ref.getDownloadURL();
-    return _downloadURL;
+    // TODO: Upload to Amplify S3 and return the URL
+    return "";
   }
 
   Future<bool> _addBook(Map<String, dynamic> book) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('books')
-          .add(book)
-          .then((value) => print("Book Added"))
-          .catchError((error) => print("Failed to add book: $error"));
+      // TODO: Save the book to Amplify database
       return true;
     } catch (e) {
       print(e);

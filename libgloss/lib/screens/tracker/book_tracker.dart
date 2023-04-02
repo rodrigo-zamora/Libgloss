@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../blocs/tracking/bloc/tracking_bloc.dart';
-import '../../config/colors.dart';
-import '../../repositories/auth/user_auth_repository.dart';
-import '../../widgets/shared/search_appbar.dart';
-import '../../widgets/shared/side_menu.dart';
+import 'package:libgloss/blocs/tracking/bloc/tracking_bloc.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
 import 'tracking_item.dart';
 import 'wish_item.dart';
@@ -21,13 +18,9 @@ class BookTracker extends StatefulWidget {
 }
 
 class _BookTrackerState extends State<BookTracker> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+  final Color _primaryColor = AppColor.getPrimary(Routes.bookTracker);
 
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
-
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.bookTracker);
 
   final controllerT = PageController(viewportFraction: 0.8, keepPage: true);
 
@@ -35,12 +28,9 @@ class _BookTrackerState extends State<BookTracker> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference lists = FirebaseFirestore.instance.collection('lists');
+    // TODO: Get user lists from Amplify database
 
-    print(
-        "\x1B[32m[BookTracker] User: ${UserAuthRepository.userInstance?.currentUser?.uid}");
-
-    String useruid = UserAuthRepository.userInstance?.currentUser?.uid ?? "";
+    String useruid = "";
 
     if (useruid == "") {
       return Scaffold(
@@ -84,51 +74,28 @@ class _BookTrackerState extends State<BookTracker> {
         ),
       );
     } else {
-      return FutureBuilder<DocumentSnapshot>(
-        // Get the documents where useruid is equal to the uid
-        future: lists
-            .where('useruid',
-                isEqualTo: UserAuthRepository.userInstance?.currentUser?.uid)
-            .get()
-            .then((value) => value.docs[0].reference.get()),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              Map<String, dynamic>? data =
-                  snapshot.data!.data() as Map<String, dynamic>?;
-              print('\x1B[32mdata from firestore: ${data}');
-              return _buildLists(context, data);
-            }
-          }
-
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(80),
-              child: SearchAppBar(
-                primaryColor: _primaryColor,
-                secondaryColor: _secondaryColor,
-                showMenuButton: false,
-                showCameraButton: false,
-                showSearchField: false,
-                showBackButton: false,
-                title: 'Mis listas',
-              ),
-            ),
-            drawer: SideMenu(
-              sideMenuColor: _primaryColor,
-            ),
-            body: Center(
-              child: CircularProgressIndicator(
-                color: _secondaryColor,
-              ),
-            ),
-          );
-        },
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80),
+          child: SearchAppBar(
+            primaryColor: _primaryColor,
+            secondaryColor: _secondaryColor,
+            showMenuButton: false,
+            showCameraButton: false,
+            showSearchField: false,
+            showBackButton: false,
+            title: 'Mis listas',
+          ),
+        ),
+        drawer: SideMenu(
+          sideMenuColor: _primaryColor,
+        ),
+        body: Center(
+          child: CircularProgressIndicator(
+            color: _secondaryColor,
+          ),
+        ),
       );
     }
   }

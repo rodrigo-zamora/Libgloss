@@ -1,12 +1,15 @@
+const AWS = require('aws-sdk');
+const config = require('../../config/config.js');
+
 const googleController = require('./stores/google.js');
 const amzController = require('./stores/amz.js');
 const gandhiController = require('./stores/gandhi.js');
 const gonvillController = require('./stores/gonvill.js');
 const elSotanoController = require('./stores/el_sotano.js');
 
-const Book = require('../../models/book');
-const BookDetails = require('../../models/book_details');
 const { NotFoundError, BadRequestError, ServerError, NotImplementedError } = require('../../utils/errors.js');
+
+const generateBookId = require('../../utils/id.js');
 
 const booksController = {
 
@@ -26,17 +29,54 @@ const booksController = {
 
         // If no books were found, return an empty array
         if (books.length == 0) return [];
+        
+        return books;
+    },
+
+    saveNewBooks: async (books) => {
 
         // Add all books to the database
+        const docClient = new AWS.DynamoDB.DocumentClient();
+
         for (let i = 0; i < books.length; i++) {
             let book = books[i];
-            let bookInDb = await Book.findOne({ isbn: book.isbn });
-            if (!bookInDb) {
-                await Book.create(book);
+
+            if (book.publisher != undefined) {
+
+                let params = {
+                    TableName: config.aws_table_name,
+                    Key: {
+                        id: book.isbn
+                    }
+                };
+                
+                // Check if book already exists in the database
+                let data = await docClient.get(params).promise();
+
+                // If book does not exist, add it to the database
+                if (Object.keys(data).length === 0) {
+                    let params = {
+                        TableName: config.aws_table_name,
+                        Item: {
+                            id: generateBookId(book.title, book.authors[0], book.publisher),
+                            isbn: book.isbn,
+                            title: book.title,
+                            subtitle: book.subtitle,
+                            rating: book.rating,
+                            thumbnail: book.thumbnail,
+                            authors: book.authors,
+                            publisher: book.publisher,
+                            description: book.description,
+                            categories: book.categories,
+                            language: book.language,
+                        },
+                    };
+
+                    await docClient.put(params).promise();
+                }
             }
         }
 
-        return books;
     },
 
     // Get price and availability details for a book, given its ISBN
@@ -70,72 +110,72 @@ const booksController = {
                     return { mercado_libre: details ? details : null };
                 case 'amazon':
                     details = await amzController.getPrice(query.isbn);
-                    return { amazon: details};
+                    return { amazon: details };
                 case 'gandhi':
                     details = await gandhiController.getPrice(title);
-                    return { gandhi: details};
+                    return { gandhi: details };
                 case 'gonvill':
                     details = await gonvillController.getPrice(query.isbn);
-                    return { gonvill: details};
+                    return { gonvill: details };
                 case 'el_sotano':
                     details = await elSotanoController.getPrice(query.isbn);
-                    return { el_sotano: details};
+                    return { el_sotano: details };
                 default:
                     throw new BadRequestError('Store not found. Possible stores: mercado_libre, amazon, gandhi, gonvill, el_sotano');
             }
         } else {
             let amzPrice;
-        try {
-            amzPrice = await amzController.getPrice(query.isbn);
-        } catch (err) {
-            console.log('\t\tError getting price from Amazon:', err);
-        }
+            try {
+                amzPrice = await amzController.getPrice(query.isbn);
+            } catch (err) {
+                console.log('\t\tError getting price from Amazon:', err);
+            }
 
-        // TODO: Fix mercado libre price
-        /*let mlPrice;
-        try {
-            // Mercado Libre doesn't accept ISBNs, so we need to search by title
-            mlPrice = await mlController.getPrice(title);
-        } catch (err) {
-            console.log('\t\tError getting price from Mercado Libre:', err);
-        }*/
+            // TODO: Fix mercado libre price
+            /*let mlPrice;
+            try {
+                // Mercado Libre doesn't accept ISBNs, so we need to search by title
+                mlPrice = await mlController.getPrice(title);
+            } catch (err) {
+                console.log('\t\tError getting price from Mercado Libre:', err);
+            }*/
 
-        let gandhiPrice;
-        try {
+            let gandhiPrice;
+            try {
 
-            // Search using title to get the physical book
-            gandhiPrice = await gandhiController.getPrice(title);
-        } catch (err) {
-            console.log('\t\tError getting price from Gandhi:', err);
-        }
+                // Search using title to get the physical book
+                gandhiPrice = await gandhiController.getPrice(title);
+            } catch (err) {
+                console.log('\t\tError getting price from Gandhi:', err);
+            }
 
-        let gonvillPrice;
-        try {
-            gonvillPrice = await gonvillController.getPrice(query.isbn);
-        } catch (err) {
-            console.log('\t\tError getting price from Gonvill:', err);
-        }
+            let gonvillPrice;
+            try {
+                gonvillPrice = await gonvillController.getPrice(query.isbn);
+            } catch (err) {
+                console.log('\t\tError getting price from Gonvill:', err);
+            }
 
-        let elSotanoPrice;
-        try {
-            elSotanoPrice = await elSotanoController.getPrice(query.isbn);
-        } catch (err) {
-            console.log('\t\tError getting price from El Sotano:', err);
-        }
+            let elSotanoPrice;
+            try {
+                elSotanoPrice = await elSotanoController.getPrice(query.isbn);
+            } catch (err) {
+                console.log('\t\tError getting price from El Sotano:', err);
+            }
 
-        if (query.isbn) {
-            details.amazon = amzPrice ? amzPrice : null;
-            //details.mercado_libre = mlPrice ? mlPrice : null;
-            details.gandhi = gandhiPrice ? gandhiPrice : null;
-            details.gonvill = gonvillPrice ? gonvillPrice : null;
-            details.el_sotano = elSotanoPrice ? elSotanoPrice : null;
-        }
-        
-        return details;
+            if (query.isbn) {
+                details.amazon = amzPrice ? amzPrice : null;
+                //details.mercado_libre = mlPrice ? mlPrice : null;
+                details.gandhi = gandhiPrice ? gandhiPrice : null;
+                details.gonvill = gonvillPrice ? gonvillPrice : null;
+                details.el_sotano = elSotanoPrice ? elSotanoPrice : null;
+            }
+
+            return details;
         }
     },
 
-    // Get a list of all books in the database
+    // Get all books in the database (paginated)
     getBooks: async (query) => {
 
         let page_size;
@@ -157,7 +197,40 @@ const booksController = {
             page = 1;
         }
 
-        return await Book.find().skip(parseInt(page_size) * (parseInt(page) - 1)).limit(parseInt(page_size));
+        const docClient = new AWS.DynamoDB.DocumentClient();
+
+        let items = [];
+        let lastEvaluatedKey = null;
+        let pageCounter = 0;
+
+        const params = {
+            TableName: config.aws_table_name,
+            ExclusiveStartKey: lastEvaluatedKey,
+            Limit: page_size,
+        }
+
+        let books;
+
+        try {
+            do {
+                const result = await docClient.scan(params).promise();
+                items = [...items, ...result.Items];
+                lastEvaluatedKey = result.LastEvaluatedKey;
+
+                pageCounter++;
+            } while (lastEvaluatedKey && pageCounter < page);
+
+            const startIndex = (page - 1) * page_size;
+            const endIndex = page * page_size;
+
+            books = items.slice(startIndex, endIndex);
+
+        } catch (err) {
+            console.error(err);
+            throw new ServerError('Error getting books from DynamoDB');
+        }
+
+        return books;
     },
 
     // Get a list of random books in the database
@@ -174,68 +247,140 @@ const booksController = {
             page_size = 10;
         }
 
-        let books = await Book.aggregate([{ $sample: { size: parseInt(page_size) } }]);
+        const docClient = new AWS.DynamoDB.DocumentClient();
 
-        return books;
+        let items = [];
+        let lastEvaluatedKey = null;
+
+        const params = {
+            TableName: config.aws_table_name,
+            ExclusiveStartKey: lastEvaluatedKey,
+        }
+
+        try {
+            do {
+                const result = await docClient.scan(params).promise();
+                items = [...items, ...result.Items];
+                lastEvaluatedKey = result.LastEvaluatedKey;
+            } while (lastEvaluatedKey);
+
+            const randomBooks = [];
+
+            for (let i = 0; i < page_size; i++) {
+                const randomIndex = Math.floor(Math.random() * items.length);
+                randomBooks.push(items[randomIndex]);
+            }
+
+            return randomBooks;
+
+        } catch (err) {
+            console.error(err);
+            throw new ServerError('Error getting books from DynamoDB');
+        }
     },
 
     // Get the history of a book, given its ISBN
     getHistory: async (query) => {
-        let history = await BookDetails.findOne({ isbn: query.isbn });
-        if (!history) {
-            throw new NotFoundError('No history found for this book');
-        } else {
-            return {
-                isbn: history.isbn,
-                stores: history.stores
+
+        let key = {};
+
+        // ISBN-10
+        if (query.length == 10) {
+            key = {
+                isbn10: query
             }
+        } else if (query.length == 13) {
+            key = {
+                isbn13: query
+            }
+        } else if (query.length == 25) {
+            key = {
+                id: query
+            }
+        } else {
+            throw new BadRequestError('Invalid query parameter. Must be ISBN-10, ISBN-13 or ID.')
+        }
+
+        const docClient = new AWS.DynamoDB.DocumentClient();
+
+        const params = {
+            TableName: 'book_history',
+            Key: key
+        }
+
+        try {
+            const result = await docClient.get(params).promise();
+            return result.Item;
+        } catch (err) {
+            console.error(err);
+            throw new NotFoundError('Book not found');
         }
     },
 
     // Save the books in the database, with the current price and date
-    saveBooks: async (isbn, details) => {
+    saveBooks: async (query, details) => {
 
         if (details) {
-            // Check if the book is already in the database
-            let bookInDb = await BookDetails.findOne({ isbn: isbn });
 
-            // If the book is not in the database, create a new record
-            if (!bookInDb) {
-                let bookDetails = {
-                    isbn: isbn,
-                    stores: {}
-                };
-                bookInDb = await BookDetails.create(bookDetails);
-            }
+            const docClient = new AWS.DynamoDB.DocumentClient();
 
-
-            for (let store in details) {
-                let price = details[store].price;
-                
-                if (price) {
-                    let storeData = {
-                        price: price,
-                        date: new Date()
-                    };
-                    
-                    // Check if the store is already in the database
-                    if (bookInDb.stores[store]) {
-                        let lastPrice = bookInDb.stores[store].data[bookInDb.stores[store].data.length - 1].price;
-                        if (lastPrice != price) bookInDb.stores[store].data.push(storeData);
-                    } else {
-                        bookInDb.stores[store] = {
-                            data: [storeData]
-                        };
-                    }
-
+            const params = {
+                TableName: config.aws_table_name,
+                Key: {
+                    isbn: isbn
+                },
+                UpdateExpression: 'set #price = :price, #date = :date',
+                ExpressionAttributeNames: {
+                    '#price': 'price',
+                    '#date': 'date'
+                },
+                ExpressionAttributeValues: {
+                    ':price': details.price,
+                    ':date': new Date()
                 }
             }
-            
-            // Save the book in the database
-            bookInDb.markModified('stores');
-            await bookInDb.save();
-            
+
+            // Check if book exists in database
+            const checkParams = {
+                TableName: config.aws_table_name,
+                Key: {
+                    id: query
+                }
             }
+
+            try {
+                const result = await docClient.get(checkParams).promise();
+                if (result.Item) {
+                    try {
+                        await docClient.update(params).promise();
+                        return true;
+                    } catch (err) {
+                        console.error(err);
+                        throw new ServerError('Error updating book in DynamoDB');
+                    }
+                } else {
+                    const params = {
+                        TableName: config.aws_table_name,
+                        Item: {
+                            id: query,
+                            price: details.price,
+                            date: new Date()
+                        }
+                    }
+
+                    try {
+                        await docClient.put(params).promise();
+                        return true;
+                    } catch (err) {
+                        console.error(err);
+                        throw new ServerError('Error saving book to DynamoDB');
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                throw new ServerError('Error getting book from DynamoDB');
+            }
+        }
     },
 
 }

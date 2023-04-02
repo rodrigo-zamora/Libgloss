@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
-import '../../blocs/search/bloc/search_bloc.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/blocs/search/bloc/search_bloc.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class Scanner extends StatelessWidget {
   Scanner({
     Key? key,
   }) : super(key: key);
 
-  final Color _primaryColor = ColorSelector.getPrimary(LibglossRoutes.HOME_NEW);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_NEW);
+  final Color _primaryColor = AppColor.getPrimary(Routes.newBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.newBooks);
   final MobileScannerController cameraController = MobileScannerController();
 
   @override
@@ -59,7 +57,7 @@ class Scanner extends StatelessWidget {
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_NEW,
+              Routes.searchNewBooks,
             );
             Map<String, dynamic> filters = {
               'isbn': code,

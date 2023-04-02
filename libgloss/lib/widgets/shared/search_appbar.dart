@@ -147,20 +147,10 @@ class SearchAppBar extends StatelessWidget {
         onSubmitted: (value) {
           // TODO: Add filters to search
           Map<String, dynamic> filters = {};
-
-          if (kDebugMode) {
-            print(
-                "\u001b[32m[SearchAppBar] Received route: ${_route}\u001b[0m");
-            print(
-                "\u001b[32m[SearchAppBar] Search query is ${_textFieldController.text}");
-            print("\u001b[32m[SearchAppBar] Filters are ${filters.toString()}");
-            print(
-                "\u001b[32m[SearchAppBar] Current page is ${ModalRoute.of(context)?.settings.name}");
-          }
-          if (_route == LibglossRoutes.HOME_NEW) {
+          if (_route == Routes.home) {
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_NEW,
+              Routes.searchNewBooks,
               arguments: filters,
             );
 
@@ -172,10 +162,10 @@ class SearchAppBar extends StatelessWidget {
             );
           }
 
-          if (_route == LibglossRoutes.HOME_USED) {
+          if (_route == Routes.usedBooks) {
             Navigator.pushNamed(
               context,
-              LibglossRoutes.SEARCH_USED,
+              Routes.searchUsedBooks,
               arguments: filters,
             );
 
@@ -202,7 +192,7 @@ class SearchAppBar extends StatelessWidget {
                       onTap: () {
                         Navigator.pushNamed(
                           context,
-                          LibglossRoutes.SCANNER,
+                          Routes.newBooksScanner,
                         );
                       },
                     ),
@@ -249,13 +239,10 @@ class SearchAppBar extends StatelessWidget {
         icon: Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
-          switch (LibglossRoutes.CURRENT_ROUTE) {
-            case LibglossRoutes.SEARCH_NEW:
-              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME;
-              break;
-            case LibglossRoutes.SEARCH_USED:
-              LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_USED;
-              break;
+          if (Routes.currentRoute == Routes.searchNewBooks) {
+            Routes.currentRoute = Routes.home;
+          } else if (Routes.currentRoute == Routes.searchUsedBooks) {
+            Routes.currentRoute = Routes.usedBooks;
           }
         },
       );
@@ -558,7 +545,7 @@ class SearchAppBar extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context, LibglossRoutes.SEARCH_NEW);
+                  Navigator.pushNamed(context, Routes.searchNewBooks);
                   BlocProvider.of<SearchBloc>(context).add(
                     SearchBoookEvent(
                       query: _filterTitleController.text,

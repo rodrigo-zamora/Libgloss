@@ -1,5 +1,3 @@
-const admin = require('firebase-admin');
-
 const notification_options = {
     priority: "high",
     timeToLive: 60 * 60 * 24,
@@ -9,7 +7,7 @@ const notification_options = {
 
 const NotificationsController = {
     getToken: async (useruid) => {
-        let user = await admin.firestore().collection('users').doc(useruid).get();
+        let user = [];
         return user.data().token;
     },
     notifyUsers: async (isbn, details) => {

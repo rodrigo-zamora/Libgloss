@@ -1,17 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
-import 'package:libgloss/config/colors.dart';
+import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
-import '../../blocs/bookISBN/bloc/book_isbn_bloc.dart';
-import '../../widgets/shared/online_image.dart';
-import '../../widgets/shared/search_appbar.dart';
+import 'package:libgloss/blocs/bookISBN/bloc/book_isbn_bloc.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
 
 class HomeUsed extends StatefulWidget {
   HomeUsed({
@@ -23,37 +21,19 @@ class HomeUsed extends StatefulWidget {
 }
 
 class _HomeUsedState extends State<HomeUsed> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
-  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor = AppColor.getPrimary(Routes.usedBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.usedBooks);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
+  final Color _greenColor = AppColor.getTertiary(Routes.usedBooks);
 
   List<Map<String, dynamic>> _listElements = [];
   Map<String, dynamic>? isSeller = {};
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference user = FirebaseFirestore.instance.collection('users');
+    // TODO: Get used books from Amplify database
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: user.doc(UserAuthRepository().getuid()).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            BlocProvider.of<UsedBooksBloc>(context).add(GetUsedBooksEvent());
-            isSeller = snapshot.data!.data() as Map<String, dynamic>?;
-            return _getBooks(context);
-          }
-        }
-        return _loadingPage();
-      },
-    );
+    return _loadingPage();
   }
 
   Widget _loadingPage() {
@@ -87,12 +67,12 @@ class _HomeUsedState extends State<HomeUsed> {
           showMenuButton: true,
           showCameraButton: false,
           showSearchField: true,
-          route: LibglossRoutes.HOME_USED,
+          route: Routes.usedBooks,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
-        route: LibglossRoutes.HOME_USED,
+        route: Routes.usedBooks,
       ),
       body: _add(context),
     );
@@ -181,12 +161,9 @@ class _HomeUsedState extends State<HomeUsed> {
         children: [
           GestureDetector(
             onTap: () {
-              if (kDebugMode)
-                print(
-                    "[HomeUsed] Moving to details of ${_listElements[index]["title"]}");
               Navigator.pushNamed(
                 context,
-                LibglossRoutes.USED_BOOK_DETAILS,
+                Routes.usedBookDetails,
                 arguments: _listElements[index],
               );
             },
@@ -302,10 +279,7 @@ class _HomeUsedState extends State<HomeUsed> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, 'Cancel');
-                  Navigator.pushNamed(
-                    context,
-                    LibglossRoutes.USED_BOOK_SCANNER,
-                  );
+                  Navigator.pushNamed(context, Routes.usedBookScanner);
                 },
                 child: Text("Continuar", style: TextStyle(color: _greenColor)),
               ),

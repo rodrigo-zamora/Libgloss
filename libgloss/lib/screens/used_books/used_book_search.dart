@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../blocs/used_search_books/bloc/used_search_bloc.dart';
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import '../../widgets/shared/online_image.dart';
-import '../../widgets/shared/search_appbar.dart';
-import '../../widgets/shared/side_menu.dart';
+import 'package:libgloss/config/app_color.dart';
+import 'package:libgloss/blocs/used_search_books/bloc/used_search_bloc.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/online_image.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'package:libgloss/widgets/shared/side_menu.dart';
 
 class UsedBookSearch extends StatefulWidget {
   const UsedBookSearch({super.key});
@@ -17,12 +16,10 @@ class UsedBookSearch extends StatefulWidget {
 }
 
 class _UsedBookSearchState extends State<UsedBookSearch> {
-  final Color _primaryColor =
-      ColorSelector.getPrimary(LibglossRoutes.HOME_USED);
-  final Color _secondaryColor =
-      ColorSelector.getSecondary(LibglossRoutes.HOME_USED);
-  final Color _blueColor = ColorSelector.getTertiary(LibglossRoutes.HOME);
-  final Color _greenColor = ColorSelector.getTertiary(LibglossRoutes.HOME_USED);
+  final Color _primaryColor = AppColor.getPrimary(Routes.usedBooks);
+  final Color _secondaryColor = AppColor.getSecondary(Routes.usedBooks);
+  final Color _blueColor = AppColor.getTertiary(Routes.home);
+  final Color _greenColor = AppColor.getTertiary(Routes.usedBooks);
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +32,12 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
           showMenuButton: false,
           showCameraButton: false,
           showSearchField: true,
-          route: LibglossRoutes.HOME_USED,
+          route: Routes.usedBooks,
         ),
       ),
       drawer: SideMenu(
         sideMenuColor: _primaryColor,
-        route: LibglossRoutes.HOME_USED,
+        route: Routes.usedBooks,
       ),
       body: _searchBook(context),
     );
@@ -154,7 +151,7 @@ class _UsedBookSearchState extends State<UsedBookSearch> {
                         print(books[index]["title"]);
                         Navigator.pushNamed(
                           context,
-                          LibglossRoutes.USED_BOOK_DETAILS,
+                          Routes.usedBookDetails,
                           arguments: books[index],
                         );
                       },

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/config/app_color.dart';
 
-import '../../blocs/auth/bloc/auth_bloc.dart';
-import '../../config/colors.dart';
-import '../../config/routes.dart';
-import 'parts/have_account.dart';
-import 'parts/or_line.dart';
-import 'parts/social_log.dart';
-import '../../widgets/shared/search_appbar.dart';
-
-import 'parts/bunny_silhouette.dart';
-import 'parts/button_log.dart';
-import 'parts/log_text.dart';
+import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
+import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/widgets/shared/search_appbar.dart';
+import 'components/have_account.dart';
+import 'components/or_line.dart';
+import 'components/social_log.dart';
+import 'components/bunny_silhouette.dart';
+import 'components/button_log.dart';
+import 'components/log_text.dart';
 
 class LogInForm extends StatefulWidget {
   LogInForm({super.key});
@@ -26,20 +25,20 @@ class _LogInFormState extends State<LogInForm> {
   @override
   Widget build(BuildContext context) {
     Color _primaryColor = _current
-        ? ColorSelector.getPrimary(LibglossRoutes.OPTIONS)
-        : ColorSelector.getPrimary(LibglossRoutes.BOOK_TRACKER);
+        ? AppColor.getPrimary(Routes.options)
+        : AppColor.getPrimary(Routes.bookTracker);
     Color _secondaryColor = _current
-        ? ColorSelector.getSecondary(LibglossRoutes.OPTIONS)
-        : ColorSelector.getSecondary(LibglossRoutes.BOOK_TRACKER);
+        ? AppColor.getSecondary(Routes.options)
+        : AppColor.getSecondary(Routes.bookTracker);
     Color _tertiaryColor = _current
-        ? ColorSelector.getTertiary(LibglossRoutes.OPTIONS)
-        : ColorSelector.getTertiary(LibglossRoutes.BOOK_TRACKER);
+        ? AppColor.getTertiary(Routes.options)
+        : AppColor.getTertiary(Routes.bookTracker);
     Color _quaternaryColor = _current
-        ? ColorSelector.getQuaternary(LibglossRoutes.OPTIONS)
-        : ColorSelector.getQuaternary(LibglossRoutes.BOOK_TRACKER);
+        ? AppColor.getQuaternary(Routes.options)
+        : AppColor.getQuaternary(Routes.bookTracker);
     AssetImage _logo = _current
-        ? ColorSelector.getBackground(LibglossRoutes.OPTIONS)
-        : ColorSelector.getBackground(LibglossRoutes.BOOK_TRACKER);
+        ? AssetImage('assets/images/login/background_o.png')
+        : AssetImage('assets/images/login/background_p.png');
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -183,7 +182,11 @@ class _LogInFormState extends State<LogInForm> {
                     text: "Acceder",
                     onPressed: () {
                       Navigator.pushNamed(
-                          context, LibglossRoutes.CURRENT_ROUTE);
+                        context,
+                        Routes.currentRoute == Routes.options
+                            ? Routes.options
+                            : Routes.bookTracker,
+                      );
                     }),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.01,
@@ -247,7 +250,12 @@ class _LogInFormState extends State<LogInForm> {
                   text_color: Colors.white,
                   text: "Acceder",
                   onPressed: () {
-                    Navigator.pushNamed(context, LibglossRoutes.CURRENT_ROUTE);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.currentRoute == Routes.options
+                          ? Routes.options
+                          : Routes.bookTracker,
+                    );
                   },
                 ),
                 SizedBox(

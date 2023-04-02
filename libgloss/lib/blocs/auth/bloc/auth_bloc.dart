@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
+import 'package:libgloss/config/routes.dart';
 
-import '../../../config/routes.dart';
 import '../../../repositories/auth/user_auth_repository.dart';
 
 part 'auth_event.dart';
@@ -44,13 +44,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
 
-      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+      Routes.currentRoute = Routes.newBooks;
 
       Navigator.pushAndRemoveUntil(
           event.buildcontext,
           PageRouteBuilder(pageBuilder: (BuildContext context,
               Animation animation, Animation secondaryAnimation) {
-            return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+            return Routes.getRoute(Routes.newBooks);
           }, transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
@@ -74,7 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _authUser(event, emit) async {
     emit(AuthAwaitingState());
     try {
-      await _authRepo.signInWithGoogle();
+      // TODO: Implement auth here
 
       ScaffoldMessenger.of(event.buildcontext)
         ..hideCurrentSnackBar()
@@ -84,13 +84,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
 
-      LibglossRoutes.CURRENT_ROUTE = LibglossRoutes.HOME_NEW;
+      Routes.currentRoute = Routes.newBooks;
 
       Navigator.pushAndRemoveUntil(
           event.buildcontext,
           PageRouteBuilder(pageBuilder: (BuildContext context,
               Animation animation, Animation secondaryAnimation) {
-            return LibglossRoutes.getRoute(LibglossRoutes.HOME);
+            return Routes.getRoute(Routes.newBooks);
           }, transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
