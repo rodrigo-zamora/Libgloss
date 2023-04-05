@@ -2,36 +2,43 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
 class UserAuthRepository {
-  bool isAuthenticated() {
-    return false;
-  }
+  Future<void> isAuthenticated() async {}
 
   String? getuid() {
     return null;
   }
 
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    try {
+      await Amplify.Auth.signOut();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> signIn() async {}
 
-  Future<void> signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
       final result =
           await Amplify.Auth.signInWithWebUI(provider: AuthProvider.google);
-      print('Resultfor the login: $result');
+      print('Resultfor the login: ${result.nextStep?.additionalInfo}');
+      return result.isSignedIn;
     } on AuthException catch (e) {
       print(e.message);
+      throw Exception(e.message);
     }
   }
 
-  Future<void> signInWithFacebook() async {
+  Future<bool> signInWithFacebook() async {
     try {
       final result =
           await Amplify.Auth.signInWithWebUI(provider: AuthProvider.facebook);
-      print('Resultfor the login: $result');
+      print('Result for the login: ${result.nextStep?.additionalInfo}');
+      return result.isSignedIn;
     } on AuthException catch (e) {
       print(e.message);
+      throw Exception(e.message);
     }
   }
-  // TODO: Implement user auth using Amplify Auth
 }

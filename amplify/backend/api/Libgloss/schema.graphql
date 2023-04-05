@@ -1,0 +1,85 @@
+type WishListItem @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  authors: [String]
+  isbn: String
+  thumbnail: String
+  title: String
+}
+
+type UserBooks @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  authors: [String]
+  categories: [String]
+  images: [String]
+  title: String
+  latitude: Int
+  longitude: Int
+  price: Int
+  publisher: String
+  sellerUUID: ID
+  thumbnail: String
+  isbn: String
+}
+
+type TrackingListItem @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  authors: [String]
+  isbn: String
+  price: Int
+  store: String
+  thumbnail: String
+  time: Int
+  title: String
+}
+
+type Users @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  sellerID: ID
+  settingsID: ID
+  phoneNumber: AWSPhone
+  profilePicture: String
+  token: String
+  username: String
+  zipCode: String
+  email: AWSEmail
+  isAdministrator: Boolean
+}
+
+type Seller @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  email: AWSEmail
+  sellerName: String
+  phoneNumber: String
+}
+
+type List @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Tracking: [String]
+  Wish: String
+}
+
+type Book @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDat: AWSDateTime
+  title: String
+  subtitle: String
+  rating: Int
+  thumbnail: String
+  language: String
+  isbn: String
+  authors: [String]
+  publisher: String
+  categories: [String]
+  description: String
+}
+
+type Settings @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  notifications: Boolean
+}
+ 

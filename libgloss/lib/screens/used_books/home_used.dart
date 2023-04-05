@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
@@ -87,7 +88,7 @@ class _HomeUsedState extends State<HomeUsed> {
   }
 
   Widget _button(bool isSeller) {
-    if (UserAuthRepository().isAuthenticated() && isSeller) {
+    if (BlocProvider.of<AuthBloc>(context).isSigned && isSeller) {
       return Positioned(
         bottom: MediaQuery.of(context).size.height * 0.03,
         right: MediaQuery.of(context).size.height * 0.03,

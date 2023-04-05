@@ -11,6 +11,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserAuthRepository _authRepo = UserAuthRepository();
+  bool isSigned = false;
 
   AuthBloc() : super(AuthInitial()) {
     on<VerifyAuthEvent>(_authVerfication);
@@ -20,7 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _authVerfication(event, emit) {
-    if (_authRepo.isAuthenticated()) {
+    if (isSigned) {
       emit(AuthSuccessState());
     } else {
       emit(UnAuthState());
@@ -32,6 +33,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print('signing out');
 
       await _authRepo.signOut();
+
+      isSigned = false;
 
       print('signed out');
 
@@ -51,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.buildcontext,
           PageRouteBuilder(pageBuilder: (BuildContext context,
               Animation animation, Animation secondaryAnimation) {
-            return Routes.getRoute(Routes.newBooks);
+            return Routes.getRoute(Routes.home);
           }, transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
@@ -76,7 +79,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthAwaitingState());
     try {
       // TODO: Implement auth here
-      await _authRepo.signInWithGoogle();
+      await _authRepo.signOut();
+      var currentUserisSigned = await _authRepo.signInWithGoogle();
+
+      if (currentUserisSigned == false) {
+        throw Exception("");
+      }
+
+      isSigned = true;
+      await _authRepo.isAuthenticated();
       ScaffoldMessenger.of(event.buildcontext)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -91,7 +102,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.buildcontext,
           PageRouteBuilder(pageBuilder: (BuildContext context,
               Animation animation, Animation secondaryAnimation) {
-            return Routes.getRoute(Routes.newBooks);
+            return Routes.getRoute(Routes.home);
           }, transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
@@ -124,7 +135,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthAwaitingState());
     try {
       // TODO: Implement auth here
-      await _authRepo.signInWithFacebook();
+      await _authRepo.signOut();
+      var currentUserisSigned = await _authRepo.signInWithFacebook();
+
+      if (currentUserisSigned == false) {
+        throw Exception("");
+      }
+      isSigned = true;
       ScaffoldMessenger.of(event.buildcontext)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -139,7 +156,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.buildcontext,
           PageRouteBuilder(pageBuilder: (BuildContext context,
               Animation animation, Animation secondaryAnimation) {
-            return Routes.getRoute(Routes.newBooks);
+            return Routes.getRoute(Routes.home);
           }, transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,

@@ -206,27 +206,32 @@ class _LogInFormState extends State<LogInForm> {
                   },
                 ),
                 OrLine(tertiaryColor: _tertiaryColor, context: context),
-                SocialLog(
-                  logo: _tertiaryColor,
-                  splash: _primaryColor,
-                  action: () {
-                    BlocProvider.of<AuthBloc>(context).add(
-                      GoogleAuthEvent(
-                        buildcontext: context,
-                      ),
-                    );
-                  },
-                ),
-                SocialLogF(
-                  logo: _tertiaryColor,
-                  splash: _primaryColor,
-                  action: () {
-                    BlocProvider.of<AuthBloc>(context).add(
-                      FacebookAuthEvent(
-                        buildcontext: context,
-                      ),
-                    );
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SocialLog(
+                      logo: _tertiaryColor,
+                      splash: _primaryColor,
+                      action: () {
+                        BlocProvider.of<AuthBloc>(context).add(
+                          GoogleAuthEvent(
+                            buildcontext: context,
+                          ),
+                        );
+                      },
+                    ),
+                    SocialLogF(
+                      logo: _tertiaryColor,
+                      splash: _primaryColor,
+                      action: () {
+                        BlocProvider.of<AuthBloc>(context).add(
+                          FacebookAuthEvent(
+                            buildcontext: context,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/blocs/books/bloc/books_bloc.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
@@ -16,20 +17,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-
-  final List<Widget> _pagesList = UserAuthRepository().isAuthenticated() == true
-      ? [
-          Routes.getRoute(Routes.newBooks),
-          Routes.getRoute(Routes.usedBooks),
-          Routes.getRoute(Routes.bookTracker),
-          Routes.getRoute(Routes.options),
-        ]
-      : [
-          Routes.getRoute(Routes.newBooks),
-          Routes.getRoute(Routes.usedBooks),
-          Routes.getRoute(Routes.bookTracker),
-          Routes.getRoute(Routes.login),
-        ];
 
   @override
   void initState() {
@@ -50,6 +37,19 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pagesList = BlocProvider.of<AuthBloc>(context).isSigned
+        ? [
+            Routes.getRoute(Routes.newBooks),
+            Routes.getRoute(Routes.usedBooks),
+            Routes.getRoute(Routes.bookTracker),
+            Routes.getRoute(Routes.options),
+          ]
+        : [
+            Routes.getRoute(Routes.newBooks),
+            Routes.getRoute(Routes.usedBooks),
+            Routes.getRoute(Routes.bookTracker),
+            Routes.getRoute(Routes.login),
+          ];
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: const FaIcon(FontAwesomeIcons.userGear),
-            label: UserAuthRepository().isAuthenticated()
+            label: BlocProvider.of<AuthBloc>(context).isSigned
                 ? 'Mi perfil'
                 : 'Iniciar sesión',
           ),

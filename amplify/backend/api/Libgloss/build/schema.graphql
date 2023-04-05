@@ -1,0 +1,942 @@
+
+type WishListItem @aws_iam @aws_api_key {
+  id: ID!
+  authors: [String]
+  isbn: String
+  thumbnail: String
+  title: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type UserBooks @aws_iam @aws_api_key {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  authors: [String]
+  categories: [String]
+  images: [String]
+  title: String
+  latitude: Int
+  longitude: Int
+  price: Int
+  publisher: String
+  sellerUUID: ID
+  thumbnail: String
+  isbn: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type TrackingListItem @aws_iam @aws_api_key {
+  id: ID!
+  authors: [String]
+  isbn: String
+  price: Int
+  store: String
+  thumbnail: String
+  time: Int
+  title: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Users @aws_iam @aws_api_key {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  sellerID: ID
+  settingsID: ID
+  phoneNumber: AWSPhone
+  profilePicture: String
+  token: String
+  username: String
+  zipCode: String
+  email: AWSEmail
+  isAdministrator: Boolean
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Seller @aws_iam @aws_api_key {
+  id: ID!
+  email: AWSEmail
+  sellerName: String
+  phoneNumber: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type List @aws_iam @aws_api_key {
+  id: ID!
+  Tracking: [String]
+  Wish: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Book @aws_iam @aws_api_key {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDat: AWSDateTime
+  title: String
+  subtitle: String
+  rating: Int
+  thumbnail: String
+  language: String
+  isbn: String
+  authors: [String]
+  publisher: String
+  categories: [String]
+  description: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Settings @aws_iam @aws_api_key {
+  id: ID!
+  notifications: Boolean
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelWishListItemConnection @aws_api_key @aws_iam {
+  items: [WishListItem]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelWishListItemFilterInput {
+  id: ModelIDInput
+  authors: ModelStringInput
+  isbn: ModelStringInput
+  thumbnail: ModelStringInput
+  title: ModelStringInput
+  and: [ModelWishListItemFilterInput]
+  or: [ModelWishListItemFilterInput]
+  not: ModelWishListItemFilterInput
+}
+
+type Query {
+  getWishListItem(id: ID!): WishListItem @aws_api_key @aws_iam
+  listWishListItems(filter: ModelWishListItemFilterInput, limit: Int, nextToken: String): ModelWishListItemConnection @aws_api_key @aws_iam
+  syncWishListItems(filter: ModelWishListItemFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelWishListItemConnection @aws_api_key @aws_iam
+  getUserBooks(id: ID!): UserBooks @aws_api_key @aws_iam
+  listUserBooks(filter: ModelUserBooksFilterInput, limit: Int, nextToken: String): ModelUserBooksConnection @aws_api_key @aws_iam
+  syncUserBooks(filter: ModelUserBooksFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUserBooksConnection @aws_api_key @aws_iam
+  getTrackingListItem(id: ID!): TrackingListItem @aws_api_key @aws_iam
+  listTrackingListItems(filter: ModelTrackingListItemFilterInput, limit: Int, nextToken: String): ModelTrackingListItemConnection @aws_api_key @aws_iam
+  syncTrackingListItems(filter: ModelTrackingListItemFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTrackingListItemConnection @aws_api_key @aws_iam
+  getUsers(id: ID!): Users @aws_api_key @aws_iam
+  listUsers(filter: ModelUsersFilterInput, limit: Int, nextToken: String): ModelUsersConnection @aws_api_key @aws_iam
+  syncUsers(filter: ModelUsersFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUsersConnection @aws_api_key @aws_iam
+  getSeller(id: ID!): Seller @aws_api_key @aws_iam
+  listSellers(filter: ModelSellerFilterInput, limit: Int, nextToken: String): ModelSellerConnection @aws_api_key @aws_iam
+  syncSellers(filter: ModelSellerFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelSellerConnection @aws_api_key @aws_iam
+  getList(id: ID!): List @aws_api_key @aws_iam
+  listLists(filter: ModelListFilterInput, limit: Int, nextToken: String): ModelListConnection @aws_api_key @aws_iam
+  syncLists(filter: ModelListFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelListConnection @aws_api_key @aws_iam
+  getBook(id: ID!): Book @aws_api_key @aws_iam
+  listBooks(filter: ModelBookFilterInput, limit: Int, nextToken: String): ModelBookConnection @aws_api_key @aws_iam
+  syncBooks(filter: ModelBookFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelBookConnection @aws_api_key @aws_iam
+  getSettings(id: ID!): Settings @aws_api_key @aws_iam
+  listSettings(filter: ModelSettingsFilterInput, limit: Int, nextToken: String): ModelSettingsConnection @aws_api_key @aws_iam
+  syncSettings(filter: ModelSettingsFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelSettingsConnection @aws_api_key @aws_iam
+}
+
+input ModelWishListItemConditionInput {
+  authors: ModelStringInput
+  isbn: ModelStringInput
+  thumbnail: ModelStringInput
+  title: ModelStringInput
+  and: [ModelWishListItemConditionInput]
+  or: [ModelWishListItemConditionInput]
+  not: ModelWishListItemConditionInput
+}
+
+input CreateWishListItemInput {
+  id: ID
+  authors: [String]
+  isbn: String
+  thumbnail: String
+  title: String
+  _version: Int
+}
+
+input UpdateWishListItemInput {
+  id: ID!
+  authors: [String]
+  isbn: String
+  thumbnail: String
+  title: String
+  _version: Int
+}
+
+input DeleteWishListItemInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createWishListItem(input: CreateWishListItemInput!, condition: ModelWishListItemConditionInput): WishListItem @aws_api_key @aws_iam
+  updateWishListItem(input: UpdateWishListItemInput!, condition: ModelWishListItemConditionInput): WishListItem @aws_api_key @aws_iam
+  deleteWishListItem(input: DeleteWishListItemInput!, condition: ModelWishListItemConditionInput): WishListItem @aws_api_key @aws_iam
+  createUserBooks(input: CreateUserBooksInput!, condition: ModelUserBooksConditionInput): UserBooks @aws_api_key @aws_iam
+  updateUserBooks(input: UpdateUserBooksInput!, condition: ModelUserBooksConditionInput): UserBooks @aws_api_key @aws_iam
+  deleteUserBooks(input: DeleteUserBooksInput!, condition: ModelUserBooksConditionInput): UserBooks @aws_api_key @aws_iam
+  createTrackingListItem(input: CreateTrackingListItemInput!, condition: ModelTrackingListItemConditionInput): TrackingListItem @aws_api_key @aws_iam
+  updateTrackingListItem(input: UpdateTrackingListItemInput!, condition: ModelTrackingListItemConditionInput): TrackingListItem @aws_api_key @aws_iam
+  deleteTrackingListItem(input: DeleteTrackingListItemInput!, condition: ModelTrackingListItemConditionInput): TrackingListItem @aws_api_key @aws_iam
+  createUsers(input: CreateUsersInput!, condition: ModelUsersConditionInput): Users @aws_api_key @aws_iam
+  updateUsers(input: UpdateUsersInput!, condition: ModelUsersConditionInput): Users @aws_api_key @aws_iam
+  deleteUsers(input: DeleteUsersInput!, condition: ModelUsersConditionInput): Users @aws_api_key @aws_iam
+  createSeller(input: CreateSellerInput!, condition: ModelSellerConditionInput): Seller @aws_api_key @aws_iam
+  updateSeller(input: UpdateSellerInput!, condition: ModelSellerConditionInput): Seller @aws_api_key @aws_iam
+  deleteSeller(input: DeleteSellerInput!, condition: ModelSellerConditionInput): Seller @aws_api_key @aws_iam
+  createList(input: CreateListInput!, condition: ModelListConditionInput): List @aws_api_key @aws_iam
+  updateList(input: UpdateListInput!, condition: ModelListConditionInput): List @aws_api_key @aws_iam
+  deleteList(input: DeleteListInput!, condition: ModelListConditionInput): List @aws_api_key @aws_iam
+  createBook(input: CreateBookInput!, condition: ModelBookConditionInput): Book @aws_api_key @aws_iam
+  updateBook(input: UpdateBookInput!, condition: ModelBookConditionInput): Book @aws_api_key @aws_iam
+  deleteBook(input: DeleteBookInput!, condition: ModelBookConditionInput): Book @aws_api_key @aws_iam
+  createSettings(input: CreateSettingsInput!, condition: ModelSettingsConditionInput): Settings @aws_api_key @aws_iam
+  updateSettings(input: UpdateSettingsInput!, condition: ModelSettingsConditionInput): Settings @aws_api_key @aws_iam
+  deleteSettings(input: DeleteSettingsInput!, condition: ModelSettingsConditionInput): Settings @aws_api_key @aws_iam
+}
+
+input ModelSubscriptionWishListItemFilterInput {
+  id: ModelSubscriptionIDInput
+  authors: ModelSubscriptionStringInput
+  isbn: ModelSubscriptionStringInput
+  thumbnail: ModelSubscriptionStringInput
+  title: ModelSubscriptionStringInput
+  and: [ModelSubscriptionWishListItemFilterInput]
+  or: [ModelSubscriptionWishListItemFilterInput]
+}
+
+type Subscription {
+  onCreateWishListItem(filter: ModelSubscriptionWishListItemFilterInput): WishListItem @aws_subscribe(mutations: ["createWishListItem"]) @aws_api_key @aws_iam
+  onUpdateWishListItem(filter: ModelSubscriptionWishListItemFilterInput): WishListItem @aws_subscribe(mutations: ["updateWishListItem"]) @aws_api_key @aws_iam
+  onDeleteWishListItem(filter: ModelSubscriptionWishListItemFilterInput): WishListItem @aws_subscribe(mutations: ["deleteWishListItem"]) @aws_api_key @aws_iam
+  onCreateUserBooks(filter: ModelSubscriptionUserBooksFilterInput): UserBooks @aws_subscribe(mutations: ["createUserBooks"]) @aws_api_key @aws_iam
+  onUpdateUserBooks(filter: ModelSubscriptionUserBooksFilterInput): UserBooks @aws_subscribe(mutations: ["updateUserBooks"]) @aws_api_key @aws_iam
+  onDeleteUserBooks(filter: ModelSubscriptionUserBooksFilterInput): UserBooks @aws_subscribe(mutations: ["deleteUserBooks"]) @aws_api_key @aws_iam
+  onCreateTrackingListItem(filter: ModelSubscriptionTrackingListItemFilterInput): TrackingListItem @aws_subscribe(mutations: ["createTrackingListItem"]) @aws_api_key @aws_iam
+  onUpdateTrackingListItem(filter: ModelSubscriptionTrackingListItemFilterInput): TrackingListItem @aws_subscribe(mutations: ["updateTrackingListItem"]) @aws_api_key @aws_iam
+  onDeleteTrackingListItem(filter: ModelSubscriptionTrackingListItemFilterInput): TrackingListItem @aws_subscribe(mutations: ["deleteTrackingListItem"]) @aws_api_key @aws_iam
+  onCreateUsers(filter: ModelSubscriptionUsersFilterInput): Users @aws_subscribe(mutations: ["createUsers"]) @aws_api_key @aws_iam
+  onUpdateUsers(filter: ModelSubscriptionUsersFilterInput): Users @aws_subscribe(mutations: ["updateUsers"]) @aws_api_key @aws_iam
+  onDeleteUsers(filter: ModelSubscriptionUsersFilterInput): Users @aws_subscribe(mutations: ["deleteUsers"]) @aws_api_key @aws_iam
+  onCreateSeller(filter: ModelSubscriptionSellerFilterInput): Seller @aws_subscribe(mutations: ["createSeller"]) @aws_api_key @aws_iam
+  onUpdateSeller(filter: ModelSubscriptionSellerFilterInput): Seller @aws_subscribe(mutations: ["updateSeller"]) @aws_api_key @aws_iam
+  onDeleteSeller(filter: ModelSubscriptionSellerFilterInput): Seller @aws_subscribe(mutations: ["deleteSeller"]) @aws_api_key @aws_iam
+  onCreateList(filter: ModelSubscriptionListFilterInput): List @aws_subscribe(mutations: ["createList"]) @aws_api_key @aws_iam
+  onUpdateList(filter: ModelSubscriptionListFilterInput): List @aws_subscribe(mutations: ["updateList"]) @aws_api_key @aws_iam
+  onDeleteList(filter: ModelSubscriptionListFilterInput): List @aws_subscribe(mutations: ["deleteList"]) @aws_api_key @aws_iam
+  onCreateBook(filter: ModelSubscriptionBookFilterInput): Book @aws_subscribe(mutations: ["createBook"]) @aws_api_key @aws_iam
+  onUpdateBook(filter: ModelSubscriptionBookFilterInput): Book @aws_subscribe(mutations: ["updateBook"]) @aws_api_key @aws_iam
+  onDeleteBook(filter: ModelSubscriptionBookFilterInput): Book @aws_subscribe(mutations: ["deleteBook"]) @aws_api_key @aws_iam
+  onCreateSettings(filter: ModelSubscriptionSettingsFilterInput): Settings @aws_subscribe(mutations: ["createSettings"]) @aws_api_key @aws_iam
+  onUpdateSettings(filter: ModelSubscriptionSettingsFilterInput): Settings @aws_subscribe(mutations: ["updateSettings"]) @aws_api_key @aws_iam
+  onDeleteSettings(filter: ModelSubscriptionSettingsFilterInput): Settings @aws_subscribe(mutations: ["deleteSettings"]) @aws_api_key @aws_iam
+}
+
+type ModelUserBooksConnection @aws_api_key @aws_iam {
+  items: [UserBooks]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelUserBooksFilterInput {
+  id: ModelIDInput
+  createdDate: ModelStringInput
+  updatedDate: ModelStringInput
+  authors: ModelStringInput
+  categories: ModelStringInput
+  images: ModelStringInput
+  title: ModelStringInput
+  latitude: ModelIntInput
+  longitude: ModelIntInput
+  price: ModelIntInput
+  publisher: ModelStringInput
+  sellerUUID: ModelIDInput
+  thumbnail: ModelStringInput
+  isbn: ModelStringInput
+  and: [ModelUserBooksFilterInput]
+  or: [ModelUserBooksFilterInput]
+  not: ModelUserBooksFilterInput
+}
+
+input ModelUserBooksConditionInput {
+  createdDate: ModelStringInput
+  updatedDate: ModelStringInput
+  authors: ModelStringInput
+  categories: ModelStringInput
+  images: ModelStringInput
+  title: ModelStringInput
+  latitude: ModelIntInput
+  longitude: ModelIntInput
+  price: ModelIntInput
+  publisher: ModelStringInput
+  sellerUUID: ModelIDInput
+  thumbnail: ModelStringInput
+  isbn: ModelStringInput
+  and: [ModelUserBooksConditionInput]
+  or: [ModelUserBooksConditionInput]
+  not: ModelUserBooksConditionInput
+}
+
+input CreateUserBooksInput {
+  id: ID
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  authors: [String]
+  categories: [String]
+  images: [String]
+  title: String
+  latitude: Int
+  longitude: Int
+  price: Int
+  publisher: String
+  sellerUUID: ID
+  thumbnail: String
+  isbn: String
+  _version: Int
+}
+
+input UpdateUserBooksInput {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  authors: [String]
+  categories: [String]
+  images: [String]
+  title: String
+  latitude: Int
+  longitude: Int
+  price: Int
+  publisher: String
+  sellerUUID: ID
+  thumbnail: String
+  isbn: String
+  _version: Int
+}
+
+input DeleteUserBooksInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionUserBooksFilterInput {
+  id: ModelSubscriptionIDInput
+  createdDate: ModelSubscriptionStringInput
+  updatedDate: ModelSubscriptionStringInput
+  authors: ModelSubscriptionStringInput
+  categories: ModelSubscriptionStringInput
+  images: ModelSubscriptionStringInput
+  title: ModelSubscriptionStringInput
+  latitude: ModelSubscriptionIntInput
+  longitude: ModelSubscriptionIntInput
+  price: ModelSubscriptionIntInput
+  publisher: ModelSubscriptionStringInput
+  sellerUUID: ModelSubscriptionIDInput
+  thumbnail: ModelSubscriptionStringInput
+  isbn: ModelSubscriptionStringInput
+  and: [ModelSubscriptionUserBooksFilterInput]
+  or: [ModelSubscriptionUserBooksFilterInput]
+}
+
+type ModelTrackingListItemConnection @aws_api_key @aws_iam {
+  items: [TrackingListItem]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelTrackingListItemFilterInput {
+  id: ModelIDInput
+  authors: ModelStringInput
+  isbn: ModelStringInput
+  price: ModelIntInput
+  store: ModelStringInput
+  thumbnail: ModelStringInput
+  time: ModelIntInput
+  title: ModelStringInput
+  and: [ModelTrackingListItemFilterInput]
+  or: [ModelTrackingListItemFilterInput]
+  not: ModelTrackingListItemFilterInput
+}
+
+input ModelTrackingListItemConditionInput {
+  authors: ModelStringInput
+  isbn: ModelStringInput
+  price: ModelIntInput
+  store: ModelStringInput
+  thumbnail: ModelStringInput
+  time: ModelIntInput
+  title: ModelStringInput
+  and: [ModelTrackingListItemConditionInput]
+  or: [ModelTrackingListItemConditionInput]
+  not: ModelTrackingListItemConditionInput
+}
+
+input CreateTrackingListItemInput {
+  id: ID
+  authors: [String]
+  isbn: String
+  price: Int
+  store: String
+  thumbnail: String
+  time: Int
+  title: String
+  _version: Int
+}
+
+input UpdateTrackingListItemInput {
+  id: ID!
+  authors: [String]
+  isbn: String
+  price: Int
+  store: String
+  thumbnail: String
+  time: Int
+  title: String
+  _version: Int
+}
+
+input DeleteTrackingListItemInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionTrackingListItemFilterInput {
+  id: ModelSubscriptionIDInput
+  authors: ModelSubscriptionStringInput
+  isbn: ModelSubscriptionStringInput
+  price: ModelSubscriptionIntInput
+  store: ModelSubscriptionStringInput
+  thumbnail: ModelSubscriptionStringInput
+  time: ModelSubscriptionIntInput
+  title: ModelSubscriptionStringInput
+  and: [ModelSubscriptionTrackingListItemFilterInput]
+  or: [ModelSubscriptionTrackingListItemFilterInput]
+}
+
+type ModelUsersConnection @aws_api_key @aws_iam {
+  items: [Users]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelUsersFilterInput {
+  id: ModelIDInput
+  createdDate: ModelStringInput
+  updatedDate: ModelStringInput
+  sellerID: ModelIDInput
+  settingsID: ModelIDInput
+  phoneNumber: ModelStringInput
+  profilePicture: ModelStringInput
+  token: ModelStringInput
+  username: ModelStringInput
+  zipCode: ModelStringInput
+  email: ModelStringInput
+  isAdministrator: ModelBooleanInput
+  and: [ModelUsersFilterInput]
+  or: [ModelUsersFilterInput]
+  not: ModelUsersFilterInput
+}
+
+input ModelUsersConditionInput {
+  createdDate: ModelStringInput
+  updatedDate: ModelStringInput
+  sellerID: ModelIDInput
+  settingsID: ModelIDInput
+  phoneNumber: ModelStringInput
+  profilePicture: ModelStringInput
+  token: ModelStringInput
+  username: ModelStringInput
+  zipCode: ModelStringInput
+  email: ModelStringInput
+  isAdministrator: ModelBooleanInput
+  and: [ModelUsersConditionInput]
+  or: [ModelUsersConditionInput]
+  not: ModelUsersConditionInput
+}
+
+input CreateUsersInput {
+  id: ID
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  sellerID: ID
+  settingsID: ID
+  phoneNumber: AWSPhone
+  profilePicture: String
+  token: String
+  username: String
+  zipCode: String
+  email: AWSEmail
+  isAdministrator: Boolean
+  _version: Int
+}
+
+input UpdateUsersInput {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDate: AWSDateTime
+  sellerID: ID
+  settingsID: ID
+  phoneNumber: AWSPhone
+  profilePicture: String
+  token: String
+  username: String
+  zipCode: String
+  email: AWSEmail
+  isAdministrator: Boolean
+  _version: Int
+}
+
+input DeleteUsersInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionUsersFilterInput {
+  id: ModelSubscriptionIDInput
+  createdDate: ModelSubscriptionStringInput
+  updatedDate: ModelSubscriptionStringInput
+  sellerID: ModelSubscriptionIDInput
+  settingsID: ModelSubscriptionIDInput
+  phoneNumber: ModelSubscriptionStringInput
+  profilePicture: ModelSubscriptionStringInput
+  token: ModelSubscriptionStringInput
+  username: ModelSubscriptionStringInput
+  zipCode: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
+  isAdministrator: ModelSubscriptionBooleanInput
+  and: [ModelSubscriptionUsersFilterInput]
+  or: [ModelSubscriptionUsersFilterInput]
+}
+
+type ModelSellerConnection @aws_api_key @aws_iam {
+  items: [Seller]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelSellerFilterInput {
+  id: ModelIDInput
+  email: ModelStringInput
+  sellerName: ModelStringInput
+  phoneNumber: ModelStringInput
+  and: [ModelSellerFilterInput]
+  or: [ModelSellerFilterInput]
+  not: ModelSellerFilterInput
+}
+
+input ModelSellerConditionInput {
+  email: ModelStringInput
+  sellerName: ModelStringInput
+  phoneNumber: ModelStringInput
+  and: [ModelSellerConditionInput]
+  or: [ModelSellerConditionInput]
+  not: ModelSellerConditionInput
+}
+
+input CreateSellerInput {
+  id: ID
+  email: AWSEmail
+  sellerName: String
+  phoneNumber: String
+  _version: Int
+}
+
+input UpdateSellerInput {
+  id: ID!
+  email: AWSEmail
+  sellerName: String
+  phoneNumber: String
+  _version: Int
+}
+
+input DeleteSellerInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionSellerFilterInput {
+  id: ModelSubscriptionIDInput
+  email: ModelSubscriptionStringInput
+  sellerName: ModelSubscriptionStringInput
+  phoneNumber: ModelSubscriptionStringInput
+  and: [ModelSubscriptionSellerFilterInput]
+  or: [ModelSubscriptionSellerFilterInput]
+}
+
+type ModelListConnection @aws_api_key @aws_iam {
+  items: [List]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelListFilterInput {
+  id: ModelIDInput
+  Tracking: ModelStringInput
+  Wish: ModelStringInput
+  and: [ModelListFilterInput]
+  or: [ModelListFilterInput]
+  not: ModelListFilterInput
+}
+
+input ModelListConditionInput {
+  Tracking: ModelStringInput
+  Wish: ModelStringInput
+  and: [ModelListConditionInput]
+  or: [ModelListConditionInput]
+  not: ModelListConditionInput
+}
+
+input CreateListInput {
+  id: ID
+  Tracking: [String]
+  Wish: String
+  _version: Int
+}
+
+input UpdateListInput {
+  id: ID!
+  Tracking: [String]
+  Wish: String
+  _version: Int
+}
+
+input DeleteListInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionListFilterInput {
+  id: ModelSubscriptionIDInput
+  Tracking: ModelSubscriptionStringInput
+  Wish: ModelSubscriptionStringInput
+  and: [ModelSubscriptionListFilterInput]
+  or: [ModelSubscriptionListFilterInput]
+}
+
+type ModelBookConnection @aws_api_key @aws_iam {
+  items: [Book]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelBookFilterInput {
+  id: ModelIDInput
+  createdDate: ModelStringInput
+  updatedDat: ModelStringInput
+  title: ModelStringInput
+  subtitle: ModelStringInput
+  rating: ModelIntInput
+  thumbnail: ModelStringInput
+  language: ModelStringInput
+  isbn: ModelStringInput
+  authors: ModelStringInput
+  publisher: ModelStringInput
+  categories: ModelStringInput
+  description: ModelStringInput
+  and: [ModelBookFilterInput]
+  or: [ModelBookFilterInput]
+  not: ModelBookFilterInput
+}
+
+input ModelBookConditionInput {
+  createdDate: ModelStringInput
+  updatedDat: ModelStringInput
+  title: ModelStringInput
+  subtitle: ModelStringInput
+  rating: ModelIntInput
+  thumbnail: ModelStringInput
+  language: ModelStringInput
+  isbn: ModelStringInput
+  authors: ModelStringInput
+  publisher: ModelStringInput
+  categories: ModelStringInput
+  description: ModelStringInput
+  and: [ModelBookConditionInput]
+  or: [ModelBookConditionInput]
+  not: ModelBookConditionInput
+}
+
+input CreateBookInput {
+  id: ID
+  createdDate: AWSDateTime
+  updatedDat: AWSDateTime
+  title: String
+  subtitle: String
+  rating: Int
+  thumbnail: String
+  language: String
+  isbn: String
+  authors: [String]
+  publisher: String
+  categories: [String]
+  description: String
+  _version: Int
+}
+
+input UpdateBookInput {
+  id: ID!
+  createdDate: AWSDateTime
+  updatedDat: AWSDateTime
+  title: String
+  subtitle: String
+  rating: Int
+  thumbnail: String
+  language: String
+  isbn: String
+  authors: [String]
+  publisher: String
+  categories: [String]
+  description: String
+  _version: Int
+}
+
+input DeleteBookInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionBookFilterInput {
+  id: ModelSubscriptionIDInput
+  createdDate: ModelSubscriptionStringInput
+  updatedDat: ModelSubscriptionStringInput
+  title: ModelSubscriptionStringInput
+  subtitle: ModelSubscriptionStringInput
+  rating: ModelSubscriptionIntInput
+  thumbnail: ModelSubscriptionStringInput
+  language: ModelSubscriptionStringInput
+  isbn: ModelSubscriptionStringInput
+  authors: ModelSubscriptionStringInput
+  publisher: ModelSubscriptionStringInput
+  categories: ModelSubscriptionStringInput
+  description: ModelSubscriptionStringInput
+  and: [ModelSubscriptionBookFilterInput]
+  or: [ModelSubscriptionBookFilterInput]
+}
+
+type ModelSettingsConnection @aws_api_key @aws_iam {
+  items: [Settings]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelSettingsFilterInput {
+  id: ModelIDInput
+  notifications: ModelBooleanInput
+  and: [ModelSettingsFilterInput]
+  or: [ModelSettingsFilterInput]
+  not: ModelSettingsFilterInput
+}
+
+input ModelSettingsConditionInput {
+  notifications: ModelBooleanInput
+  and: [ModelSettingsConditionInput]
+  or: [ModelSettingsConditionInput]
+  not: ModelSettingsConditionInput
+}
+
+input CreateSettingsInput {
+  id: ID
+  notifications: Boolean
+  _version: Int
+}
+
+input UpdateSettingsInput {
+  id: ID!
+  notifications: Boolean
+  _version: Int
+}
+
+input DeleteSettingsInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionSettingsFilterInput {
+  id: ModelSubscriptionIDInput
+  notifications: ModelSubscriptionBooleanInput
+  and: [ModelSubscriptionSettingsFilterInput]
+  or: [ModelSubscriptionSettingsFilterInput]
+}
+

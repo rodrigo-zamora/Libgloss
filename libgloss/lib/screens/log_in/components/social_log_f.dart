@@ -47,7 +47,7 @@ class SocialLogF extends StatelessWidget {
               borderRadius: BorderRadius.circular(100)),
           onPressed: _action,
           child: FaIcon(
-            FontAwesomeIcons.f,
+            FontAwesomeIcons.facebookF,
             color: _logo,
           ),
         ),
