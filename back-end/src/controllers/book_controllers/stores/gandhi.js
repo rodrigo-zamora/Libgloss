@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 const cloudscraper = require('cloudscraper');
 
-const BASE_URL = 'https://www.gandhi.com.mx/';
+const BASE_URL = 'https://www.gandhi.com.mx/catalogsearch/result/?q=';
 
 const gandhiController = {
     getPrice: async (isbn) => {
