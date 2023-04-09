@@ -72,6 +72,7 @@ dependencies:
   amplify_core:
   amplify_auth_cognito:
   amplify_analytics_pinpoint:
+  amplify_storage_s3:
 
 dev_dependencies:
   flutter_test:

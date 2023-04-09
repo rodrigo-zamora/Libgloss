@@ -20,6 +20,8 @@ class LogInForm extends StatefulWidget {
   State<LogInForm> createState() => _LogInFormState();
 }
 
+final List<String> log = [];
+
 class _LogInFormState extends State<LogInForm> {
   bool _current = true;
 

@@ -78,7 +78,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _authUser(event, emit) async {
     emit(AuthAwaitingState());
     try {
-      // TODO: Implement auth here
       await _authRepo.signOut();
       var currentUserisSigned = await _authRepo.signInWithGoogle();
 
@@ -87,7 +86,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
 
       isSigned = true;
-      await _authRepo.isAuthenticated();
       ScaffoldMessenger.of(event.buildcontext)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -134,7 +132,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _authFacebook(event, emit) async {
     emit(AuthAwaitingState());
     try {
-      // TODO: Implement auth here
       await _authRepo.signOut();
       var currentUserisSigned = await _authRepo.signInWithFacebook();
 

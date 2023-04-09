@@ -21,7 +21,7 @@
 
 import 'package:amplify_core/amplify_core.dart';
 import 'Book.dart';
-import 'List.dart';
+import 'ListWish.dart';
 import 'Seller.dart';
 import 'Settings.dart';
 import 'TrackingListItem.dart';
@@ -30,7 +30,7 @@ import 'Users.dart';
 import 'WishListItem.dart';
 
 export 'Book.dart';
-export 'List.dart';
+export 'ListWish.dart';
 export 'Seller.dart';
 export 'Settings.dart';
 export 'TrackingListItem.dart';
@@ -40,21 +40,30 @@ export 'WishListItem.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "16cf37dc9fddf53401c7cff54d805e40";
+  String version = "4ac9128d3338de50881f8ac638b572a2";
   @override
-  List<ModelSchema> modelSchemas = [Book.schema, List.schema, Seller.schema, Settings.schema, TrackingListItem.schema, UserBooks.schema, Users.schema, WishListItem.schema];
+  List<ModelSchema> modelSchemas = [
+    Book.schema,
+    ListWish.schema,
+    Seller.schema,
+    Settings.schema,
+    TrackingListItem.schema,
+    UserBooks.schema,
+    Users.schema,
+    WishListItem.schema
+  ];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
 
   static ModelProvider get instance => _instance;
-  
+
   ModelType getModelTypeByModelName(String modelName) {
-    switch(modelName) {
+    switch (modelName) {
       case "Book":
         return Book.classType;
-      case "List":
-        return List.classType;
+      case "ListWish":
+        return ListWish.classType;
       case "Seller":
         return Seller.classType;
       case "Settings":
@@ -68,7 +77,9 @@ class ModelProvider implements ModelProviderInterface {
       case "WishListItem":
         return WishListItem.classType;
       default:
-        throw Exception("Failed to find model in model provider for model name: " + modelName);
+        throw Exception(
+            "Failed to find model in model provider for model name: " +
+                modelName);
     }
   }
 }
