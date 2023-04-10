@@ -3,11 +3,11 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:libgloss/amplifyconfiguration.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/blocs.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/models/ModelProvider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() async {
   // Ensure that the WidgetsBinding is initialized before calling
@@ -34,6 +34,8 @@ class Libgloss extends StatefulWidget {
 }
 
 Future<void> configureAmplify() async {
+  // Get the amplifyconfig.json file
+  final amplifyconfig = await rootBundle.loadString('amplifyconfig.json');
   final datastorePlugin =
       AmplifyDataStore(modelProvider: ModelProvider.instance);
   await Amplify.addPlugins([AmplifyAuthCognito(), datastorePlugin]);

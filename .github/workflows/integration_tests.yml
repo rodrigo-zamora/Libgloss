@@ -1,8 +1,6 @@
 name: Node.js CI
 
 on:
-  push:
-    branches-ignore: [ master, development ]
   pull_request:
     branches: [ master, development ]
 
