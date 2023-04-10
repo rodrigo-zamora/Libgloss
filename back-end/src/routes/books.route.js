@@ -29,11 +29,11 @@ router.get('/details', handleError(async (req, res) => {
     let details = await booksController.getDetails(req.query);
     res.json(details);
 
-    // Save the books in the database, with the current price and date
-    await booksController.saveBooks(req.query.isbn, details);
+    // TODO: Save the books in the database, with the current price and date
+    // await booksController.saveBooks(details);
 
-    // Notify users about the price change
-    await notificationsController.notifyUsers(req.query.isbn, details);
+    // TODO: Notify users about the price change
+    // await notificationsController.notifyUsers(req.query.isbn, details);
 
 }));
 

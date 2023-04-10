@@ -65,7 +65,7 @@ describe('Book API', () => {
     describe('GET /api/books/search', () => {
         it('should return a list of books by title', (done) => {
             request(app)
-                .get('/api/books/search?title=book')
+                .get('/api/books/search?title=la razón de estar contigo')
                 .expect(200)
                 .end(endFunction(done));
         }),

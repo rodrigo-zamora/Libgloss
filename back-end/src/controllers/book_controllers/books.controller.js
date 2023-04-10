@@ -29,7 +29,7 @@ const booksController = {
 
         // If no books were found, return an empty array
         if (books.length == 0) return [];
-        
+
         return books;
     },
 
@@ -41,40 +41,42 @@ const booksController = {
         for (let i = 0; i < books.length; i++) {
             let book = books[i];
 
-            if (book.publisher != undefined) {
+            let title = book.title ? book.title : '';
+            let author = book.authors[0] ? book.authors[0] : '';
+            let publisher = book.publisher ? book.publisher : '';
 
+            let params = {
+                TableName: config.aws_table_name,
+                Key: {
+                    id: book.isbn
+                }
+            };
+
+            // Check if book already exists in the database
+            let data = await docClient.get(params).promise();
+
+            // If book does not exist, add it to the database
+            if (Object.keys(data).length === 0) {
                 let params = {
                     TableName: config.aws_table_name,
-                    Key: {
-                        id: book.isbn
-                    }
+                    Item: {
+                        id: generateBookId(title, author, publisher),
+                        isbn: book.isbn,
+                        title: book.title,
+                        subtitle: book.subtitle,
+                        rating: book.rating,
+                        thumbnail: book.thumbnail,
+                        authors: book.authors,
+                        publisher: book.publisher,
+                        description: book.description,
+                        categories: book.categories,
+                        language: book.language,
+                    },
                 };
-                
-                // Check if book already exists in the database
-                let data = await docClient.get(params).promise();
 
-                // If book does not exist, add it to the database
-                if (Object.keys(data).length === 0) {
-                    let params = {
-                        TableName: config.aws_table_name,
-                        Item: {
-                            id: generateBookId(book.title, book.authors[0], book.publisher),
-                            isbn: book.isbn,
-                            title: book.title,
-                            subtitle: book.subtitle,
-                            rating: book.rating,
-                            thumbnail: book.thumbnail,
-                            authors: book.authors,
-                            publisher: book.publisher,
-                            description: book.description,
-                            categories: book.categories,
-                            language: book.language,
-                        },
-                    };
-
-                    await docClient.put(params).promise();
-                }
+                await docClient.put(params).promise();
             }
+
         }
 
     },
@@ -318,58 +320,65 @@ const booksController = {
     },
 
     // Save the books in the database, with the current price and date
-    saveBooks: async (query, details) => {
+    saveBooks: async (isbn, book) => {
 
-        if (details) {
+        if (price) {
 
             const docClient = new AWS.DynamoDB.DocumentClient();
-
-            const params = {
-                TableName: config.aws_table_name,
-                Key: {
-                    isbn: isbn
-                },
-                UpdateExpression: 'set #price = :price, #date = :date',
-                ExpressionAttributeNames: {
-                    '#price': 'price',
-                    '#date': 'date'
-                },
-                ExpressionAttributeValues: {
-                    ':price': details.price,
-                    ':date': new Date()
-                }
-            }
 
             // Check if book exists in database
             const checkParams = {
                 TableName: config.aws_table_name,
                 Key: {
-                    id: query
+                    id: isbn
                 }
             }
 
             try {
                 const result = await docClient.get(checkParams).promise();
                 if (result.Item) {
+
+                    const params = {
+                        TableName: config.aws_table_name,
+                        Key: {
+                            id: isbn
+                        },
+                        UpdateExpression: 'set #price = :price, #date = :date',
+                        ExpressionAttributeNames: {
+                            '#price': 'price',
+                            '#date': 'date'
+                        },
+                        ExpressionAttributeValues: {
+                            ':price': price,
+                            ':date': new Date().toISOString()
+                        }
+                    }
+
                     try {
                         await docClient.update(params).promise();
+                        console.log('Book updated in DynamoDB');
                         return true;
                     } catch (err) {
                         console.error(err);
                         throw new ServerError('Error updating book in DynamoDB');
                     }
                 } else {
-                    const params = {
+
+                    let date = new Date();
+
+                    let bookData = {
                         TableName: config.aws_table_name,
                         Item: {
-                            id: query,
-                            price: details.price,
-                            date: new Date()
-                        }
+                            id: isbn,
+                            price: price,
+                            date: date.toISOString(),
+                        },
                     }
 
+                    console.table(bookData);
+
                     try {
-                        await docClient.put(params).promise();
+                        //await docClient.put(bookData).promise();
                         return true;
                     } catch (err) {
                         console.error(err);

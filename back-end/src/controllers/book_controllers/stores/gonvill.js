@@ -6,7 +6,6 @@ const BASE_URL = 'https://www.gonvill.com.mx/busqueda/listaLibros.php?tipoBus=fu
 const gonvillController = {
     getPrice: async (isbn) => {
         let url = `${BASE_URL}${isbn}`;
-        console.log('\tSearching books in Gonvill with url', url);
 
         let response = await cloudscraper.get(url, { method: 'GET' });
         const $ = cheerio.load(response);
@@ -22,8 +21,6 @@ const gonvillController = {
         price = price[price.length - 1];
 
         price = Math.round(parseFloat(price) * 100) / 100;
-
-        console.log('\t\tFound book with price', price);
 
         if (!price) return null;
 

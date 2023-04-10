@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/models/ModelProvider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
 
@@ -31,7 +34,7 @@ class _AccountState extends State<Account> {
   bool hasImage = false;
   bool updating = false;
 
-  Map<String, dynamic> user = {};
+  dynamic user = {};
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +59,32 @@ class _AccountState extends State<Account> {
   Widget _main(BuildContext context) {
     // TODO: Get user data from Amplify database and show it in the screen
 
-    return _buildMyAccount(context, {});
+    if (user.isEmpty) {
+      return FutureBuilder<AuthUser>(
+        future: Amplify.Auth.getCurrentUser(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Algo salió mal");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              String data = snapshot.data!.userId;
+              user = data;
+              return _buildMyAccount(context, data);
+            }
+          }
+          return Center(
+              child: CircularProgressIndicator(
+            color: _secondaryColor,
+          ));
+        },
+      );
+    } else {
+      return _buildMyAccount(context, user);
+    }
   }
 
-  Widget _buildMyAccount(BuildContext context, Map<String, dynamic> data) {
+  Widget _buildMyAccount(BuildContext context, dynamic data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -211,7 +236,29 @@ class _AccountState extends State<Account> {
             content: Text('Subiendo imagen...'),
           ),
         );
+
       final URL = await _uploadImage(pickedImage!);
+
+      final resultRemove = await Amplify.Storage.list();
+
+      var checkURL;
+      for (var item in resultRemove.items) {
+        checkURL = await Amplify.Storage.getUrl(key: item.key);
+        if (checkURL == data['profilePicture']) {
+          await Amplify.Storage.remove(key: item.key);
+          break;
+        }
+      }
+
+      final users = await Amplify.DataStore.query(Users.classType,
+          where: Users.ID.eq(data['id']));
+      if (users.isEmpty) {
+        print("No user found");
+      } else {
+        final updatedUserURL = users.first.copyWith(profilePicture: URL);
+
+        await Amplify.DataStore.save(updatedUserURL);
+      }
 
       // TODO: Delete old image from Amplify storage and update the URL in the database
 
@@ -219,6 +266,19 @@ class _AccountState extends State<Account> {
 
     try {
       // TODO: Update user data in Amplify database
+      final users = await Amplify.DataStore.query(Users.classType,
+          where: Users.ID.eq(data['id']));
+      if (users.isEmpty) {
+        throw new Exception('User not Found');
+      } else {
+        final updatedUser = users.first.copyWith(
+          username: _nameController.text,
+          phoneNumber: _phoneController.text,
+          zipCode: _zipController.text,
+        );
+
+        await Amplify.DataStore.save(updatedUser);
+      }
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -321,7 +381,15 @@ class _AccountState extends State<Account> {
 
   Future<String> _uploadImage(XFile element) async {
     // TODO: Upload image to Amplify storage
-    return "";
+    try {
+      final fileName = "profile_pictures/${element.name}${DateTime.now()}.png";
+      final resultUpload = await Amplify.Storage.uploadFile(
+          local: File(element.path), key: fileName);
+      final result = await Amplify.Storage.getUrl(key: resultUpload.key);
+      return result.url;
+    } catch (e) {
+      throw e;
+    }
   }
 
   Widget _edit(BuildContext context, TextEditingController controller,

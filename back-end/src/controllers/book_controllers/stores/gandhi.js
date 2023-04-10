@@ -4,23 +4,25 @@ const cloudscraper = require('cloudscraper');
 const BASE_URL = 'https://www.gandhi.com.mx/catalogsearch/result/?q=';
 
 const gandhiController = {
-    getPrice: async (isbn) => {
-        let url = `${BASE_URL}${isbn}`;
-        console.log('\tSearching books in Gandhi with url', url);
+    getPrice: async (bookTitle) => {
+        let url = `${BASE_URL}${bookTitle}`;
 
         let response = await cloudscraper.get(url, { method: 'GET' });
         const $ = cheerio.load(response);
 
-        let price = $("meta[itemprop='price']").attr('content');
-        price = Math.round(parseFloat(price) * 100) / 100;
+        let item = $(".search.results").find(".product-item-info")[0];
 
-        console.log('\t\tFound book with price', price);
+        let price = $(item).find(".price").text();
+        
+        let itemUrl = $(item).find("a").attr("href");
 
+        price = parseFloat(price.replace('$', '').replace(',', ''));
+        
         if (!price) return null;
 
         return {
             price: price,
-            url: url
+            url: itemUrl
         };
     }
 }

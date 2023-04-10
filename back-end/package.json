@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/rodrigo-zamora/Libgloss#readme",
   "dependencies": {
-    "aws-sdk": "^2.1345.0",
+    "aws-sdk": "^2.1338.0",
     "bent": "^7.3.12",
     "cheerio": "^1.0.0-rc.12",
     "cloudscraper": "^4.6.0",
