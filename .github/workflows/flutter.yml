@@ -21,12 +21,13 @@ jobs:
           channel: 'stable'
 
       - name: create-json
+        id: create-json
         uses: jsdaniell/create-json@v1.2.2
 
         with:
-          name: 'amplifyconfiguration.json'
+          name: amplifyconfiguration.json
           json: ${{ secrets.AMPLIFY_CONFIG }}
-          dir: 'libgloss/src/'
+          dir: ./libgloss/src/
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
