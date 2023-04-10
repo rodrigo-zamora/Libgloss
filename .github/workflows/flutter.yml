@@ -20,9 +20,13 @@ jobs:
           flutter-version: '3.3.4'
           channel: 'stable'
 
-      - name: create-json
+      - name: Create amplifyconfiguration.json
+        run: |
+          touch amplifyconfiguration.json
+
+      - name: Create json
         id: create-json
-        uses: jsdaniell/create-json@v1.2.2
+        uses: jsdaniell/create-json@1.1.2
 
         with:
           name: amplifyconfiguration.json
