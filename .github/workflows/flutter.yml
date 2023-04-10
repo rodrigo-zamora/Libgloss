@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Flutter CI  
 
 on:
   pull_request:
@@ -24,7 +24,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
 
         with:
-          name: 'amplifyconfiguration.dart'
+          name: 'amplifyconfiguration.json'
           json: ${{ secrets.AMPLIFY_CONFIG }}
           dir: 'libgloss/src/'
 
