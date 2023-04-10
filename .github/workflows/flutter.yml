@@ -22,16 +22,9 @@ jobs:
 
       - name: Create amplifyconfiguration.json
         run: |
+          cd libgloss/src
           touch amplifyconfiguration.json
-
-      - name: Create json
-        id: create-json
-        uses: jsdaniell/create-json@1.1.2
-
-        with:
-          name: amplifyconfiguration.json
-          json: ${{ secrets.AMPLIFY_CONFIG }}
-          dir: ./libgloss/src/
+          echo ${{ secrets.AMPLIFY_CONFIG }} >> amplifyconfiguration.json
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
