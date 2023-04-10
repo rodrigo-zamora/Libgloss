@@ -6,7 +6,6 @@ const BASE_URL = 'https://www.elsotano.com/busqueda/listaLibros.php?tipoBus=full
 const elSotanoController = {
     getPrice: async (isbn) => {
         let url = `${BASE_URL}${isbn}`;
-        console.log('\tSearching books in El Sotano with url', url);
 
         let response = await cloudscraper.get(url, { method: 'GET' });
         const $ = cheerio.load(response);
@@ -25,8 +24,6 @@ const elSotanoController = {
 
         // This is the default price if the book is not found
         if (price == 679) return null;
-
-        console.log('\t\tFound book with price', price);
 
         if (!price) return null;
 

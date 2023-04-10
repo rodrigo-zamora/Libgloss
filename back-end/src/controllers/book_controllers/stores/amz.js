@@ -8,7 +8,6 @@ const CATEGORY = "i=stripbooks";
 const amzController = {
     getPrice: async (isbn) => {
         let url = `${BASE_URL}${isbn}&${CATEGORY}`;
-        console.log('\tSearching books in Amazon with url', url);
         
         let response = await cloudscraper.get(url, {method: 'GET'});
         const $ = cheerio.load(response);
@@ -31,7 +30,6 @@ const amzController = {
         price = priceArray[0];
 
         price = Math.round(parseFloat(price) * 100) / 100;
-        console.log('\t\tFound book with price', price);
 
         if (!price) return null;
 

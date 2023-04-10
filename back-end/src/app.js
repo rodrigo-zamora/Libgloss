@@ -30,7 +30,7 @@ const {
     NotImplementedError
 } = require('./utils/errors');
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     if (err.details) return res.status(400).send(err.details[0].message);
 
     if (err instanceof BadRequestError) return res.status(400).send(err.message);
