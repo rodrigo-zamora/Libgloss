@@ -21,14 +21,14 @@ jobs:
         with:
           flutter-version: '3.3.4'
           channel: 'stable'
-          
-      - name: Create env file
-        env:
-          DATA: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          cd libgloss
-          touch .env
-          echo $DATA > .env
+
+      - name: create-json
+        uses: jsdaniell/create-json@v1.2.2
+
+        with:
+          name: 'amplifyconfiguration.dart'
+          json: ${{ secrets.AMPLIFY_CONFIG }}
+          dir: 'libgloss/src/'
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
