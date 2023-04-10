@@ -22,7 +22,7 @@ jobs:
 
       - name: Create amplifyconfiguration.json
         run: |
-          cd libgloss/src
+          cd libgloss/lib
           touch amplifyconfiguration.json
           echo ${{ secrets.AMPLIFY_CONFIG }} >> amplifyconfiguration.json
 
