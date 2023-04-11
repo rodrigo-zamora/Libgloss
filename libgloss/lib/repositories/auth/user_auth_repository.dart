@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
@@ -31,20 +32,31 @@ class UserAuthRepository {
       final user = await Amplify.Auth.getCurrentUser();
       final detailsUser = await Amplify.Auth.fetchUserAttributes();
       var detailsId = jsonDecode(detailsUser[1].value);
-      final post = await Amplify.DataStore.save(new Users(
-          id: detailsId[0]['userId'],
+      final newUser = new Users(
+          sellerID: "ABC",
+          settingsID: "ABCD",
           email: detailsUser[3].value,
           createdDate: TemporalDateTime(new DateTime.fromMillisecondsSinceEpoch(
               detailsId[0]['dateCreated'])),
           updatedDate: TemporalDateTime(new DateTime.fromMillisecondsSinceEpoch(
               detailsId[0]['dateCreated'])),
-          phoneNumber: '666-666-666-666',
+          phoneNumber: "+52 33 1387 7570",
           profilePicture:
               'https://i.pinimg.com/564x/d4/37/4b/d4374b6dc2934880eaa7a5e8989c1f64.jpg',
           token: result.nextStep!.additionalInfo!['token'],
           username: detailsUser[3].value,
           zipCode: '4503747',
-          isAdministrator: false));
+          isAdministrator: false);
+      final request = ModelMutations.create(newUser);
+      final response = await Amplify.API.mutate(request: request).response;
+
+      final createdUser = response.data;
+      if (createdUser == null) {
+        safePrint('errors: ${response.errors}');
+      }
+      safePrint('Mutation result: ${createdUser?.email}');
+      final posts = await Amplify.DataStore.query(Users.classType);
+      print('Posts: $posts');
       return result.isSignedIn;
     } on AuthException catch (e) {
       print(e.message);

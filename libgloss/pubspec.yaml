@@ -69,6 +69,7 @@ dependencies:
   # AWS Amplify
   amplify_flutter: ^0.6.0
   amplify_datastore: ^0.6.0
+  amplify_api: ^0.6.0
   amplify_core:
   amplify_auth_cognito:
   amplify_analytics_pinpoint:

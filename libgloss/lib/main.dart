@@ -1,3 +1,4 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -34,9 +35,10 @@ class Libgloss extends StatefulWidget {
 }
 
 Future<void> configureAmplify() async {
+  final api = AmplifyAPI(modelProvider: ModelProvider.instance);
   final datastorePlugin =
       AmplifyDataStore(modelProvider: ModelProvider.instance);
-  await Amplify.addPlugins([AmplifyAuthCognito(), datastorePlugin]);
+  await Amplify.addPlugins([AmplifyAuthCognito(), datastorePlugin, api]);
   await Amplify.configure(amplifyconfig);
 }
 
