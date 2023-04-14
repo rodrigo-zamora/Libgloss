@@ -29,12 +29,19 @@ class UserAuthRepository {
       final result =
           await Amplify.Auth.signInWithWebUI(provider: AuthProvider.google);
       print('Result for the login: ${result.nextStep?.additionalInfo}');
-      final user = await Amplify.Auth.getCurrentUser();
       final detailsUser = await Amplify.Auth.fetchUserAttributes();
+      final query = Users.EMAIL.eq(detailsUser[3].value);
+      final req = ModelQueries.list<Users>(Users.classType, where: query);
+      final res = await Amplify.API.query(request: req).response;
+      print('Posts: ${res.data?.items.first}');
+      if (res.data != null) {
+        return result.isSignedIn;
+      }
+
       var detailsId = jsonDecode(detailsUser[1].value);
       final newUser = new Users(
-          sellerID: "ABC",
-          settingsID: "ABCD",
+          sellerID: "",
+          settingsID: "",
           email: detailsUser[3].value,
           createdDate: TemporalDateTime(new DateTime.fromMillisecondsSinceEpoch(
               detailsId[0]['dateCreated'])),
@@ -55,8 +62,6 @@ class UserAuthRepository {
         safePrint('errors: ${response.errors}');
       }
       safePrint('Mutation result: ${createdUser?.email}');
-      final posts = await Amplify.DataStore.query(Users.classType);
-      print('Posts: $posts');
       return result.isSignedIn;
     } on AuthException catch (e) {
       print(e.message);

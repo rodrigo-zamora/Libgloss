@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -249,35 +250,35 @@ class _AccountState extends State<Account> {
           break;
         }
       }
+      final query = Users.EMAIL.eq(data['email']);
+      final req = ModelQueries.list<Users>(Users.classType, where: query);
+      final res = await Amplify.API.query(request: req).response;
 
-      final users = await Amplify.DataStore.query(Users.classType,
-          where: Users.ID.eq(data['id']));
-      if (users.isEmpty) {
+      if (res.data == null) {
         print("No user found");
       } else {
-        final updatedUserURL = users.first.copyWith(profilePicture: URL);
+        final userWithData =
+            res.data!.items.first!.copyWith(profilePicture: URL);
 
-        await Amplify.DataStore.save(updatedUserURL);
+        final request = ModelMutations.update(userWithData);
+        final response = await Amplify.API.mutate(request: request).response;
+        print('Response: $response');
       }
-
-      // TODO: Delete old image from Amplify storage and update the URL in the database
-
-    }
-
-    try {
       // TODO: Update user data in Amplify database
-      final users = await Amplify.DataStore.query(Users.classType,
-          where: Users.ID.eq(data['id']));
-      if (users.isEmpty) {
+
+      if (res.data == null) {
         throw new Exception('User not Found');
       } else {
-        final updatedUser = users.first.copyWith(
+        final updatedUser = res.data!.items.first!.copyWith(
           username: _nameController.text,
           phoneNumber: _phoneController.text,
           zipCode: _zipController.text,
         );
 
-        await Amplify.DataStore.save(updatedUser);
+        final request = ModelMutations.update(updatedUser);
+        final response = await Amplify.API.mutate(request: request).response;
+
+        print('Response: $response');
       }
 
       ScaffoldMessenger.of(context)
@@ -307,8 +308,6 @@ class _AccountState extends State<Account> {
             );
           }),
           (Route route) => false);
-    } catch (e) {
-      print(e);
     }
   }
 
