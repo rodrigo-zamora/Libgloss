@@ -7,7 +7,7 @@ phases:
     commands:
       - echo "Build started on `date`"
       - cd back-end
-      - npm build
+      - npm run build
   build:
     commands:
       - pwd
