@@ -9,8 +9,10 @@ phases:
       - npm install
   build:
     commands:
-      - npm run build
+      - echo "Build started on `date`"
+      - mv back-end/dist/* .
+      - rm -rf back-end/
 
 artifacts:
   files:
-    - back-end/dist/**/*
+    - '**/*'
