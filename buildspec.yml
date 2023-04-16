@@ -5,11 +5,12 @@ phases:
     runtime-versions:
       nodejs: 14
     commands:
+      - echo "Build started on `date`"
       - cd back-end
       - npm install
   build:
     commands:
-      - echo "Build started on `date`"
+      - cd ..
       - mv back-end/dist/* .
       - rm -rf back-end/
 
