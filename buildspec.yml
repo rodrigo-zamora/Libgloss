@@ -10,8 +10,12 @@ phases:
       - npm install
   build:
     commands:
+      - pwd
+      - ls
       - cd ..
+      - ls
       - mv back-end/dist/* .
+      - ls
       - rm -rf back-end/
 
 artifacts:
