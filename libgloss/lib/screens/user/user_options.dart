@@ -1,9 +1,11 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/models/Users.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
 
@@ -19,11 +21,27 @@ class _UserOptionsState extends State<UserOptions> {
   final Color _secondaryColor = AppColor.getSecondary(Routes.options);
   final Color _tertiaryColor = AppColor.getQuaternary(Routes.options);
   final Color _iconColors = AppColor.gray;
+  var data = new Users();
 
   @override
   Widget build(BuildContext context) {
     // TODO: Get the user data from Amplify
-    return CircularProgressIndicator();
+    return FutureBuilder<AuthUser>(
+      future: Amplify.Auth.getCurrentUser(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            var data = BlocProvider.of<AuthBloc>(context).currentUser;
+
+            if (data != null) return _buildUserOptions(data);
+          }
+        }
+        return _loadingUserOptions();
+      },
+    );
   }
 
   Widget _loadingUserOptions() {
@@ -49,7 +67,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Widget _buildUserOptions(Map<String, dynamic>? data) {
+  Widget _buildUserOptions(Users? data) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
@@ -76,7 +94,7 @@ class _UserOptionsState extends State<UserOptions> {
             children: [
               SizedBox(height: 20),
               Text(
-                data?['username'],
+                data!.username!,
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -84,7 +102,7 @@ class _UserOptionsState extends State<UserOptions> {
                 ),
               ),
               Text(
-                data!['email'],
+                data.email!,
                 style: TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
@@ -93,13 +111,13 @@ class _UserOptionsState extends State<UserOptions> {
               ),
               SizedBox(height: 20),
               _profilePicture(data),
-              _sellerButton(data['isSeller']),
+              _sellerButton(data.sellerID != " "),
               //_followers(true),
               SizedBox(height: 10),
               _lowButton(Icons.person_outlined, "Mi cuenta", () {
                 Navigator.pushNamed(context, Routes.myAccount);
               }, Icons.arrow_forward_ios),
-              _bookHistory(data['isSeller']),
+              _bookHistory(data.sellerID != " "),
               _lowButton(Icons.help_outline, "Notifiaciones", () {
                 Navigator.pushNamed(context, Routes.notifications);
               }, Icons.arrow_forward_ios),
@@ -127,7 +145,7 @@ class _UserOptionsState extends State<UserOptions> {
     }
   }
 
-  Container _profilePicture(Map<String, dynamic>? data) {
+  Container _profilePicture(Users? data) {
     return Container(
       height: 110,
       width: 110,
@@ -146,7 +164,7 @@ class _UserOptionsState extends State<UserOptions> {
           );
         },
         fit: BoxFit.contain,
-        imageUrl: data!['profilePicture'],
+        imageUrl: data!.profilePicture!,
         imageBuilder: (context, imageProvider) {
           return CircleAvatar(
             backgroundImage: imageProvider,
