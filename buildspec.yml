@@ -7,7 +7,7 @@ phases:
     commands:
       - echo "Build started on `date`"
       - cd back-end
-      - npm install
+      - npm build
   build:
     commands:
       - pwd
@@ -16,6 +16,7 @@ phases:
       - rm -rf libgloss/
       - rm -rf images/
       - mv back-end/* .
+      - mv backend/dist/* dist/
       - ls
       - rm -rf back-end/
 
