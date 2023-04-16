@@ -11,16 +11,16 @@ phases:
       - npm run build
   build:
     commands:
-      - pwd
-      - ls
       - cd ..
-      - pwd
       - rm -rf libgloss/
       - rm -rf images/
-      - ls
       - mv back-end/* .
-      - ls
       - rm -rf back-end/
+      - echo "Build completed on `date`"
+      - echo "Creating .env file"
+      - echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+      - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+      - echo "AWS_REGION=$AWS_REGION"
 
 artifacts:
   files:
