@@ -16,11 +16,8 @@ app.use(express.json());
 const swaggerDocument = YAML.load(path.resolve('./src/docs/swagger.yaml'));
 
 // Routes
-app.use('/', (req, res) => {
-    res.send('To see the documentation, go to /docs');
-});
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/books', require('./routes/books.route'));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Error handling
 const {
