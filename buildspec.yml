@@ -13,8 +13,9 @@ phases:
       - pwd
       - ls
       - cd ..
-      - ls
-      - mv back-end/dist/* .
+      - rm -rf libgloss/
+      - rm -rf images/
+      - mv back-end/* .
       - ls
       - rm -rf back-end/
 
