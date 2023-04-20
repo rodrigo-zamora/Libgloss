@@ -274,8 +274,11 @@ class _AccountState extends State<Account> {
         phoneNumber: _phoneController.text,
         zipCode: _zipController.text,
       );
-
-      final request = ModelMutations.update(updatedUser);
+      final requestDelete = ModelMutations.delete(res.data!.items.first!);
+      final responseDelete =
+          await Amplify.API.mutate(request: requestDelete).response;
+      print('Response: $responseDelete');
+      final request = ModelMutations.create(updatedUser);
       final response = await Amplify.API.mutate(request: request).response;
 
       print('Response: $response');

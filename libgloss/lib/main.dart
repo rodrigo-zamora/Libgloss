@@ -1,7 +1,7 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:libgloss/amplifyconfiguration.dart';
@@ -36,9 +36,8 @@ class Libgloss extends StatefulWidget {
 
 Future<void> configureAmplify() async {
   final api = AmplifyAPI(modelProvider: ModelProvider.instance);
-  final datastorePlugin =
-      AmplifyDataStore(modelProvider: ModelProvider.instance);
-  await Amplify.addPlugins([AmplifyAuthCognito(), datastorePlugin, api]);
+  final storage = AmplifyStorageS3();
+  await Amplify.addPlugins([AmplifyAuthCognito(), api, storage]);
   await Amplify.configure(amplifyconfig);
 }
 
