@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -67,8 +67,8 @@ dependencies:
   jie_preview_image: ^1.0.1
 
   # AWS Amplify
-  amplify_flutter: ^0.6.0
-  amplify_api: ^0.6.0
+  amplify_flutter: 
+  amplify_api: 
   amplify_core:
   amplify_auth_cognito:
   amplify_analytics_pinpoint:

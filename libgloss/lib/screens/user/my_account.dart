@@ -62,7 +62,7 @@ class _AccountState extends State<Account> {
 
   Widget _main(BuildContext context) {
     // TODO: Get user data from Amplify database and show it in the screen
-    if (user != null) {
+    if (user == null || user?.token == null) {
       return FutureBuilder<AuthUser>(
         future: Amplify.Auth.getCurrentUser(),
         builder: (context, snapshot) {
@@ -206,7 +206,7 @@ class _AccountState extends State<Account> {
                         );
                       return;
                     }
-                    await _updateProfile(data);
+                    await _updateProfile(context, data);
                     setState(() {
                       updating = true;
                     });
@@ -228,7 +228,7 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Future<void> _updateProfile(Users data) async {
+  Future<void> _updateProfile(BuildContext context, Users data) async {
     final query = Users.EMAIL.eq(data.email);
     final req = ModelQueries.list<Users>(Users.classType, where: query);
     final res = await Amplify.API.query(request: req).response;
@@ -262,11 +262,12 @@ class _AccountState extends State<Account> {
         final request = ModelMutations.update(userWithData);
         final response = await Amplify.API.mutate(request: request).response;
         print('Response: $response');
+        BlocProvider.of<AuthBloc>(context).currentUser = response.data!;
       }
     }
     // TODO: Update user data in Amplify database
 
-    if (res.data == null) {
+    else if (res.data == null) {
       throw new Exception('User not Found');
     } else {
       final updatedUser = res.data!.items.first!.copyWith(
@@ -274,14 +275,12 @@ class _AccountState extends State<Account> {
         phoneNumber: _phoneController.text,
         zipCode: _zipController.text,
       );
-      final requestDelete = ModelMutations.delete(res.data!.items.first!);
-      final responseDelete =
-          await Amplify.API.mutate(request: requestDelete).response;
-      print('Response: $responseDelete');
-      final request = ModelMutations.create(updatedUser);
+
+      final request = ModelMutations.update(updatedUser);
       final response = await Amplify.API.mutate(request: request).response;
 
       print('Response: $response');
+      BlocProvider.of<AuthBloc>(context).currentUser = response.data!;
     }
 
     ScaffoldMessenger.of(context)
@@ -365,7 +364,7 @@ class _AccountState extends State<Account> {
                     print(pickedImage!.path);
                     setState(() {
                       hasImage = true;
-                      user!.copyWith(profilePicture: pickedImage!.path);
+                      user = user!.copyWith(profilePicture: pickedImage!.path);
                     });
                   },
                   child: Icon(

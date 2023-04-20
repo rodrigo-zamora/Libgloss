@@ -25,7 +25,6 @@ class _UserOptionsState extends State<UserOptions> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get the user data from Amplify
     return FutureBuilder<AuthUser>(
       future: Amplify.Auth.getCurrentUser(),
       builder: (BuildContext context, snapshot) {
