@@ -61,7 +61,6 @@ class _AccountState extends State<Account> {
   }
 
   Widget _main(BuildContext context) {
-    // TODO: Get user data from Amplify database and show it in the screen
     if (user == null || user?.token == null) {
       return FutureBuilder<AuthUser>(
         future: Amplify.Auth.getCurrentUser(),
@@ -264,10 +263,7 @@ class _AccountState extends State<Account> {
         print('Response: $response');
         BlocProvider.of<AuthBloc>(context).currentUser = response.data!;
       }
-    }
-    // TODO: Update user data in Amplify database
-
-    else if (res.data == null) {
+    } else if (res.data == null) {
       throw new Exception('User not Found');
     } else {
       final updatedUser = res.data!.items.first!.copyWith(
@@ -380,7 +376,6 @@ class _AccountState extends State<Account> {
   }
 
   Future<String> _uploadImage(XFile element) async {
-    // TODO: Upload image to Amplify storage
     try {
       final fileName = "profile_pictures/${element.name}${DateTime.now()}.png";
       final resultUpload = await Amplify.Storage.uploadFile(
