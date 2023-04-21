@@ -32,9 +32,11 @@ class _HomeUsedState extends State<HomeUsed> {
 
   @override
   Widget build(BuildContext context) {
+    isSeller!['isSeller'] = true;
+
     // TODO: Get used books from Amplify database
 
-    return _loadingPage();
+    return _buildSellingPage();
   }
 
   Widget _loadingPage() {

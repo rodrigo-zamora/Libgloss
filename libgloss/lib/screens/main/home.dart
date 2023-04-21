@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
             Routes.getRoute(Routes.newBooks),
             Routes.getRoute(Routes.usedBooks),
             Routes.getRoute(Routes.bookTracker),
-            Routes.getRoute(Routes.myBooks),
+            Routes.getRoute(Routes.options),
           ]
         : [
             Routes.getRoute(Routes.newBooks),

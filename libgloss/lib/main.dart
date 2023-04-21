@@ -9,6 +9,7 @@ import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/blocs.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/models/ModelProvider.dart';
+import 'package:libgloss/widgets/animations/slide_route.dart';
 
 void main() async {
   // Ensure that the WidgetsBinding is initialized before calling
@@ -61,6 +62,12 @@ class _LibglossState extends State<Libgloss> {
         primaryColor: AppColor.primaryColor,
       ),
       home: Routes.getRoute(Routes.home),
+      onGenerateRoute: ((settings) {
+        return SlideRoute(
+          page: Routes.getRoutesMap()[settings.name]!(context),
+          settings: settings,
+        );
+      }),
     );
   }
 }

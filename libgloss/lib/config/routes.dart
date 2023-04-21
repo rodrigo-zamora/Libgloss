@@ -104,4 +104,8 @@ class Routes {
   static Widget getRoute(String route) {
     return _routes[route]!(null);
   }
+
+  static Map<String, WidgetBuilder> getRoutesMap() {
+    return _routes;
+  }
 }

@@ -33,8 +33,7 @@ class UserAuthRepository {
       final query = Users.EMAIL.eq(detailsUser[3].value);
       final req = ModelQueries.list<Users>(Users.classType, where: query);
       final res = await Amplify.API.query(request: req).response;
-      print('Posts: ${res.data?.items.first}');
-      if (res.data != null) {
+      if (res.data?.items.length != 0) {
         return res.data?.items.first;
       }
 
