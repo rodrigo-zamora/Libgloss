@@ -73,6 +73,7 @@ dependencies:
   amplify_auth_cognito:
   amplify_analytics_pinpoint:
   amplify_storage_s3:
+  aws_rekognition_api: ^2.0.0
 
 dev_dependencies:
   flutter_test:
