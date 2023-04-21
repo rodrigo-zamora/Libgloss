@@ -1,4 +1,7 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
+import 'package:libgloss/models/ModelProvider.dart';
 import 'package:meta/meta.dart';
 
 part 'used_books_event.dart';
@@ -16,7 +19,10 @@ class UsedBooksBloc extends Bloc<UsedBooksEvent, UsedBooksState> {
       List<Map<String, dynamic>> books = [];
 
       try {
-        // TODO: Get all used books from Amplify database
+        final req = ModelQueries.list<UserBooks>(UserBooks.classType);
+        final res = await Amplify.API.query(request: req).response;
+
+        res.data!.items.forEach((item) => {books.add(item!.toJson())});
 
         emit(UsedBooksLoaded(usedBooks: books));
       } catch (e) {

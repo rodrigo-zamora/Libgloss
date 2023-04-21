@@ -1,8 +1,15 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/repositories/auth/user_auth_repository.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
+
+import '../../models/ModelProvider.dart';
+import '../../models/Users.dart';
 
 class ConfigurationPage extends StatelessWidget {
   ConfigurationPage({super.key});
@@ -33,8 +40,29 @@ class ConfigurationPage extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    // TODO: Get options from the user
-    return CircularProgressIndicator();
+    final query = Settings.ID
+        .eq(BlocProvider.of<AuthBloc>(context).currentUser!.settingsID);
+    final req = ModelQueries.list<Settings>(Settings.classType, where: query);
+
+    return FutureBuilder(
+      future: Amplify.API.query(request: req).response,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("Algo salió mal");
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            Users user = BlocProvider.of<AuthBloc>(context).currentUser!;
+            Map<String, dynamic> data = user.toJson();
+            return _buildNotifications(data);
+          }
+        }
+        return Center(
+            child: CircularProgressIndicator(
+          color: _secondaryColor,
+        ));
+      },
+    );
   }
 
   Widget _buildNotifications(Map<String, dynamic> data) {
@@ -62,11 +90,24 @@ class ConfigurationPage extends StatelessWidget {
               StatefulBuilder(
                 builder: (context, setState) {
                   return Switch(
-                    value: data['notifications'],
+                    value: (data["settingsID"] != Null),
                     onChanged: (value) {
-                      setState(() {
-                        data['notifications'] = value;
-                        // TODO: Update the user's options in the database
+                      setState(() async {
+                        data['settingsID'] = value ? "Algo" : null;
+                        final query = Settings.ID.eq(
+                            BlocProvider.of<AuthBloc>(context)
+                                .currentUser!
+                                .settingsID);
+                        final req = ModelQueries.list<Settings>(
+                            Settings.classType,
+                            where: query);
+                        final response =
+                            await Amplify.API.query(request: req).response;
+
+                        final updatedSetting = response.data!.items.first!
+                            .copyWith(notifications: value);
+                        final request = ModelMutations.update(updatedSetting);
+                        await Amplify.API.mutate(request: request).response;
                       });
                     },
                     activeTrackColor: _tertiaryColor,

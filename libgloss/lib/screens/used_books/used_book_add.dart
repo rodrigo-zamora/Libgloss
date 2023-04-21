@@ -11,6 +11,8 @@ import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
 import 'package:libgloss/widgets/shared/side_menu.dart';
 
+import 'package:aws_rekognition_api/rekognition-2016-06-27.dart'
+    as RekognitionAPI;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -496,10 +498,62 @@ class _UsedBookAddState extends State<UsedBookAdd> {
             );
         } else {
           uploaded = true;
-          List<String> _imagesURL = [];
+          bool isValid = false;
+          setState(() {});
+
+          for (var i = 0; i < _imageFileList!.length; i++) {
+            final response = await _uploadImage(_imageFileList![i]);
+            if (!response) {
+              isValid = false;
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Una de las imágenes no es un libro",
+                    ),
+                  ),
+                );
+            } else {
+              isValid = true;
+            }
+          }
+
+          if (isValid) {
+            uploaded = await _addBook(_args);
+            if (uploaded) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  PageRouteBuilder(pageBuilder: (BuildContext context,
+                      Animation animation, Animation secondaryAnimation) {
+                    return Routes.getRoute(Routes.home);
+                  }, transitionsBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child) {
+                    return new SlideTransition(
+                      position: new Tween<Offset>(
+                        begin: const Offset(1.0, 0.0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    );
+                  }),
+                  (Route route) => false);
+            } else {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Hubo un error al guardar el libro",
+                    ),
+                  ),
+                );
+            }
+          }
 
           // TODO: Add used book to Amplify database and show the progress
-
         }
       },
       child: _text("Guardar libro", _defaultColor, 15.0, FontWeight.normal,
@@ -507,19 +561,45 @@ class _UsedBookAddState extends State<UsedBookAdd> {
     );
   }
 
-  Future<String> _uploadImage(XFile element) async {
-    // TODO: Upload to Amplify S3 and return the URL
-    return "";
+  Future<bool> _uploadImage(XFile element) async {
+    final accessKeyId = dotenv.env['AWS_ACCESS_KEY_ID'] as String;
+    final secretAccessKey = dotenv.env['AWS_SECRET_ACCESS_KEY'] as String;
+
+    final rekognition = RekognitionAPI.Rekognition(
+      region: 'us-east-1',
+      credentials: RekognitionAPI.AwsClientCredentials(
+        accessKey: accessKeyId,
+        secretKey: secretAccessKey,
+      ),
+    );
+
+    try {
+      final imageBytes = File(element.path).readAsBytesSync();
+
+      final request = await rekognition.detectLabels(
+        image: RekognitionAPI.Image(
+          bytes: imageBytes,
+        ),
+      );
+
+      final labels = request.labels;
+      print(labels);
+
+      for (var label in labels!) {
+        if (label.name == 'Book' || label.name == 'Book Cover') {
+          if (label.confidence! > 90) {
+            return true;
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   Future<bool> _addBook(Map<String, dynamic> book) async {
-    try {
-      // TODO: Save the book to Amplify database
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+    return false;
   }
 }
 

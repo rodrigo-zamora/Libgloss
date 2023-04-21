@@ -1,9 +1,14 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/blocs/used_books/bloc/used_books_bloc.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
+
+import '../../models/ModelProvider.dart';
 
 class MyBooks extends StatefulWidget {
   MyBooks({super.key});
@@ -42,8 +47,30 @@ class _MyBooksState extends State<MyBooks> {
   }
 
   Widget _main(BuildContext _context) {
-    // TODO: Get all books from the user
-    return CircularProgressIndicator();
+    final query = UserBooks.SELLERUUID
+        .eq(BlocProvider.of<AuthBloc>(context).currentUser!.id);
+    final req = ModelQueries.list<UserBooks>(UserBooks.classType, where: query);
+    return FutureBuilder(
+      future: Amplify.API.query(request: req).response,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("Algo salió mal");
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            List<Map<String, dynamic>> data = [];
+            snapshot.data?.data?.items.forEach((item) {
+              data.add(item!.toJson());
+            });
+            return _buildMyBooks(data, _context);
+          }
+        }
+        return Center(
+            child: CircularProgressIndicator(
+          color: _secondaryColor,
+        ));
+      },
+    );
   }
 
   Widget _buildMyBooks(List<Map<String, dynamic>> data, BuildContext _context) {
@@ -239,7 +266,17 @@ class _MyBooksState extends State<MyBooks> {
   _updateBook(
       Map<String, dynamic> data, String price, BuildContext context) async {
     try {
-      // TODO: Update book in Amplify
+      final query = UserBooks.ID.eq(data["id"]);
+      final req =
+          ModelQueries.list<UserBooks>(UserBooks.classType, where: query);
+      final res = await Amplify.API.query(request: req).response;
+
+      final bookWithData =
+          res.data!.items.first!.copyWith(price: int.parse(price));
+
+      final request = ModelMutations.update(bookWithData);
+      final response = await Amplify.API.mutate(request: request).response;
+      print('Response: $response');
     } catch (e) {
       print(e);
     }
@@ -265,7 +302,15 @@ class _MyBooksState extends State<MyBooks> {
               onPressed: () async {
                 List<dynamic> images = _images;
                 try {
-                  // TODO: Delete book in Amplify
+                  final query = UserBooks.ID.eq(id);
+                  final req = ModelQueries.list<UserBooks>(UserBooks.classType,
+                      where: query);
+                  final res = await Amplify.API.query(request: req).response;
+
+                  final request = ModelMutations.delete(res.data!.items.first!);
+                  final response =
+                      await Amplify.API.mutate(request: request).response;
+                  print('Response: $response');
                   BlocProvider.of<UsedBooksBloc>(context)
                       .add(GetUsedBooksEvent());
                 } catch (e) {
@@ -275,7 +320,13 @@ class _MyBooksState extends State<MyBooks> {
                 Navigator.pop(context);
                 for (String image in images) {
                   try {
-                    // TODO: Delete image in Amplify
+                    final uri = Uri.parse(image);
+                    final objectKey = uri.pathSegments.join('/');
+
+                    final result = await Amplify.Storage.remove(
+                      key: objectKey,
+                    );
+                    safePrint('Removed file: ${result.key}');
                   } catch (e) {
                     print(e);
                   }

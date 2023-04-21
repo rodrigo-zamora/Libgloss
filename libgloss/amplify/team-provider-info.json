@@ -12,9 +12,6 @@
       "AmplifyAppId": "d10yx0r8ukg5xc"
     },
     "categories": {
-      "api": {
-        "Libgloss": {}
-      },
       "auth": {
         "libgloss11eee6a1": {}
       },

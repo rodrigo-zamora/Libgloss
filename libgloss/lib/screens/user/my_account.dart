@@ -1,14 +1,18 @@
 import 'dart:io';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
 import 'package:libgloss/models/ModelProvider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
+
+import '../../blocs/auth/bloc/auth_bloc.dart';
 
 class Account extends StatefulWidget {
   Account({super.key});
@@ -34,7 +38,7 @@ class _AccountState extends State<Account> {
   bool hasImage = false;
   bool updating = false;
 
-  dynamic user = {};
+  Users? user = new Users();
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +61,7 @@ class _AccountState extends State<Account> {
   }
 
   Widget _main(BuildContext context) {
-    // TODO: Get user data from Amplify database and show it in the screen
-
-    if (user.isEmpty) {
+    if (user == null || user?.token == null) {
       return FutureBuilder<AuthUser>(
         future: Amplify.Auth.getCurrentUser(),
         builder: (context, snapshot) {
@@ -68,8 +70,8 @@ class _AccountState extends State<Account> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
-              String data = snapshot.data!.userId;
-              user = data;
+              user = BlocProvider.of<AuthBloc>(context).currentUser;
+              Users? data = user;
               return _buildMyAccount(context, data);
             }
           }
@@ -108,12 +110,11 @@ class _AccountState extends State<Account> {
         ),
         _edit(
             context,
-            data['username'] == null
+            data.username == null
                 ? _nameController
-                : _nameController =
-                    TextEditingController(text: data['username']),
+                : _nameController = TextEditingController(text: data.username),
             TextInputType.text,
-            data['username']),
+            data.username),
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
           child: Text("Número de teléfono",
@@ -124,12 +125,12 @@ class _AccountState extends State<Account> {
         ),
         _edit(
             context,
-            data['phoneNumber'] == null
+            data.phoneNumber == null
                 ? _phoneController
                 : _phoneController =
-                    TextEditingController(text: data['phoneNumber']),
+                    TextEditingController(text: data.phoneNumber),
             TextInputType.number,
-            data['phoneNumber']),
+            data.phoneNumber),
         Container(
           padding: EdgeInsets.only(bottom: 5, top: 20),
           child: Text("Código postal",
@@ -140,11 +141,11 @@ class _AccountState extends State<Account> {
         ),
         _edit(
             context,
-            data['zipCode'] == null
+            data.zipCode == null
                 ? _zipController
-                : _zipController = TextEditingController(text: data['zipCode']),
+                : _zipController = TextEditingController(text: data.zipCode),
             TextInputType.number,
-            data['zipCode']),
+            data.zipCode),
         updating == true
             ? Column(
                 children: [
@@ -168,7 +169,7 @@ class _AccountState extends State<Account> {
                   ),
                   onPressed: () async {
                     if (_phoneController.text == '' ||
-                        _phoneController.text.length != 10) {
+                        _phoneController.text.length <= 15) {
                       ScaffoldMessenger.of(context)
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
@@ -181,7 +182,7 @@ class _AccountState extends State<Account> {
                     }
 
                     if (_zipController.text == '' &&
-                        _zipController.text.length != 5) {
+                        _zipController.text.length <= 5) {
                       ScaffoldMessenger.of(context)
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
@@ -204,9 +205,8 @@ class _AccountState extends State<Account> {
                         );
                       return;
                     }
-
+                    await _updateProfile(context, data);
                     setState(() {
-                      _updateProfile(data);
                       updating = true;
                     });
                   },
@@ -227,7 +227,10 @@ class _AccountState extends State<Account> {
     );
   }
 
-  void _updateProfile(Map<String, dynamic> data) async {
+  Future<void> _updateProfile(BuildContext context, Users data) async {
+    final query = Users.EMAIL.eq(data.email);
+    final req = ModelQueries.list<Users>(Users.classType, where: query);
+    final res = await Amplify.API.query(request: req).response;
     if (pickedImage != null) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -236,7 +239,6 @@ class _AccountState extends State<Account> {
             content: Text('Subiendo imagen...'),
           ),
         );
-
       final URL = await _uploadImage(pickedImage!);
 
       final resultRemove = await Amplify.Storage.list();
@@ -244,75 +246,69 @@ class _AccountState extends State<Account> {
       var checkURL;
       for (var item in resultRemove.items) {
         checkURL = await Amplify.Storage.getUrl(key: item.key);
-        if (checkURL == data['profilePicture']) {
+        if (checkURL == data.profilePicture) {
           await Amplify.Storage.remove(key: item.key);
           break;
         }
       }
 
-      final users = await Amplify.DataStore.query(Users.classType,
-          where: Users.ID.eq(data['id']));
-      if (users.isEmpty) {
+      if (res.data == null) {
         print("No user found");
       } else {
-        final updatedUserURL = users.first.copyWith(profilePicture: URL);
+        final userWithData =
+            res.data!.items.first!.copyWith(profilePicture: URL);
 
-        await Amplify.DataStore.save(updatedUserURL);
+        final request = ModelMutations.update(userWithData);
+        final response = await Amplify.API.mutate(request: request).response;
+        print('Response: $response');
+        BlocProvider.of<AuthBloc>(context).currentUser = response.data!;
       }
+    } else if (res.data == null) {
+      throw new Exception('User not Found');
+    } else {
+      final updatedUser = res.data!.items.first!.copyWith(
+        username: _nameController.text,
+        phoneNumber: _phoneController.text,
+        zipCode: _zipController.text,
+      );
 
-      // TODO: Delete old image from Amplify storage and update the URL in the database
+      final request = ModelMutations.update(updatedUser);
+      final response = await Amplify.API.mutate(request: request).response;
 
+      print('Response: $response');
+      BlocProvider.of<AuthBloc>(context).currentUser = response.data!;
     }
 
-    try {
-      // TODO: Update user data in Amplify database
-      final users = await Amplify.DataStore.query(Users.classType,
-          where: Users.ID.eq(data['id']));
-      if (users.isEmpty) {
-        throw new Exception('User not Found');
-      } else {
-        final updatedUser = users.first.copyWith(
-          username: _nameController.text,
-          phoneNumber: _phoneController.text,
-          zipCode: _zipController.text,
-        );
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Perfil actualizado'),
+        ),
+      );
 
-        await Amplify.DataStore.save(updatedUser);
-      }
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: Text('Perfil actualizado'),
-          ),
-        );
-
-      Routes.currentRoute = Routes.home;
-      Navigator.pushAndRemoveUntil(
-          context,
-          PageRouteBuilder(pageBuilder: (BuildContext context,
-              Animation animation, Animation secondaryAnimation) {
-            return Routes.getRoute(Routes.home);
-          }, transitionsBuilder: (BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-              Widget child) {
-            return new SlideTransition(
-              position: new Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          }),
-          (Route route) => false);
-    } catch (e) {
-      print(e);
-    }
+    Routes.currentRoute = Routes.home;
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(pageBuilder: (BuildContext context,
+            Animation animation, Animation secondaryAnimation) {
+          return Routes.getRoute(Routes.home);
+        }, transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child) {
+          return new SlideTransition(
+            position: new Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        }),
+        (Route route) => false);
   }
 
-  Container _profilePicture(Map<String, dynamic>? data) {
+  Container _profilePicture(Users data) {
     return Container(
         height: 110,
         width: 110,
@@ -339,7 +335,7 @@ class _AccountState extends State<Account> {
                       );
                     },
                     fit: BoxFit.contain,
-                    imageUrl: data!['profilePicture'],
+                    imageUrl: data.profilePicture!,
                     imageBuilder: (context, imageProvider) {
                       return CircleAvatar(
                         backgroundImage: imageProvider,
@@ -364,7 +360,7 @@ class _AccountState extends State<Account> {
                     print(pickedImage!.path);
                     setState(() {
                       hasImage = true;
-                      data!["profilePicture"] = pickedImage!.path;
+                      user = user!.copyWith(profilePicture: pickedImage!.path);
                     });
                   },
                   child: Icon(
@@ -380,7 +376,6 @@ class _AccountState extends State<Account> {
   }
 
   Future<String> _uploadImage(XFile element) async {
-    // TODO: Upload image to Amplify storage
     try {
       final fileName = "profile_pictures/${element.name}${DateTime.now()}.png";
       final resultUpload = await Amplify.Storage.uploadFile(

@@ -20,7 +20,7 @@ import 'package:libgloss/screens/user/user_options.dart';
 import 'package:libgloss/widgets/animations/splash.dart';
 
 class Routes {
-  static const api = "https://libgloss.herokuapp.com/api/";
+  static const api = "http://libgloss.us-east-1.elasticbeanstalk.com/api/";
 
   /* Routes definitions */
 
@@ -103,5 +103,9 @@ class Routes {
 
   static Widget getRoute(String route) {
     return _routes[route]!(null);
+  }
+
+  static Map<String, WidgetBuilder> getRoutesMap() {
+    return _routes;
   }
 }

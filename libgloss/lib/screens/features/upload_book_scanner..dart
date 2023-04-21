@@ -175,7 +175,11 @@ class UploadBookScanner extends StatelessWidget {
                     Routes.createUsedBook,
                     arguments: {
                       "title": books[0]["title"],
-                      // TODO: Update with actual book model
+                      "authors": books[0]["authors"],
+                      "isbn": books[0]["isbn"],
+                      "thumbnail": books[0]["thumbnail"],
+                      "localizacion": "45607",
+                      "vendedor": "Rodrigo Zamora",
                     },
                   );
                 },

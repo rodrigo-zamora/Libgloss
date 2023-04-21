@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:libgloss/config/routes.dart';
 
+import '../../../models/Users.dart';
 import '../../../repositories/auth/user_auth_repository.dart';
 
 part 'auth_event.dart';
@@ -12,6 +13,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserAuthRepository _authRepo = UserAuthRepository();
   bool isSigned = false;
+  Users? currentUser = new Users();
 
   AuthBloc() : super(AuthInitial()) {
     on<VerifyAuthEvent>(_authVerfication);
@@ -35,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepo.signOut();
 
       isSigned = false;
+      currentUser = null;
 
       print('signed out');
 
@@ -79,9 +82,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthAwaitingState());
     try {
       await _authRepo.signOut();
-      var currentUserisSigned = await _authRepo.signInWithGoogle();
+      currentUser = await _authRepo.signInWithGoogle();
 
-      if (currentUserisSigned == false) {
+      if (currentUser == null) {
         throw Exception("");
       }
 
@@ -133,9 +136,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthAwaitingState());
     try {
       await _authRepo.signOut();
-      var currentUserisSigned = await _authRepo.signInWithFacebook();
+      currentUser = await _authRepo.signInWithFacebook();
 
-      if (currentUserisSigned == false) {
+      if (currentUser == null) {
         throw Exception("");
       }
       isSigned = true;

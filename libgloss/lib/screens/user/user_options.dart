@@ -1,9 +1,13 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libgloss/blocs/auth/bloc/auth_bloc.dart';
 import 'package:libgloss/config/app_color.dart';
 import 'package:libgloss/config/routes.dart';
+import 'package:libgloss/models/Users.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:libgloss/widgets/shared/search_appbar.dart';
 
@@ -19,11 +23,26 @@ class _UserOptionsState extends State<UserOptions> {
   final Color _secondaryColor = AppColor.getSecondary(Routes.options);
   final Color _tertiaryColor = AppColor.getQuaternary(Routes.options);
   final Color _iconColors = AppColor.gray;
+  var data = new Users();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get the user data from Amplify
-    return CircularProgressIndicator();
+    return FutureBuilder<AuthUser>(
+      future: Amplify.Auth.getCurrentUser(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            var data = BlocProvider.of<AuthBloc>(context).currentUser;
+
+            if (data != null) return _buildUserOptions(data);
+          }
+        }
+        return _loadingUserOptions();
+      },
+    );
   }
 
   Widget _loadingUserOptions() {
@@ -49,7 +68,7 @@ class _UserOptionsState extends State<UserOptions> {
     );
   }
 
-  Widget _buildUserOptions(Map<String, dynamic>? data) {
+  Widget _buildUserOptions(Users? data) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
@@ -76,7 +95,7 @@ class _UserOptionsState extends State<UserOptions> {
             children: [
               SizedBox(height: 20),
               Text(
-                data?['username'],
+                data!.username!,
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -84,7 +103,7 @@ class _UserOptionsState extends State<UserOptions> {
                 ),
               ),
               Text(
-                data!['email'],
+                data.email!,
                 style: TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
@@ -93,13 +112,13 @@ class _UserOptionsState extends State<UserOptions> {
               ),
               SizedBox(height: 20),
               _profilePicture(data),
-              _sellerButton(data['isSeller']),
+              _sellerButton(data.sellerID != " "),
               //_followers(true),
               SizedBox(height: 10),
               _lowButton(Icons.person_outlined, "Mi cuenta", () {
                 Navigator.pushNamed(context, Routes.myAccount);
               }, Icons.arrow_forward_ios),
-              _bookHistory(data['isSeller']),
+              _bookHistory(data.sellerID != " "),
               _lowButton(Icons.help_outline, "Notifiaciones", () {
                 Navigator.pushNamed(context, Routes.notifications);
               }, Icons.arrow_forward_ios),
@@ -127,7 +146,7 @@ class _UserOptionsState extends State<UserOptions> {
     }
   }
 
-  Container _profilePicture(Map<String, dynamic>? data) {
+  Container _profilePicture(Users? data) {
     return Container(
       height: 110,
       width: 110,
@@ -146,7 +165,7 @@ class _UserOptionsState extends State<UserOptions> {
           );
         },
         fit: BoxFit.contain,
-        imageUrl: data!['profilePicture'],
+        imageUrl: data!.profilePicture!,
         imageBuilder: (context, imageProvider) {
           return CircleAvatar(
             backgroundImage: imageProvider,
@@ -485,11 +504,27 @@ class _UserOptionsState extends State<UserOptions> {
               child: Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 if (user[0]['phoneNumber'] == null) {
                   if (_phoneController.text.length == 10) {
                     // TODO: Update user phone number in Amplify database
+                    final query = Users.EMAIL.eq(user[0]['email']);
+                    final req =
+                        ModelQueries.list<Users>(Users.classType, where: query);
+                    final res = await Amplify.API.query(request: req).response;
+
+                    final updatedUser = res.data!.items.first!.copyWith(
+                      phoneNumber: _phoneController.text,
+                    );
+
+                    final request = ModelMutations.update(updatedUser);
+                    final response =
+                        await Amplify.API.mutate(request: request).response;
+
+                    print('Response: $response');
+                    BlocProvider.of<AuthBloc>(context).currentUser =
+                        response.data!;
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -501,7 +536,22 @@ class _UserOptionsState extends State<UserOptions> {
                 if (user[0]['zipCode'] == null) {
                   if (_zpController.text.length == 5) {
                     // TODO: Update user zip code in Amplify database
+                    final query = Users.EMAIL.eq(user[0]['email']);
+                    final req =
+                        ModelQueries.list<Users>(Users.classType, where: query);
+                    final res = await Amplify.API.query(request: req).response;
+
+                    final updatedUser = res.data!.items.first!.copyWith(
+                      zipCode: _zpController.text,
+                    );
+
+                    final request = ModelMutations.update(updatedUser);
+                    final response =
+                        await Amplify.API.mutate(request: request).response;
+                    BlocProvider.of<AuthBloc>(context).currentUser =
+                        response.data!;
                     // TODO: Use user's current address to get coordinates
+
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -513,6 +563,21 @@ class _UserOptionsState extends State<UserOptions> {
                 if (_zpController.text.length == 5 &&
                     _phoneController.text.length == 10) {
                   // TODO: Update user isSeller value in Amplify database
+                  final query = Users.EMAIL.eq(user[0]['email']);
+                  final req =
+                      ModelQueries.list<Users>(Users.classType, where: query);
+                  final res = await Amplify.API.query(request: req).response;
+
+                  final updatedUser = res.data!.items.first!.copyWith(
+                    sellerID: "Algo",
+                  );
+
+                  final request = ModelMutations.update(updatedUser);
+                  final response =
+                      await Amplify.API.mutate(request: request).response;
+
+                  BlocProvider.of<AuthBloc>(context).currentUser =
+                      response.data!;
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.home, (route) => false);
                   ScaffoldMessenger.of(context)

@@ -154,7 +154,8 @@ class _HomeNewState extends State<HomeNew> {
   }
 
   Widget _gender(BuildContext context, List<dynamic> books, int index) {
-    if (books[index]["categories"].length != 0) {
+    if (books[index]["categories"] != null &&
+        books[index]["categories"].length != 0) {
       return SizedBox(
         child: Stack(
           fit: StackFit.expand,
