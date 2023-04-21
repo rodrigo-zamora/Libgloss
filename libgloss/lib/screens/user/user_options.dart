@@ -1,3 +1,5 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -502,11 +504,27 @@ class _UserOptionsState extends State<UserOptions> {
               child: Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 if (user[0]['phoneNumber'] == null) {
                   if (_phoneController.text.length == 10) {
                     // TODO: Update user phone number in Amplify database
+                    final query = Users.EMAIL.eq(user[0]['email']);
+                    final req =
+                        ModelQueries.list<Users>(Users.classType, where: query);
+                    final res = await Amplify.API.query(request: req).response;
+
+                    final updatedUser = res.data!.items.first!.copyWith(
+                      phoneNumber: _phoneController.text,
+                    );
+
+                    final request = ModelMutations.update(updatedUser);
+                    final response =
+                        await Amplify.API.mutate(request: request).response;
+
+                    print('Response: $response');
+                    BlocProvider.of<AuthBloc>(context).currentUser =
+                        response.data!;
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -518,7 +536,22 @@ class _UserOptionsState extends State<UserOptions> {
                 if (user[0]['zipCode'] == null) {
                   if (_zpController.text.length == 5) {
                     // TODO: Update user zip code in Amplify database
+                    final query = Users.EMAIL.eq(user[0]['email']);
+                    final req =
+                        ModelQueries.list<Users>(Users.classType, where: query);
+                    final res = await Amplify.API.query(request: req).response;
+
+                    final updatedUser = res.data!.items.first!.copyWith(
+                      zipCode: _zpController.text,
+                    );
+
+                    final request = ModelMutations.update(updatedUser);
+                    final response =
+                        await Amplify.API.mutate(request: request).response;
+                    BlocProvider.of<AuthBloc>(context).currentUser =
+                        response.data!;
                     // TODO: Use user's current address to get coordinates
+
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -530,6 +563,21 @@ class _UserOptionsState extends State<UserOptions> {
                 if (_zpController.text.length == 5 &&
                     _phoneController.text.length == 10) {
                   // TODO: Update user isSeller value in Amplify database
+                  final query = Users.EMAIL.eq(user[0]['email']);
+                  final req =
+                      ModelQueries.list<Users>(Users.classType, where: query);
+                  final res = await Amplify.API.query(request: req).response;
+
+                  final updatedUser = res.data!.items.first!.copyWith(
+                    sellerID: "Algo",
+                  );
+
+                  final request = ModelMutations.update(updatedUser);
+                  final response =
+                      await Amplify.API.mutate(request: request).response;
+
+                  BlocProvider.of<AuthBloc>(context).currentUser =
+                      response.data!;
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.home, (route) => false);
                   ScaffoldMessenger.of(context)

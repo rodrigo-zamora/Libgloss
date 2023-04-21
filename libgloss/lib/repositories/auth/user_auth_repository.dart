@@ -39,8 +39,8 @@ class UserAuthRepository {
 
       var detailsId = jsonDecode(detailsUser[1].value);
       final newUser = new Users(
-          sellerID: "",
-          settingsID: "",
+          sellerID: null,
+          settingsID: null,
           email: detailsUser[3].value,
           createdDate: TemporalDateTime(new DateTime.fromMillisecondsSinceEpoch(
               detailsId[0]['dateCreated'])),

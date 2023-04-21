@@ -90,10 +90,10 @@ class ConfigurationPage extends StatelessWidget {
               StatefulBuilder(
                 builder: (context, setState) {
                   return Switch(
-                    value: data['notifications'],
+                    value: (data["settingsID"] != Null),
                     onChanged: (value) {
                       setState(() async {
-                        data['notifications'] = value;
+                        data['settingsID'] = value ? "Algo" : null;
                         final query = Settings.ID.eq(
                             BlocProvider.of<AuthBloc>(context)
                                 .currentUser!

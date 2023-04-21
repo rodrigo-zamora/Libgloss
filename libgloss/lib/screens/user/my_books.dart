@@ -266,7 +266,17 @@ class _MyBooksState extends State<MyBooks> {
   _updateBook(
       Map<String, dynamic> data, String price, BuildContext context) async {
     try {
-      // TODO: Update book in Amplify
+      final query = UserBooks.ID.eq(data["id"]);
+      final req =
+          ModelQueries.list<UserBooks>(UserBooks.classType, where: query);
+      final res = await Amplify.API.query(request: req).response;
+
+      final bookWithData =
+          res.data!.items.first!.copyWith(price: int.parse(price));
+
+      final request = ModelMutations.update(bookWithData);
+      final response = await Amplify.API.mutate(request: request).response;
+      print('Response: $response');
     } catch (e) {
       print(e);
     }
@@ -292,7 +302,15 @@ class _MyBooksState extends State<MyBooks> {
               onPressed: () async {
                 List<dynamic> images = _images;
                 try {
-                  // TODO: Delete book in Amplify
+                  final query = UserBooks.ID.eq(id);
+                  final req = ModelQueries.list<UserBooks>(UserBooks.classType,
+                      where: query);
+                  final res = await Amplify.API.query(request: req).response;
+
+                  final request = ModelMutations.delete(res.data!.items.first!);
+                  final response =
+                      await Amplify.API.mutate(request: request).response;
+                  print('Response: $response');
                   BlocProvider.of<UsedBooksBloc>(context)
                       .add(GetUsedBooksEvent());
                 } catch (e) {
@@ -302,7 +320,13 @@ class _MyBooksState extends State<MyBooks> {
                 Navigator.pop(context);
                 for (String image in images) {
                   try {
-                    // TODO: Delete image in Amplify
+                    final uri = Uri.parse(image);
+                    final objectKey = uri.pathSegments.join('/');
+
+                    final result = await Amplify.Storage.remove(
+                      key: objectKey,
+                    );
+                    safePrint('Removed file: ${result.key}');
                   } catch (e) {
                     print(e);
                   }
